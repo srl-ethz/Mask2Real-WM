@@ -14,8 +14,8 @@
   --text: #e8e8ea;
   --text-dim: #9a9aa0;
   --text-faint: #6a6a70;
-  --accent: #E97132;
-  --accent-soft: rgba(233,113,50,.12);
+  --accent: #3B82F6;
+  --accent-soft: rgba(59,130,246,.12);
   --blue: #156082;
   --red: #C00000;
   --max: 980px;
@@ -35,7 +35,7 @@ a:hover { text-decoration: underline; }
 header.hero {
   text-align: center; padding: 64px 0 26px;
   border-bottom: 1px solid var(--border);
-  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(233,113,50,.10), transparent 70%);
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,130,246,.10), transparent 70%);
 }
 .venue {
   display: inline-block; font-size: 12.5px; letter-spacing: 1.5px;
@@ -62,7 +62,7 @@ header.hero .subtitle { color: var(--text-dim); font-size: 16px; max-width: 720p
 }
 .btn:hover { border-color: var(--accent); color: #fff; text-decoration: none; transform: translateY(-1px); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.btn.primary:hover { background: #f2873f; }
+.btn.primary:hover { background: #60a5fa; }
 .btn svg { width: 17px; height: 17px; }
 
 /* ── sections ── */
@@ -167,10 +167,10 @@ footer { padding: 34px 0 50px; text-align: center; color: var(--text-faint); fon
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Interactive Demo
       </a>
-      <a class="btn" href="paper.pdf">
+      <span class="btn" aria-disabled="true" style="opacity:0.6;cursor:not-allowed;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Paper (PDF)
-      </a>
+        Paper · Soon available
+      </span>
       <a class="btn" href="#" id="code-link">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
         Code
