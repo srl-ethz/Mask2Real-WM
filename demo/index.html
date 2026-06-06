@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrcaHand — DOF Controllability</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #111; color: #eee;
+  height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ── top bar ── */
+#topbar {
+  display: flex; align-items: center; gap: 14px; padding: 9px 18px;
+  background: #1a1a1a; border-bottom: 1px solid #2a2a2a; flex-shrink: 0;
+}
+#topbar h1 { font-size: 15px; font-weight: 600; color: #fff; letter-spacing: .4px; }
+#topbar label { font-size: 12px; color: #888; }
+#topbar select {
+  background: #252525; color: #ddd; border: 1px solid #3a3a3a;
+  border-radius: 5px; padding: 4px 9px; font-size: 12px; cursor: pointer;
+}
+#topbar select:hover { border-color: #666; }
+#model-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── main ── */
+#main { display: flex; flex: 1; overflow: hidden; }
+
+/* ── left: robot viewer ── */
+#left-panel {
+  width: 42%; flex-shrink: 0; display: flex; flex-direction: column;
+  border-right: 1px solid #222; background: #141414; position: relative;
+}
+#robot-canvas { flex: 1; display: block; width: 100%; cursor: grab; }
+#robot-canvas:active { cursor: grabbing; }
+
+/* base-DOF buttons strip */
+#base-dofs {
+  flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; background: #181818; border-top: 1px solid #222;
+  flex-wrap: wrap;
+}
+#base-dofs .strip-label { font-size: 12px; color: #555; margin-right: 4px; }
+.dof-btn {
+  padding: 10px 24px; border-radius: 22px; border: 2px solid #3a3a3a;
+  background: #232323; color: #bbb; cursor: pointer; font-size: 15px;
+  font-weight: 600; transition: all .12s; user-select: none;
+}
+.dof-btn:hover { border-color: #888; color: #eee; }
+.dof-btn.active { background: #E97132; border-color: #E97132; color: #fff; }
+
+/* loading overlay */
+#loading-overlay {
+  position: absolute; inset: 0; background: #141414;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px; z-index: 20;
+}
+.spinner {
+  width: 34px; height: 34px; border: 3px solid #2a2a2a;
+  border-top-color: #E97132; border-radius: 50%;
+  animation: spin .75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#loading-msg { font-size: 13px; color: #777; }
+
+/* ── right: video panel ── */
+#right-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+#dof-header {
+  padding: 9px 16px; background: #161616; border-bottom: 1px solid #222;
+  flex-shrink: 0; display: flex; align-items: baseline; gap: 10px;
+}
+#dof-title    { font-size: 16px; font-weight: 700; color: #fff; }
+#dof-subtitle { font-size: 11px; color: #666; }
+
+#video-area {
+  flex: 1; position: relative; background: #000;
+  display: flex; align-items: center; justify-content: center; min-height: 0;
+}
+#main-video { width: 100%; height: 100%; object-fit: contain; display: none; }
+
+#video-spinner {
+  position: absolute; display: none;
+  flex-direction: column; align-items: center; gap: 10px;
+}
+#video-spinner .spinner { border-top-color: #aaa; }
+
+#placeholder { text-align: center; color: #444; }
+#placeholder svg { opacity: .35; margin-bottom: 10px; display: block; margin-inline: auto; }
+#placeholder p { font-size: 13px; }
+
+#video-footer {
+  padding: 7px 16px; background: #161616; border-top: 1px solid #222;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+#video-info { font-size: 11px; color: #555; }
+#nav-btns { display: flex; gap: 7px; }
+.nav-btn {
+  padding: 4px 13px; border-radius: 5px; border: 1px solid #333;
+  background: #1e1e1e; color: #aaa; cursor: pointer; font-size: 11px; transition: all .12s;
+}
+.nav-btn:hover { border-color: #666; color: #eee; }
+
+/* tooltip */
+#tooltip {
+  position: fixed; padding: 5px 9px; background: rgba(0,0,0,.88);
+  border: 1px solid #444; border-radius: 5px; font-size: 11px; color: #ddd;
+  pointer-events: none; display: none; z-index: 999; white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>OrcaHand Controllability</h1>
+  <span style="color:#333;font-size:20px">|</span>
+  <label>Model</label>
+  <div id="model-dot"></div>
+  <select id="model-select">
+    <option value="wm_lora">WM + LoRA (best)</option>
+    <option value="wm_midtrain">WM Mid-train</option>
+    <option value="wm_real">WM Real Only</option>
+    <option value="baseline">Baseline</option>
+  </select>
+  <label>Sample</label>
+  <select id="sample-select">
+    <option value="63">Sample 63 (best ID)</option>
+    <option value="94">Sample 94 (2nd best)</option>
+    <option value="17">Sample 17</option>
+    <option value="89">Sample 89</option>
+  </select>
+</div>
+
+<div id="main">
+
+  <div id="left-panel">
+    <canvas id="robot-canvas"></canvas>
+
+    <div id="base-dofs">
+      <span class="strip-label">End-effector:</span>
+      <div class="dof-btn" data-dim="0">X</div>
+      <div class="dof-btn" data-dim="1">Y</div>
+      <div class="dof-btn" data-dim="2">Z</div>
+      <div class="dof-btn" data-dim="3">roll</div>
+      <div class="dof-btn" data-dim="4">pitch</div>
+      <div class="dof-btn" data-dim="5">yaw</div>
+    </div>
+
+    <div id="loading-overlay">
+      <div class="spinner"></div>
+      <span id="loading-msg">Loading robot…</span>
+    </div>
+  </div>
+
+  <div id="right-panel">
+    <div id="dof-header">
+      <div id="dof-title">— Select a DOF —</div>
+      <div id="dof-subtitle">Click a joint on the robot or a button below</div>
+    </div>
+
+    <div id="video-area">
+      <div id="video-spinner">
+        <div class="spinner"></div>
+        <span style="font-size:12px;color:#888">Loading video…</span>
+      </div>
+      <div id="placeholder">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.2">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        <p>Click a joint to see the prediction</p>
+      </div>
+      <video id="main-video" autoplay loop muted playsinline></video>
+    </div>
+
+    <div id="video-footer">
+      <span id="video-info">No video loaded</span>
+      <div id="nav-btns">
+        <button class="nav-btn" id="prev-btn">◀ Prev</button>
+        <button class="nav-btn" id="next-btn">Next ▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tooltip"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three":         "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { STLLoader }     from 'three/addons/loaders/STLLoader.js';
+
+const DOF_NAMES = {
+  0:'X', 1:'Y', 2:'Z', 3:'roll', 4:'pitch', 5:'yaw',
+  6:'wrist',
+  7:'thumb_mcp', 8:'thumb_abd', 9:'thumb_pip', 10:'thumb_dip',
+  11:'index_abd', 12:'index_mcp', 13:'index_pip',
+  14:'middle_abd', 15:'middle_mcp', 16:'middle_pip',
+  17:'ring_abd', 18:'ring_mcp', 19:'ring_pip',
+  20:'pinky_abd', 21:'pinky_mcp', 22:'pinky_pip',
+};
+const MODELS = {
+  wm_lora:     { label: 'WM + LoRA (best)', color: '#E97132' },
+  wm_midtrain: { label: 'WM Mid-train',      color: '#C00000' },
+  wm_real:     { label: 'WM Real Only',      color: '#156082' },
+  baseline:    { label: 'Baseline',          color: '#888888' },
+};
+const BASELINE_VIDEO_DIMS = {
+  7: 9, 9: 7,
+  14: 17, 15: 18, 16: 19,
+  17: 14, 18: 15, 19: 16,
+};
+
+let currentModel  = 'wm_lora';
+let currentSample = '63';
+let selectedDim   = null;
+
+// ── renderer ──────────────────────────────────────────────────────────────────
+const canvas   = document.getElementById('robot-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x141414);
+
+const camera = new THREE.PerspectiveCamera(42, 1, 0.0001, 50);
+camera.up.set(0, 0, 1);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.screenSpacePanning = true;
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+[[0.5,1.0,0.8,0xffffff,1.6],[-0.5,0.2,-0.6,0xaaccff,0.7],[0,-1,0.2,0xffffff,0.3]].forEach(([x,y,z,c,i])=>{
+  const l=new THREE.DirectionalLight(c,i); l.position.set(x,y,z); scene.add(l);
+});
+
+const C_DEFAULT  = new THREE.Color(0xc8c8d4);
+const C_HOVER    = new THREE.Color(0xff9944);
+const C_SELECTED = new THREE.Color(0xffd700);
+const C_NODIM    = new THREE.Color(0x606070);
+
+const allMeshes = [];
+const dimMeshes = {};
+let hoveredDim  = null;
+
+// ── load robot ────────────────────────────────────────────────────────────────
+async function loadRobot() {
+  let sceneData;
+  try {
+    sceneData = await fetch('scene.json').then(r => r.json());
+  } catch(e) {
+    document.getElementById('loading-msg').textContent = 'Failed to load scene data';
+    return;
+  }
+
+  const loader   = new STLLoader();
+  const promises = sceneData.flatMap(entry =>
+    entry.files.map(filename => new Promise(resolve => {
+      loader.load(
+        `meshes/${filename}`,
+        geo => {
+          geo.computeVertexNormals();
+          const hasDim = entry.dim !== null;
+          const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({
+            color: hasDim ? C_DEFAULT : C_NODIM,
+            specular: 0x333344, shininess: 40,
+          }));
+          const m = entry.matrix;
+          mesh.matrix.set(
+            m[0],  m[1],  m[2],  m[3],
+            m[4],  m[5],  m[6],  m[7],
+            m[8],  m[9],  m[10], m[11],
+            m[12], m[13], m[14], m[15]
+          );
+          mesh.matrixAutoUpdate = false;
+          mesh.userData.dim = hasDim ? entry.dim : null;
+          if (hasDim) {
+            dimMeshes[entry.dim] ??= [];
+            dimMeshes[entry.dim].push(mesh);
+          }
+          scene.add(mesh);
+          allMeshes.push(mesh);
+          resolve(mesh);
+        },
+        null,
+        () => resolve(null)
+      );
+    }))
+  );
+
+  await Promise.all(promises);
+
+  const valid = allMeshes.filter(Boolean);
+  if (!valid.length) {
+    document.getElementById('loading-msg').textContent = 'No meshes loaded';
+    return;
+  }
+
+  scene.updateMatrixWorld(true);
+  const box    = new THREE.Box3();
+  valid.forEach(m => box.expandByObject(m));
+  const center = box.getCenter(new THREE.Vector3());
+  const size   = box.getSize(new THREE.Vector3()).length();
+
+  camera.near = size / 500;
+  camera.far  = size * 20;
+  camera.updateProjectionMatrix();
+  controls.minDistance = size * 0.05;
+  controls.maxDistance = size * 8;
+  camera.position.set(center.x + size*0.35, center.y - size*1.1, center.z + size*0.45);
+  camera.lookAt(center);
+  controls.target.copy(center);
+  controls.update();
+
+  document.getElementById('loading-overlay').style.display = 'none';
+}
+
+loadRobot().catch(err => {
+  console.error(err);
+  document.getElementById('loading-msg').textContent = 'Error: ' + err.message;
+  document.querySelector('#loading-overlay .spinner').style.display = 'none';
+});
+
+// ── resize ────────────────────────────────────────────────────────────────────
+function onResize() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(onResize).observe(canvas);
+onResize();
+
+// ── colours ───────────────────────────────────────────────────────────────────
+function refreshColors() {
+  allMeshes.forEach(m => {
+    if (!m) return;
+    const d = m.userData.dim;
+    if (d === null || d === undefined) { m.material.color.set(C_NODIM);    return; }
+    if (d === selectedDim)             { m.material.color.set(C_SELECTED); return; }
+    if (d === hoveredDim)              { m.material.color.set(C_HOVER);    return; }
+    m.material.color.set(C_DEFAULT);
+  });
+}
+
+// ── raycasting ────────────────────────────────────────────────────────────────
+const raycaster = new THREE.Raycaster();
+const mouse     = new THREE.Vector2();
+
+function getNDC(e) {
+  const r = canvas.getBoundingClientRect();
+  return new THREE.Vector2(
+    (e.clientX - r.left) / r.width  * 2 - 1,
+   -(e.clientY - r.top)  / r.height * 2 + 1
+  );
+}
+
+canvas.addEventListener('mousemove', e => {
+  mouse.copy(getNDC(e));
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(allMeshes.filter(Boolean), false);
+  const tip  = document.getElementById('tooltip');
+  hoveredDim = null;
+  if (hits.length) {
+    const d = hits[0].object.userData.dim;
+    if (d !== null && d !== undefined) {
+      hoveredDim = d;
+      tip.style.cssText = `display:block;left:${e.clientX+14}px;top:${e.clientY-10}px`;
+      tip.textContent   = `dim ${d}: ${DOF_NAMES[d]}`;
+      canvas.style.cursor = 'pointer';
+    } else { tip.style.display='none'; canvas.style.cursor='default'; }
+  } else { tip.style.display='none'; canvas.style.cursor='default'; }
+  refreshColors();
+});
+
+canvas.addEventListener('click', e => {
+  mouse.copy(getNDC(e));
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(allMeshes.filter(Boolean), false);
+  if (hits.length) {
+    const d = hits[0].object.userData.dim;
+    if (d !== null && d !== undefined) selectDim(d);
+  }
+});
+
+canvas.addEventListener('mouseleave', () => {
+  hoveredDim = null;
+  document.getElementById('tooltip').style.display = 'none';
+  refreshColors();
+});
+
+// ── DOF selection ─────────────────────────────────────────────────────────────
+function selectDim(dim) {
+  selectedDim = dim;
+  refreshColors();
+  document.getElementById('dof-title').textContent    = `dim ${dim} — ${DOF_NAMES[dim]}`;
+  document.getElementById('dof-subtitle').textContent = `${MODELS[currentModel].label}  ·  Sample ${currentSample}`;
+  document.querySelectorAll('.dof-btn').forEach(b =>
+    b.classList.toggle('active', +b.dataset.dim === dim));
+  loadVideo(currentModel, currentSample, dim);
+}
+
+// ── video ─────────────────────────────────────────────────────────────────────
+function loadVideo(model, sample, dim) {
+  const vid = document.getElementById('main-video');
+  const ph  = document.getElementById('placeholder');
+  const sp  = document.getElementById('video-spinner');
+  const inf = document.getElementById('video-info');
+  const videoDim = model === 'baseline' ? BASELINE_VIDEO_DIMS[dim] ?? dim : dim;
+  const url = `videos/${model}_s${sample}_d${String(videoDim).padStart(2,'0')}.mp4`;
+
+  ph.style.display  = 'none';
+  sp.style.display  = 'flex';
+  vid.style.display = 'none';
+  vid.src = url;
+  vid.load();
+
+  vid.oncanplay = () => {
+    sp.style.display  = 'none';
+    vid.style.display = 'block';
+    vid.playbackRate  = 2.0;
+    vid.play();
+    inf.textContent = `${MODELS[model].label}  ·  sample ${sample}  ·  dim ${dim}: ${DOF_NAMES[dim]}  ·  2×`;
+  };
+  vid.onerror = () => {
+    sp.style.display  = 'none';
+    ph.style.display  = 'block';
+    ph.querySelector('p').textContent = 'Video not available for this combination';
+    vid.style.display = 'none';
+    inf.textContent   = '—';
+  };
+}
+
+// ── UI controls ───────────────────────────────────────────────────────────────
+document.getElementById('model-select').addEventListener('change', e => {
+  currentModel = e.target.value;
+  document.getElementById('model-dot').style.background = MODELS[currentModel].color;
+  if (selectedDim !== null) loadVideo(currentModel, currentSample, selectedDim);
+});
+document.getElementById('sample-select').addEventListener('change', e => {
+  currentSample = e.target.value;
+  if (selectedDim !== null) loadVideo(currentModel, currentSample, selectedDim);
+});
+document.querySelectorAll('.dof-btn').forEach(btn =>
+  btn.addEventListener('click', () => selectDim(+btn.dataset.dim)));
+document.getElementById('prev-btn').addEventListener('click', () => {
+  if (selectedDim !== null) selectDim(selectedDim > 0 ? selectedDim - 1 : 22);
+});
+document.getElementById('next-btn').addEventListener('click', () => {
+  if (selectedDim !== null) selectDim(selectedDim < 22 ? selectedDim + 1 : 0);
+});
+
+document.getElementById('model-dot').style.background = MODELS['wm_lora'].color;
+
+// ── render loop ───────────────────────────────────────────────────────────────
+(function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+})();
+</script>
+</body>
+</html>
