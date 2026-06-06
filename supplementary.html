@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplementary Material · Mask2Real-WM</title>
+<meta name="description" content="Supplementary results for Mask2Real-WM: baseline comparison and simulation midtraining, per-component action controllability, conditioning ablations, error accumulation, failure modes, generalization to unseen objects, and implementation details.">
+<style>
+:root {
+  --bg: #0e0e10;
+  --bg-soft: #161618;
+  --bg-card: #1a1a1d;
+  --border: #2a2a2e;
+  --text: #e8e8ea;
+  --text-dim: #9a9aa0;
+  --text-faint: #6a6a70;
+  --accent: #3B82F6;
+  --accent-soft: rgba(59,130,246,.12);
+  --blue: #156082;
+  --red: #C00000;
+  --max: 980px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 22px; }
+
+/* ── hero ── */
+header.hero {
+  text-align: center; padding: 56px 0 26px;
+  border-bottom: 1px solid var(--border);
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,130,246,.10), transparent 70%);
+}
+.venue {
+  display: inline-block; font-size: 12.5px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent); font-weight: 600;
+  border: 1px solid var(--accent); border-radius: 20px; padding: 3px 14px; margin-bottom: 22px;
+}
+header.hero h1 {
+  font-size: clamp(24px, 4vw, 36px); line-height: 1.18; font-weight: 800;
+  max-width: 860px; margin: 0 auto 6px; letter-spacing: -0.5px;
+}
+header.hero h1 .mask { color: var(--accent); }
+header.hero .subtitle { color: var(--text-dim); font-size: 16px; max-width: 720px; margin: 14px auto 0; }
+.btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 26px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 8px; font-size: 14.5px; font-weight: 600;
+  border: 1px solid var(--border); background: var(--bg-card); color: var(--text);
+  transition: all .15s;
+}
+.btn:hover { border-color: var(--accent); color: #fff; text-decoration: none; transform: translateY(-1px); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { background: #60a5fa; }
+.btn svg { width: 17px; height: 17px; }
+
+/* ── table of contents ── */
+.toc {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px 24px; margin: 36px 0 8px;
+}
+.toc h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 12px; }
+.toc ol { list-style: none; counter-reset: app; columns: 2; column-gap: 32px; }
+.toc li { counter-increment: app; font-size: 14.5px; margin-bottom: 7px; break-inside: avoid; }
+.toc li::before { content: counter(app, upper-alpha) "."; color: var(--accent); font-weight: 700; margin-right: 8px; }
+@media (max-width: 720px) { .toc ol { columns: 1; } }
+
+/* ── sections ── */
+section { padding: 44px 0; border-bottom: 1px solid var(--border); }
+section h2 {
+  font-size: 23px; font-weight: 750; margin-bottom: 8px; letter-spacing: -0.3px;
+  display: flex; align-items: baseline; gap: 12px;
+}
+section h2 .ax {
+  font-size: 13px; font-weight: 700; color: var(--accent);
+  border: 1px solid var(--accent); border-radius: 6px; padding: 1px 8px; flex-shrink: 0;
+}
+section .lead { color: var(--text-dim); font-size: 14px; margin-bottom: 22px; }
+section p { margin-bottom: 16px; color: #d2d2d6; }
+section p strong { color: #fff; }
+h3.sub { font-size: 17px; color: #fff; margin: 24px 0 6px; }
+
+figure { margin: 22px 0; }
+figure img { width: 100%; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-soft); display: block; }
+figcaption { font-size: 13px; color: var(--text-faint); margin-top: 10px; text-align: center; }
+figcaption b { color: var(--text-dim); }
+
+.vgrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.vgrid.two { grid-template-columns: 1fr 1fr; }
+@media (max-width: 720px) { .vgrid, .vgrid.two { grid-template-columns: 1fr; } }
+
+/* ── tables ── */
+.tbl-wrap { overflow-x: auto; margin: 18px 0; }
+table.data {
+  width: 100%; border-collapse: collapse; font-size: 13.5px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+table.data caption { caption-side: top; text-align: left; font-size: 13px; color: var(--text-faint); margin-bottom: 8px; }
+table.data th, table.data td { padding: 8px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+table.data thead th { background: var(--bg-soft); color: var(--text-dim); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .4px; }
+table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.data tbody tr:last-child td { border-bottom: 0; }
+table.data .best { color: #fff; font-weight: 700; }
+table.data .grp { color: var(--text-dim); font-weight: 600; }
+
+.backlink { display: inline-flex; align-items: center; gap: 6px; margin: 20px 0 0; font-size: 14px; }
+
+footer { padding: 34px 0 50px; text-align: center; color: var(--text-faint); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- ════════════ HERO ════════════ -->
+<header class="hero">
+  <div class="wrap">
+    <span class="venue">CoRL 2025 · Appendix</span>
+    <h1>Supplementary Material<br><span class="mask">Mask2Real-WM</span></h1>
+    <p class="subtitle">Extended results, ablations, failure analyses, and implementation details accompanying the main paper.</p>
+    <div class="btns">
+      <a class="btn primary" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to main page
+      </a>
+      <a class="btn" href="index.html#demo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Interactive Demo
+      </a>
+    </div>
+
+    <div class="toc" style="text-align:left;">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#midtraining">Baseline comparison &amp; simulation midtraining</a></li>
+        <li><a href="#action-components">Per-component action controllability</a></li>
+        <li><a href="#wm2-ablation">WM₂ conditioning ablation</a></li>
+        <li><a href="#error-accum">Error accumulation in rollouts</a></li>
+        <li><a href="#failures">Failure mode examples</a></li>
+        <li><a href="#new-objects">Generalization to unseen objects</a></li>
+        <li><a href="#gt-masks">WM₂ on ground-truth masks</a></li>
+        <li><a href="#cnn-vae">CNN vs. VAE mask encoder</a></li>
+        <li><a href="#dataset">Dataset statistics</a></li>
+        <li><a href="#impl">Implementation details</a></li>
+        <li><a href="#hyperparams">Hyperparameters</a></li>
+        <li><a href="#future">Future work &amp; policy rollouts</a></li>
+      </ol>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════ A · MIDTRAINING ════════════ -->
+<section id="midtraining">
+  <div class="wrap">
+    <h2><span class="ax">A</span> Baseline Comparison &amp; the Effect of Simulation Midtraining</h2>
+    <p class="lead">What does large-scale simulation midtraining of WM₁ contribute to the full system?</p>
+    <p>We compare four regimes that all share the <strong>same WM₂ renderer</strong>: the single-stage <em>baseline</em> (Ctrl-World, fine-tuned end-to-end on real RGB), and three two-stage models whose WM₁ is trained on (i)&nbsp;real data only, (ii)&nbsp;simulation only (midtraining), and (iii)&nbsp;simulation midtraining then real LoRA fine-tuning (<em>sim+real</em>, ours).</p>
+
+    <h3 class="sub">Appearance metrics alone are misleading</h3>
+    <figure>
+      <img src="assets/img/supp/ctrl_world_appearance.png" alt="Baseline vs two-stage appearance metrics">
+      <figcaption><b>Baseline vs. the three two-stage variants, per split and metric.</b> Per-sample-view PSNR, SSIM and LPIPS on the ID and three OOD splits, each split by camera view. The baseline looks competitive on raw pixel metrics despite producing blurrier video — per-pixel metrics reward temporally averaged frames.</figcaption>
+    </figure>
+
+    <h3 class="sub">Sharpness exposes the blur</h3>
+    <figure>
+      <img src="assets/img/supp/laplacian_variance.png" alt="Laplacian variance sharpness per split">
+      <figcaption><b>Predicted-video sharpness (Laplacian variance ↑) per split.</b> Black ticks mark the ground-truth level. The baseline is consistently the <em>least sharp</em> model, while all two-stage models track ground-truth sharpness closely.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/img/supp/lpips_vs_sharpness.png" alt="LPIPS vs sharpness" style="max-width:620px;margin:0 auto;">
+      <figcaption><b>Pixel quality vs. sharpness.</b> The baseline attains good (low) LPIPS yet the lowest sharpness — good pixel scores can coincide with blurry output.</figcaption>
+    </figure>
+
+    <h3 class="sub">Mask-space quality reveals the generalization benefit</h3>
+    <div class="tbl-wrap">
+      <table class="data">
+        <caption><b>WM₁ segmentation-space quality</b> (both views pooled). Best per split in bold.</caption>
+        <thead><tr><th>Split</th><th>WM₁ regime</th><th class="num">PSNR ↑</th><th class="num">LPIPS ↓</th></tr></thead>
+        <tbody>
+          <tr><td class="grp" rowspan="3">ID</td><td>WM1 real only</td><td class="num best">22.00</td><td class="num best">0.119</td></tr>
+          <tr><td>WM1 sim only</td><td class="num">19.03</td><td class="num">0.229</td></tr>
+          <tr><td>WM1 sim+real (ours)</td><td class="num">20.72</td><td class="num">0.158</td></tr>
+          <tr><td class="grp" rowspan="3">OOD</td><td>WM1 real only</td><td class="num">20.48</td><td class="num">0.147</td></tr>
+          <tr><td>WM1 sim only</td><td class="num">20.33</td><td class="num">0.184</td></tr>
+          <tr><td>WM1 sim+real (ours)</td><td class="num best">21.74</td><td class="num best">0.122</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Real-only training fits the ID distribution best, but simulation midtraining followed by fine-tuning <strong>generalizes best under distribution shift</strong> (OOD PSNR 21.7 vs. 20.5), because the synthetic corpus covers contact-rich motions absent from the small real dataset. Long-horizon rollout strips comparing ours vs. the baseline are shown on the <a href="index.html#rollouts">main page</a>.</p>
+  </div>
+</section>
+
+<!-- ════════════ B · ACTION COMPONENTS ════════════ -->
+<section id="action-components">
+  <div class="wrap">
+    <h2><span class="ax">B</span> Per-Component Action Controllability</h2>
+    <p class="lead">Does the model respond to <em>each</em> action dimension independently?</p>
+    <p>We drive a single action dimension at a time with a sinusoid (holding the others fixed) and roll the model out for all 23 dimensions: the 6-DoF end-effector pose (dims 0–5: x, y, z, roll, pitch, yaw) and the 17 ORCA hand joints (dims 6–22). The model produces a coherent, <strong>dimension-specific</strong> response across the entire action space.</p>
+    <figure>
+      <img src="assets/img/supp/action_components.png" alt="Per-component action controllability">
+      <figcaption><b>Per-component action controllability (generated).</b> For each of the 23 action dimensions, a sinusoid is applied to that dimension alone; each clip is 50 frames generated autoregressively (5 per step), frames 0/5/10 shown. Most dimensions in third-person view; thumb joints and the mcp/pip joints of the middle, ring and pinky fingers in wrist view to better show finger motion.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ════════════ C · WM2 ABLATION ════════════ -->
+<section id="wm2-ablation">
+  <div class="wrap">
+    <h2><span class="ax">C</span> WM₂ Conditioning Ablation</h2>
+    <p class="lead">Ablating WM₂'s two conditioning signals: the ControlNet mask branch and the frame-wise action cross-attention.</p>
+    <p>Standard pixel metrics (PSNR, SSIM, LPIPS) reward predictions that minimise per-pixel error, biasing them towards blurry, temporally averaged outputs. The actions-only variant therefore appears competitive on these metrics while producing visibly degraded video.</p>
+    <figure>
+      <img src="assets/img/supp/wm2_ablation_sharpness.png" alt="WM2 ablation frame sharpness" style="max-width:640px;margin:0 auto;">
+      <figcaption><b>Frame sharpness across conditioning variants.</b> Laplacian variance ↑ for each of the 50 generated ID frames; dashed line is ground-truth sharpness. The actions-only variant collapses to blurry, low-variance outputs (0.80× GT), while <strong>masks-only and masks+actions both recover ≈0.97× GT sharpness</strong>.</figcaption>
+    </figure>
+    <p><strong>Masks only</strong> (no action conditioning) is the primary driver of spatial sharpness and additionally enables zero-shot deployment decoupled from the robot's action space. <strong>Masks + actions</strong> (ours) yields the best ID pixel metrics and competitive OOD performance while keeping the sharpness gains. The LPIPS summary appears on the <a href="index.html#results">main page</a>.</p>
+  </div>
+</section>
+
+<!-- ════════════ D · ERROR ACCUMULATION ════════════ -->
+<section id="error-accum">
+  <div class="wrap">
+    <h2><span class="ax">D</span> Error Accumulation in Autoregressive Rollouts</h2>
+    <p class="lead">In autoregressive rollout each predicted frame conditions the next, so small mistakes compound — and WM₁ mask errors propagate into WM₂.</p>
+    <figure>
+      <img src="assets/img/supp/error_accumulation.png" alt="Error accumulation over rollout">
+      <figcaption><b>Error accumulation over the rollout.</b> Mean per-frame LPIPS on ID (left) and OOD No-Object (right) for the four WM₁ regimes. Error grows fastest over the first ≈10 steps and then plateaus. On OOD all curves rise more steeply; the baseline retains the lowest LPIPS here, again reflecting the blurry-prediction bias rather than better video quality.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ════════════ E · FAILURE MODES ════════════ -->
+<section id="failures">
+  <div class="wrap">
+    <h2><span class="ax">E</span> Failure Mode Examples</h2>
+    <p class="lead">The current bottleneck is WM₁'s <em>object-state prediction</em>: it reliably captures hand dynamics but is less certain about the object.</p>
+    <figure>
+      <img src="assets/img/supp/cube_vanish_strip.png" alt="Failure: object vanishing">
+      <figcaption><b>Object vanishing under occlusion.</b> Third-person frames from a 149-frame rollout. The cube is present early (t=0,30), disappears while the hand occludes it (t=59–118), and reappears once the occlusion clears (t=148).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/img/supp/spawning_cube_strip.png" alt="Failure: object duplication">
+      <figcaption><b>Object duplication / spawning.</b> WM₁ predicts an incorrect object state — a second cube appears (t=99) and the object is re-spawned at a shifted location. Both failures originate in WM₁'s dynamics, not WM₂'s rendering: with ground-truth masks WM₂ renders the object correctly (see&nbsp;G).</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ════════════ F · NEW OBJECTS ════════════ -->
+<section id="new-objects">
+  <div class="wrap">
+    <h2><span class="ax">F</span> Generalization to Objects Unseen in Real Data</h2>
+    <p class="lead">The real demos are almost exclusively red-cube manipulation. We evaluate the full pipeline <strong>zero-shot</strong> on a banana, cup and cylinder — objects WM₁ has seen <em>in simulation</em> but that WM₂ (real-only) has never rendered.</p>
+    <p>Because WM₁ operates in segmentation space and is largely agnostic to appearance, the dynamics model transfers directly; only WM₂ must render the new appearance.</p>
+    <div class="tbl-wrap">
+      <table class="data">
+        <caption><b>Generalization to unseen objects.</b> No fine-tuning performed; both views pooled, n=300 sample-views per object.</caption>
+        <thead><tr><th>Object</th><th>Model</th><th class="num">PSNR ↑</th><th class="num">SSIM ↑</th><th class="num">LPIPS ↓</th></tr></thead>
+        <tbody>
+          <tr><td class="grp" rowspan="3">Banana</td><td>Baseline (Ctrl-World)</td><td class="num">19.40</td><td class="num">0.613</td><td class="num">0.202</td></tr>
+          <tr><td>Mask2Real-WM (appearance)</td><td class="num">17.30</td><td class="num">0.564</td><td class="num">0.238</td></tr>
+          <tr><td>Mask2Real-WM (WM₁ seg)</td><td class="num">19.76</td><td class="num">0.860</td><td class="num">0.201</td></tr>
+          <tr><td class="grp" rowspan="3">Cup</td><td>Baseline (Ctrl-World)</td><td class="num">19.01</td><td class="num">0.618</td><td class="num">0.200</td></tr>
+          <tr><td>Mask2Real-WM (appearance)</td><td class="num">16.65</td><td class="num">0.581</td><td class="num">0.224</td></tr>
+          <tr><td>Mask2Real-WM (WM₁ seg)</td><td class="num">19.48</td><td class="num">0.867</td><td class="num">0.180</td></tr>
+          <tr><td class="grp" rowspan="3">Cylinder</td><td>Baseline (Ctrl-World)</td><td class="num">19.06</td><td class="num">0.616</td><td class="num">0.194</td></tr>
+          <tr><td>Mask2Real-WM (appearance)</td><td class="num">16.92</td><td class="num">0.579</td><td class="num">0.221</td></tr>
+          <tr><td>Mask2Real-WM (WM₁ seg)</td><td class="num">19.80</td><td class="num">0.866</td><td class="num">0.190</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The baseline scores higher on per-pixel appearance metrics owing to the blurry-prediction bias, but <strong>WM₁ maintains high segmentation-space fidelity</strong> (SSIM ≈ 0.86) on these objects — the factorization transfers without retraining the dynamics model; only WM₂ would need updating to match new textures. Qualitative rollouts for each object (ours vs. baseline) are on the <a href="index.html#qualitative">main page</a>.</p>
+  </div>
+</section>
+
+<!-- ════════════ G · GT MASKS ════════════ -->
+<section id="gt-masks">
+  <div class="wrap">
+    <h2><span class="ax">G</span> WM₂ Conditioned on Ground-Truth Masks</h2>
+    <p class="lead">Is WM₁'s mask prediction quality the primary bottleneck? We feed WM₂ oracle SAM&nbsp;3 masks instead of WM₁'s predictions.</p>
+    <figure>
+      <img src="assets/img/supp/gt_masks_metrics.png" alt="WM2 on ground-truth vs predicted masks">
+      <figcaption><b>WM₂ on ground-truth vs. predicted masks (ID split).</b> The oracle reaches <strong>26.8 PSNR / 0.85 SSIM / 0.044 LPIPS</strong>, far above the full pipeline (20.1 / 0.70 / 0.150) and the baseline (20.8 / 0.70 / 0.139). The gap to the full pipeline is therefore attributable to WM₁'s mask errors, not WM₂'s rendering capacity (n=150).</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ════════════ H · CNN vs VAE ════════════ -->
+<section id="cnn-vae">
+  <div class="wrap">
+    <h2><span class="ax">H</span> CNN Mask Encoder vs. VAE Encoder for ControlNet</h2>
+    <p class="lead">Why a dedicated CNN encoder rather than the SVD VAE encoder to condition ControlNet?</p>
+    <p>We measure a <em>boundary-response score</em> — the ratio of feature-gradient magnitude at segmentation-class boundaries to that in flat interiors (&gt;1 means boundary-selective features). Across 128 frames the CNN attains <strong>4.41&nbsp;±&nbsp;0.74</strong> vs. <strong>2.98&nbsp;±&nbsp;0.43</strong> for the VAE — class boundaries encoded ≈48% more strongly, on every frame.</p>
+    <figure>
+      <img src="assets/img/supp/boundary_response_scores.png" alt="Boundary response: CNN vs VAE">
+      <figcaption><b>Per-frame boundary-response score</b> (CNN adapter vs. VAE encoder) and its mean ± std.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/img/supp/pca_feature_comparison.png" alt="PCA of conditioning features" style="max-width:780px;margin:0 auto;">
+      <figcaption><b>PCA of the conditioning features</b> (input mask, CNN, VAE, boundary mask). CNN features preserve sharp class boundaries; the VAE — trained to reconstruct natural RGB, not flat categorical masks — smears across them.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ════════════ I · DATASET ════════════ -->
+<section id="dataset">
+  <div class="wrap">
+    <h2><span class="ax">I</span> Dataset Statistics</h2>
+    <p class="lead">A large, contact-focused simulation corpus paired with a small real dataset.</p>
+    <p>The <strong>simulation corpus</strong> contains 13,950 episodes totalling 53.7&nbsp;h at 5&nbsp;fps across five objects (banana, cup, cylinder, dice, torus). Episodes are short and contact-focused (mean 13.9&nbsp;s). The <strong>real dataset</strong> comprises 218 episodes totalling 2.5&nbsp;h, with bimodal lengths: 198 short manipulation rollouts (0.71&nbsp;h) and 20 long free-play sequences (1.80&nbsp;h), predominantly red-cube grasping.</p>
+    <div class="tbl-wrap">
+      <table class="data">
+        <caption><b>Composition of the simulation dataset by motion generator.</b></caption>
+        <thead><tr><th>Motion generator</th><th class="num">Episodes</th></tr></thead>
+        <tbody>
+          <tr><td>MimicGen, clean (no noise)</td><td class="num">5,000</td></tr>
+          <tr><td>MimicGen, noisy (per-subtask sine noise)</td><td class="num">5,000</td></tr>
+          <tr><td>Random-motion (exploratory)</td><td class="num">3,700</td></tr>
+          <tr><td>Teleoperated demonstrations</td><td class="num">250</td></tr>
+          <tr><td class="best">Total</td><td class="num best">13,950</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figure>
+      <img src="assets/img/supp/episode_lengths.png" alt="Episode length distributions">
+      <figcaption><b>Episode-length distributions</b> for the simulation and real datasets.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ════════════ J · IMPLEMENTATION ════════════ -->
+<section id="impl">
+  <div class="wrap">
+    <h2><span class="ax">J</span> Implementation Details</h2>
+    <p><strong>Real-world rig.</strong> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (23 actuated DoF) inside a fixed arena, observed by a static third-person camera and a wrist-mounted camera (two Luxonis OAK-D RGB cameras). The setup figure is on the <a href="index.html#method">main page</a>.</p>
+    <p><strong>Simulation assets.</strong> Default Franka Panda URDF and the ORCA hand USD; the arena is reconstructed from physical measurements. No material, lighting or texture tuning is applied.</p>
+    <p><strong>System identification.</strong> To reduce the kinematic gap between the simulated and physical ORCA hand, per-joint PD gains and friction coefficients are optimized with CMA-ES (following Bjelonic et&nbsp;al. 2025) to minimise tracking error under a chirp command. After calibration the simulated trajectory closely follows the measured one across the full frequency sweep — sufficient for the joint-angle-driven segmentation representation to stay accurate.</p>
+    <h3 class="sub">SAM 3 prompt engineering</h3>
+    <p>For the third-person view, the prompts <code>"hand"</code> and the object name (e.g. <code>"red cube"</code>) are used. For the wrist view, a short initialization clip is prepended in which the hand moves clearly into frame; the bounding box from this clip seeds SAM&nbsp;3's tracker for the rest of the sequence.</p>
+    <figure>
+      <img src="assets/img/supp/wrist_init_clip.png" alt="Wrist-view SAM 3 initialization clip">
+      <figcaption><b>Wrist-view SAM&nbsp;3 initialization clip.</b> Frames (left to right) in which the hand moves into the wrist camera's field of view; the hand bounding box from this clip seeds the tracker for the rest of the sequence.</figcaption>
+    </figure>
+    <p><strong>CNN mask encoder.</strong> Three convolutional blocks (Conv2d + GroupNorm + SiLU) with strided downsampling, a transposed convolution to restore resolution, and a final 1×1 convolution to match the ControlNet feature dimension. Operating on decoded pixel-space masks rather than VAE latents is key — see&nbsp;H.</p>
+  </div>
+</section>
+
+<!-- ════════════ K · HYPERPARAMS ════════════ -->
+<section id="hyperparams">
+  <div class="wrap">
+    <h2><span class="ax">K</span> Hyperparameters</h2>
+    <div class="tbl-wrap">
+      <table class="data">
+        <caption><b>Training hyperparameters for WM₁ and WM₂.</b></caption>
+        <thead><tr><th>Hyperparameter</th><th>WM₁</th><th>WM₂</th></tr></thead>
+        <tbody>
+          <tr><td>Training steps (sim)</td><td>55,000</td><td>—</td></tr>
+          <tr><td>Training steps (real / total)</td><td>45,000</td><td>70,000</td></tr>
+          <tr><td>Learning rate</td><td>10⁻⁴ / 5×10⁻⁶</td><td>10⁻⁴</td></tr>
+          <tr><td>LR scheduler</td><td>Cosine</td><td>Cosine</td></tr>
+          <tr><td>Warm-up steps</td><td>3,000 / 500</td><td>3,000</td></tr>
+          <tr><td>LR cycles</td><td>0.5</td><td>0.5</td></tr>
+          <tr><td>Batch size</td><td>64</td><td>72</td></tr>
+          <tr><td>GPU</td><td>1× H200</td><td>8× H100</td></tr>
+          <tr><td>Mixed precision</td><td>BF16</td><td>FP16</td></tr>
+          <tr><td>LoRA rank / α</td><td>16 / 16 (real FT)</td><td>16 / 16</td></tr>
+          <tr><td>Cond. dropout (mask only)</td><td>10%</td><td>10%</td></tr>
+          <tr><td>Cond. dropout (action only)</td><td>10%</td><td>10%</td></tr>
+          <tr><td>Cond. dropout (both)</td><td>5%</td><td>5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ L · FUTURE WORK ════════════ -->
+<section id="future">
+  <div class="wrap">
+    <h2><span class="ax">L</span> Future Work &amp; Policy Rollouts in Imagination</h2>
+    <p class="lead">Scaling the data generator, conditioning on camera intrinsics/extrinsics, multi-object segmentation vocabularies, and distilling both stages into few-step samplers for near-real-time rollouts.</p>
+    <p>We roll out three policies trained on the real robot — a flow-matching policy, a diffusion policy, and an ACT policy (all trained on red-cube grasps and placements onto the red ramp) — inside both Mask2Real-WM and the baseline world model. Using Mask2Real-WM as a <strong>policy evaluator</strong> — scoring candidate policies by their predicted outcomes in imagination — is a natural extension we leave to future work.</p>
+    <div class="vgrid">
+      <figure style="margin:0;"><img src="assets/img/supp/policy_fm.png" alt="Flow-matching policy rollout"><figcaption><b>Flow-matching policy</b> — ours (top) vs. baseline (bottom).</figcaption></figure>
+      <figure style="margin:0;"><img src="assets/img/supp/policy_dp.png" alt="Diffusion policy rollout"><figcaption><b>Diffusion policy</b> — ours (top) vs. baseline (bottom).</figcaption></figure>
+      <figure style="margin:0;"><img src="assets/img/supp/policy_act.png" alt="ACT policy rollout"><figcaption><b>ACT policy</b> — ours (top) vs. baseline (bottom).</figcaption></figure>
+    </div>
+    <p class="lead" style="margin-top:18px;">Each: 100-frame rollout (5 frames predicted per step), 4 frames shown ≈33 apart; both views, lower half generated.</p>
+    <a class="backlink" href="index.html">← Back to the main page</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Mask2Real-WM · ETH Zurich · CoRL 2025 — Supplementary Material</p>
+  </div>
+</footer>
+
+</body>
+</html>
