@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://srl-ethz.github.io/Mask2Real-WM/sitemap.xml

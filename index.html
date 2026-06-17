@@ -5,6 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</title>
 <meta name="description" content="A two-stage action-conditioned world model for dexterous manipulation that decouples dynamics (segmentation masks) from rendering (RGB), using segmentation space as a sim-to-real bridge.">
+<meta name="keywords" content="world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, CoRL 2026, ORCA hand, Franka Panda, ETH Zurich, Mask2Real-WM">
+<meta name="author" content="Riccardo Orion Feingold, Davide Liconti, Chenyu Yang, Robert K. Katzschmann">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="https://srl-ethz.github.io/Mask2Real-WM/">
+<meta name="theme-color" content="#0e0e10">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mask2Real-WM">
+<meta property="og:title" content="Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models">
+<meta property="og:description" content="A two-stage action-conditioned world model for dexterous manipulation that decouples dynamics (segmentation masks) from rendering (RGB), using segmentation space as a sim-to-real bridge.">
+<meta property="og:url" content="https://srl-ethz.github.io/Mask2Real-WM/">
+<meta property="og:image" content="https://srl-ethz.github.io/Mask2Real-WM/assets/img/teaser_controllability.png">
+<meta property="og:image:alt" content="Mask2Real-WM: predicting future segmentation masks and rendering photorealistic RGB for 23-DoF dexterous manipulation.">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models">
+<meta name="twitter:description" content="A two-stage action-conditioned world model that decouples dynamics (segmentation masks) from rendering (RGB), using segmentation space as a sim-to-real bridge for 23-DoF dexterous manipulation.">
+<meta name="twitter:image" content="https://srl-ethz.github.io/Mask2Real-WM/assets/img/teaser_controllability.png">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models",
+  "name": "Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models",
+  "url": "https://srl-ethz.github.io/Mask2Real-WM/",
+  "image": "https://srl-ethz.github.io/Mask2Real-WM/assets/img/teaser_controllability.png",
+  "datePublished": "2026",
+  "inLanguage": "en",
+  "author": [
+    { "@type": "Person", "name": "Riccardo Orion Feingold", "email": "riccardofeingold@gmail.com" },
+    { "@type": "Person", "name": "Davide Liconti" },
+    { "@type": "Person", "name": "Chenyu Yang" },
+    { "@type": "Person", "name": "Robert K. Katzschmann" }
+  ],
+  "affiliation": { "@type": "Organization", "name": "ETH Zurich", "url": "https://srl.ethz.ch/" },
+  "publisher": { "@type": "Organization", "name": "Conference on Robot Learning (CoRL)" },
+  "abstract": "We present Mask2Real-WM, a two-stage action-conditioned world model for dexterous manipulation that decouples pixel prediction into a dynamics model (predicting future segmentation masks from past masks and the 23-DoF action sequence) and a rendering model (painting photorealistic RGB onto the predicted masks). Because segmentation space has a small sim-to-real gap, the dynamics model is pretrained on over 50 hours of synthetic simulation data and fine-tuned on fewer than 2.5 hours of real demonstrations.",
+  "keywords": "world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, ORCA hand, Franka Panda"
+}
+</script>
 <style>
 :root {
   --bg: #0e0e10;
