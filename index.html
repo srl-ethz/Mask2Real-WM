@@ -38,12 +38,12 @@
   "datePublished": "2026",
   "inLanguage": "en",
   "author": [
-    { "@type": "Person", "name": "Riccardo Orion Feingold", "email": "riccardofeingold@gmail.com" },
+    { "@type": "Person", "name": "Riccardo Orion Feingold", "email": "riccardofeingold@gmail.com", "url": "https://riccardofeingold.github.io/" },
     { "@type": "Person", "name": "Davide Liconti" },
     { "@type": "Person", "name": "Chenyu Yang" },
     { "@type": "Person", "name": "Robert K. Katzschmann" }
   ],
-  "affiliation": { "@type": "Organization", "name": "ETH Zurich", "url": "https://srl.ethz.ch/" },
+  "affiliation": { "@type": "Organization", "name": "Soft Robotics Lab, ETH Zurich", "url": "https://srl.ethz.ch/" },
   "publisher": { "@type": "Organization", "name": "Conference on Robot Learning (CoRL)" },
   "abstract": "We present Mask2Real-WM, a two-stage action-conditioned world model for dexterous manipulation that decouples pixel prediction into a dynamics model (predicting future segmentation masks from past masks and the 23-DoF action sequence) and a rendering model (painting photorealistic RGB onto the predicted masks). Because segmentation space has a small sim-to-real gap, the dynamics model is pretrained on over 50 hours of synthetic simulation data and fine-tuned on fewer than 2.5 hours of real demonstrations.",
   "keywords": "world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, ORCA hand, Franka Panda"
@@ -202,8 +202,8 @@ footer { padding: 34px 0 50px; text-align: center; color: var(--text-faint); fon
     <p class="subtitle">A two-stage action-conditioned world model that decouples <em>dynamics</em> from <em>rendering</em>, using segmentation masks to unlock large-scale synthetic pretraining for 23-DoF dexterous manipulation.</p>
 
     <div class="authors">
-      <div class="name">Riccardo O. Feingold · Davide Liconti · Chenyu Yang · Robert K. Katzschmann</div>
-      <div class="affil">Department of Mechanical and Process Engineering · ETH Zurich</div>
+      <div class="name"><a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Davide Liconti · Chenyu Yang · Robert K. Katzschmann</div>
+      <div class="affil"><a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a> · Department of Mechanical and Process Engineering · ETH Zurich</div>
       <div class="affil">Correspondence: <a href="mailto:riccardofeingold@gmail.com">riccardofeingold@gmail.com</a></div>
     </div>
 
@@ -227,6 +227,10 @@ footer { padding: 34px 0 50px; text-align: center; color: var(--text-faint); fon
       <a class="btn" href="#bibtex">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
         BibTeX
+      </a>
+      <a class="btn" href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Author Website
       </a>
     </div>
   </div>
@@ -428,8 +432,8 @@ footer { padding: 34px 0 50px; text-align: center; color: var(--text-faint); fon
 
 <footer>
   <div class="wrap">
-    <p>Mask2Real-WM · ETH Zurich · CoRL 2026</p>
-    <p style="margin-top:6px;">Page and interactive demo built with Three.js. Robot meshes © the ORCA hand project.</p>
+    <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a> · ETH Zurich · CoRL 2026</p>
+    <p style="margin-top:6px;">Built by <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a>. Page and interactive demo built with Three.js. Robot meshes © the ORCA hand project.</p>
   </div>
 </footer>
 
