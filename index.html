@@ -216,6 +216,12 @@ figcaption em { font-style: normal; color: var(--ink-2); }
 .vitem video { width: 100%; display: block; background: #000; }
 .vitem .cap { font-family: var(--mono); padding: 10px 13px; font-size: 12px; color: var(--ink-2); }
 .vitem .cap b { color: var(--ink); }
+.vitem .cap .m { color: var(--ink-3); }
+/* crop a stacked two-view clip to just its lower (wrist-camera) half */
+.crop-bottom { position: relative; width: 100%; aspect-ratio: 480 / 128; overflow: hidden; background: #000; }
+.crop-bottom video { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; display: block; background: #000; }
+.vgrid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 720px) { .vgrid3 { grid-template-columns: 1fr; } }
 
 /* ── citation ── */
 pre.cite {
@@ -456,6 +462,40 @@ footer p { line-height: 1.7; }
       <img src="assets/img/baseline_strip.png" alt="Long-horizon strip baseline">
       <figcaption><b>Baseline</b> — long-horizon rollout strip; note the loss of finger and object detail over time.</figcaption>
     </figure>
+  </div>
+</section>
+
+<!-- ════════════ POLICY ROLLOUTS (OOD) ════════════ -->
+<section id="policy-rollouts">
+  <div class="wrap">
+    <h2>Policy Rollouts · Out-of-Distribution</h2>
+    <p class="lead">Real policies rolled out through Mask2Real-WM on out-of-distribution episodes. Three policy families &mdash; ACT, Diffusion Policy, and Flow Matching &mdash; evaluated through the same world model, with predicted-vs-real PSNR / SSIM. Videos show the wrist-camera view.</p>
+    <div class="vgrid3">
+      <div class="vitem">
+        <div class="crop-bottom"><video src="assets/video/rollouts/ood_act_1.mp4" autoplay loop muted playsinline></video></div>
+        <div class="cap"><b>ACT</b> &middot; OOD <span class="m">&mdash; PSNR 23.2 / SSIM 0.843</span></div>
+      </div>
+      <div class="vitem">
+        <div class="crop-bottom"><video src="assets/video/rollouts/ood_dp_1.mp4" autoplay loop muted playsinline></video></div>
+        <div class="cap"><b>Diffusion Policy</b> &middot; OOD <span class="m">&mdash; PSNR 22.5 / SSIM 0.828</span></div>
+      </div>
+      <div class="vitem">
+        <div class="crop-bottom"><video src="assets/video/rollouts/ood_fm_1.mp4" autoplay loop muted playsinline></video></div>
+        <div class="cap"><b>Flow Matching</b> &middot; OOD <span class="m">&mdash; PSNR 23.0 / SSIM 0.833</span></div>
+      </div>
+      <div class="vitem">
+        <div class="crop-bottom"><video src="assets/video/rollouts/ood_act_2.mp4" autoplay loop muted playsinline></video></div>
+        <div class="cap"><b>ACT</b> &middot; OOD <span class="m">&mdash; PSNR 22.8 / SSIM 0.838</span></div>
+      </div>
+      <div class="vitem">
+        <div class="crop-bottom"><video src="assets/video/rollouts/ood_dp_2.mp4" autoplay loop muted playsinline></video></div>
+        <div class="cap"><b>Diffusion Policy</b> &middot; OOD <span class="m">&mdash; PSNR 22.5 / SSIM 0.825</span></div>
+      </div>
+      <div class="vitem">
+        <div class="crop-bottom"><video src="assets/video/rollouts/ood_fm_2.mp4" autoplay loop muted playsinline></video></div>
+        <div class="cap"><b>Flow Matching</b> &middot; OOD <span class="m">&mdash; PSNR 22.7 / SSIM 0.845</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
