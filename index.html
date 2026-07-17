@@ -9,10 +9,10 @@
 <meta name="author" content="Riccardo Orion Feingold, Davide Liconti, Chenyu Yang, Robert K. Katzschmann">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="https://srl-ethz.github.io/Mask2Real-WM/">
-<meta name="theme-color" content="#f6f5f1">
+<meta name="theme-color" content="#111310">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -52,469 +52,756 @@
   "keywords": "world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, ORCA hand, Franka Panda"
 }
 </script>
+
+<!-- Enable motion styles only when the visitor has not asked to reduce motion. Applied before paint to avoid flashes. -->
+<script>if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){document.documentElement.classList.add('js-anim');}</script>
+
 <style>
-:root {
-  --paper:   #f3f2ec;   /* warm paper background */
-  --panel:   #fbfaf6;   /* lighter raised panel */
-  --ink:     #1b1a17;   /* near-black text */
-  --ink-2:   #56544d;   /* secondary text */
-  --ink-3:   #8d8a80;   /* faint text / captions */
-  --rule:    #e2e0d6;   /* hairline rule */
-  --rule-2:  #cbc8bc;   /* stronger rule */
-  --teal:    #0e7c6b;   /* accent */
-  --teal-2:  #0a5e51;   /* accent deep / hover */
-  --teal-soft: rgba(14,124,107,.10);
-  --max: 1020px;
-  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --serif: 'Source Serif 4', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+:root{
+  --paper:#f4f2ea;        /* warm reading surface */
+  --paper-2:#ece9de;      /* secondary paper band */
+  --ink:#15140e;          /* near-black text */
+  --ink-2:#54524a;        /* secondary text */
+  --ink-3:#8b887c;        /* faint metadata */
+  --obs:#111310;          /* observation / mask space graphite */
+  --obs-2:#191c17;        /* raised graphite */
+  --green:#18a06b;        /* segmentation green — primary accent */
+  --green-2:#0f7d51;      /* deep green / hover */
+  --green-soft:rgba(24,160,107,.12);
+  --red:#d24a32;          /* object red — small secondary accent */
+  --blue:#215caf;         /* ETH blue — institutional only */
+  --line:#ded9c9;         /* hairline on paper */
+  --line-2:#c8c3b2;       /* stronger hairline on paper */
+  --line-d:rgba(244,242,234,.14); /* hairline on dark */
+  --wrap:1180px;
+  --measure:42rem;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --serif:'Source Serif 4','Iowan Old Style',Georgia,'Times New Roman',serif;
+  --grotesk:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --nav-h:60px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--serif);
-  background: var(--paper); color: var(--ink);
-  line-height: 1.7; font-size: 18px; -webkit-font-smoothing: antialiased;
-  counter-reset: section;
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 14px);-webkit-text-size-adjust:100%;}
+body{
+  font-family:var(--serif);
+  background:var(--paper);color:var(--ink);
+  line-height:1.72;font-size:18px;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
 }
-a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); transition: border-color .15s, color .15s; }
-a:hover { color: var(--teal-2); border-bottom-color: var(--teal); }
-em { font-style: italic; }
-.wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-.mono { font-family: var(--mono); }
+a{color:var(--green-2);text-decoration:none;transition:color .15s,opacity .15s;}
+a:hover{color:var(--green);}
+em{font-style:italic;}
+strong{font-weight:600;}
+img,video{max-width:100%;}
+::selection{background:var(--green);color:#fff;}
 
-/* ── hero ── */
-header.hero {
-  text-align: center; padding: 76px 0 40px;
-  border-bottom: 1px solid var(--rule-2);
-  background:
-    linear-gradient(var(--paper), var(--paper)) padding-box,
-    radial-gradient(ellipse 70% 55% at 50% -8%, var(--teal-soft), transparent 72%);
-}
-.venue {
-  display: inline-block; font-family: var(--mono);
-  font-size: 11.5px; letter-spacing: 2.5px; text-transform: uppercase;
-  color: var(--teal); font-weight: 500;
-  border: 1px solid var(--rule-2); border-radius: 2px; padding: 5px 14px; margin-bottom: 26px;
-}
-header.hero h1 {
-  font-family: var(--mono); font-weight: 600;
-  font-size: clamp(24px, 4.4vw, 39px); line-height: 1.25;
-  max-width: 880px; margin: 0 auto 6px; letter-spacing: -0.8px;
-}
-header.hero h1 .mask { color: var(--teal); }
-header.hero .subtitle { color: var(--ink-2); font-size: 18px; max-width: 700px; margin: 18px auto 0; }
-.authors { margin-top: 30px; font-size: 18px; }
-.authors .name { font-weight: 600; letter-spacing: -0.2px; }
-.authors .name a { border-bottom-color: transparent; }
-.authors .name a:hover { border-bottom-color: var(--teal); }
-.affil {
-  font-family: var(--mono); color: var(--ink-2);
-  font-size: 12.5px; letter-spacing: .2px; margin-top: 8px;
-}
-.affil a { border-bottom-color: transparent; }
-.affil a:hover { border-bottom-color: var(--teal); }
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(20px,5vw,48px);}
+.measure{max-width:var(--measure);}
+.mono{font-family:var(--mono);}
 
-/* ── org logos ── */
-.orglogos {
-  display: flex; align-items: center; justify-content: center; gap: 26px;
-  margin-top: 26px; flex-wrap: wrap;
+/* ─────────────────────────  NAV  ───────────────────────── */
+.nav{
+  position:sticky;top:0;z-index:60;
+  background:rgba(244,242,234,.86);
+  backdrop-filter:saturate(1.2) blur(10px);
+  -webkit-backdrop-filter:saturate(1.2) blur(10px);
+  border-bottom:1px solid var(--line);
 }
-.orglogos a { border-bottom: 0; line-height: 0; opacity: .82; transition: opacity .15s; }
-.orglogos a:hover { opacity: 1; }
-.orglogos .logo-eth { height: 21px; width: auto; display: block; }
-.orglogos .logo-srl { height: 42px; width: auto; display: block; }
-.orglogos .sep { width: 1px; height: 34px; background: var(--rule-2); }
-
-/* ── action buttons ── */
-.btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
-.btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--mono); font-size: 12.5px; font-weight: 500;
-  letter-spacing: .3px; text-transform: uppercase;
-  padding: 9px 16px; border-radius: 3px;
-  border: 1px solid var(--rule-2); background: var(--panel); color: var(--ink);
-  transition: all .15s;
+.nav__in{
+  max-width:var(--wrap);margin:0 auto;height:var(--nav-h);
+  padding:0 clamp(20px,5vw,48px);
+  display:flex;align-items:center;gap:22px;
 }
-.btn:hover { border-color: var(--teal); color: var(--teal-2); transform: translateY(-1px); }
-.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--panel); }
-.btn.primary:hover { background: var(--teal); border-color: var(--teal); color: #fff; }
-.btn svg { width: 15px; height: 15px; }
-
-/* ── sections ── */
-section { padding: 56px 0; }
-section + section { border-top: 1px solid var(--rule); }
-section h2 {
-  font-family: var(--mono); font-size: 21px; font-weight: 600; letter-spacing: -0.3px;
-  display: flex; align-items: baseline; gap: 14px;
-  margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--rule);
+.nav__mark{
+  font-family:var(--grotesk);font-weight:800;font-size:17px;letter-spacing:-.03em;
+  color:var(--ink);white-space:nowrap;flex-shrink:0;
 }
-section h2::before {
-  counter-increment: section;
-  content: counter(section, decimal-leading-zero);
-  color: var(--teal); font-size: 13px; font-weight: 500; flex-shrink: 0;
+.nav__mark b{color:var(--green-2);font-weight:800;}
+.nav__links{
+  display:flex;align-items:center;gap:20px;margin-left:6px;min-width:0;flex:1 1 auto;
+  overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);
+          mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);
 }
-section h3 { font-family: var(--mono); font-weight: 600; }
-section .lead { color: var(--ink-2); font-size: 16px; font-style: italic; margin-bottom: 26px; }
-section p { margin-bottom: 16px; color: var(--ink); }
-section p strong { font-weight: 600; }
-
-figure { margin: 28px 0; }
-figure img { width: 100%; border-radius: 4px; border: 1px solid var(--rule-2); background: #fff; display: block; }
-figcaption {
-  font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--ink-3);
-  margin-top: 12px; padding-left: 14px; border-left: 2px solid var(--rule-2); text-align: left;
+.nav__links::-webkit-scrollbar{display:none;}
+.nav__links a{
+  font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--ink-2);
+  white-space:nowrap;padding:4px 0;position:relative;
 }
-figcaption b { color: var(--ink-2); }
-figcaption em { font-style: normal; color: var(--ink-2); }
-
-/* ── highlight cards ── */
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 8px 0 4px; }
-.card {
-  background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 22px;
+.nav__links a:hover{color:var(--ink);}
+.nav__links a.is-active{color:var(--green-2);}
+.nav__links a.is-active::after{
+  content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--green);
 }
-.card .icon { font-size: 20px; margin-bottom: 10px; }
-.card h3 { font-family: var(--mono); font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
-.card p { font-size: 15px; color: var(--ink-2); margin: 0; }
-
-/* ── stats ── */
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; margin-top: 28px; border: 1px solid var(--rule-2); border-radius: 4px; overflow: hidden; }
-.stat { padding: 22px 18px; text-align: center; border-right: 1px solid var(--rule); }
-.stat:last-child { border-right: 0; }
-.stat .num { font-family: var(--mono); font-size: 27px; font-weight: 600; color: var(--teal); line-height: 1.1; }
-.stat .lbl { font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--ink-3); margin-top: 8px; }
-
-/* ── two-stage pipeline ── */
-.pipeline { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 8px 0; }
-.stage { background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 24px; position: relative; }
-.stage::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 4px 0 0 4px; }
-.stage.wm1::before { background: var(--teal); }
-.stage.wm2::before { background: var(--rule-2); }
-.stage .tag { display: inline-block; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 2px; margin-bottom: 14px; }
-.stage.wm1 .tag { background: var(--teal-soft); color: var(--teal-2); }
-.stage.wm2 .tag { background: #eceae1; color: var(--ink-2); }
-.stage h3 { font-family: var(--mono); font-size: 15px; color: var(--ink); margin-bottom: 10px; }
-.stage p { font-size: 15px; color: var(--ink-2); margin: 0; }
-
-/* ── demo embed ── */
-.demo-shell {
-  background: var(--panel); border: 1px solid var(--rule-2); border-radius: 5px;
-  overflow: hidden; margin-top: 8px;
+.nav__cta{margin-left:auto;display:flex;gap:10px;flex-shrink:0;}
+.nav__cta a{
+  font-family:var(--mono);font-size:12px;letter-spacing:.02em;
+  padding:7px 13px;border:1px solid var(--line-2);border-radius:2px;color:var(--ink);
+  white-space:nowrap;transition:border-color .15s,background .15s,color .15s;
 }
-.demo-bar {
-  display: flex; align-items: center; gap: 9px; padding: 10px 14px;
-  background: #ecebe3; border-bottom: 1px solid var(--rule-2);
-}
-.demo-bar .dot { width: 11px; height: 11px; border-radius: 50%; }
-.demo-bar .t { font-family: var(--mono); font-size: 12px; color: var(--ink-2); margin-left: 6px; }
-.demo-bar .open { font-family: var(--mono); font-size: 11.5px; margin-left: auto; }
-.demo-frame { width: 100%; height: 620px; border: 0; display: block; background: #111; }
-.demo-hint { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-top: 14px; text-align: center; }
-
-/* ── video grid ── */
-.vgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.vitem { background: var(--panel); border: 1px solid var(--rule-2); border-radius: 4px; overflow: hidden; }
-.vitem video { width: 100%; display: block; background: #000; }
-.vitem .cap { font-family: var(--mono); padding: 10px 13px; font-size: 12px; color: var(--ink-2); }
-.vitem .cap b { color: var(--ink); }
-.vitem .cap .m { color: var(--ink-3); }
-/* crop a stacked two-view clip to just its lower (wrist-camera) half */
-.crop-bottom { position: relative; width: 100%; aspect-ratio: 480 / 128; overflow: hidden; background: #000; }
-.crop-bottom video { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; display: block; background: #000; }
-.vgrid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-@media (max-width: 720px) { .vgrid3 { grid-template-columns: 1fr; } }
-
-/* ── citation ── */
-pre.cite {
-  background: var(--panel); border: 1px solid var(--rule-2); border-radius: 4px;
-  padding: 20px; overflow-x: auto; font-size: 13px; line-height: 1.65;
-  font-family: var(--mono); color: var(--ink);
+.nav__cta a:hover{border-color:var(--green);color:var(--green-2);}
+.nav__cta a.paper{background:var(--ink);border-color:var(--ink);color:var(--paper);}
+.nav__cta a.paper:hover{background:var(--green);border-color:var(--green);color:#fff;}
+@media(max-width:720px){
+  .nav__cta a.demo{display:none;}
 }
 
-footer { padding: 44px 0 60px; text-align: center; color: var(--ink-3); font-family: var(--mono); font-size: 12px; border-top: 1px solid var(--rule-2); }
-footer .footlogos { display: flex; align-items: center; justify-content: center; gap: 22px; margin-bottom: 22px; flex-wrap: wrap; }
-footer .footlogos a { border-bottom: 0; line-height: 0; opacity: .55; transition: opacity .15s; }
-footer .footlogos a:hover { opacity: .9; }
-footer .footlogos .logo-eth { height: 18px; width: auto; }
-footer .footlogos .logo-srl { height: 34px; width: auto; }
-footer p { line-height: 1.7; }
+/* ─────────────────────────  BANDS  ───────────────────────── */
+.band{padding:clamp(56px,8vw,104px) 0;}
+.band--dark{background:var(--obs);color:var(--paper);}
+.band--paper2{background:var(--paper-2);}
+.band--dark a{color:var(--green);}
+.band--dark a:hover{color:#3fd39a;}
 
-@media (max-width: 720px) {
-  body { font-size: 17px; }
-  .pipeline, .vgrid { grid-template-columns: 1fr; }
-  .stat { border-right: 0; border-bottom: 1px solid var(--rule); }
-  .stat:last-child { border-bottom: 0; }
-  .demo-frame { height: 560px; }
+/* ─────────────────────────  HEADINGS  ───────────────────────── */
+.kicker{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--green-2);display:block;margin-bottom:18px;
+}
+.band--dark .kicker{color:var(--green);}
+h2.title{
+  font-family:var(--grotesk);font-weight:800;letter-spacing:-.03em;line-height:1.02;
+  font-size:clamp(30px,5.2vw,52px);color:inherit;
+}
+.subhead{
+  font-family:var(--grotesk);font-weight:700;letter-spacing:-.02em;
+  font-size:clamp(20px,2.6vw,26px);margin-bottom:12px;
+}
+.lead{
+  font-family:var(--serif);font-size:clamp(19px,2.3vw,23px);line-height:1.5;
+  color:var(--ink);margin-top:22px;max-width:46rem;
+}
+.band--dark .lead{color:rgba(244,242,234,.9);}
+p{margin-bottom:18px;}
+.body p{max-width:var(--measure);color:var(--ink);}
+.band--dark .body p{color:rgba(244,242,234,.82);}
+.body{margin-top:26px;}
+
+/* full-width restrained divider */
+.rule{border:0;border-top:1px solid var(--line);margin:0;}
+.band--dark .rule{border-top-color:var(--line-d);}
+
+/* ─────────────────────────  HERO  ───────────────────────── */
+.hero{
+  position:relative;background:var(--obs);color:var(--paper);overflow:hidden;
+  padding:clamp(40px,7vw,86px) 0 clamp(48px,7vw,88px);
+}
+.hero__shapes{position:absolute;inset:0;pointer-events:none;opacity:.5;}
+.hero__shapes i{position:absolute;display:block;}
+.hero__shapes .s1{top:-8%;right:6%;width:38vw;height:38vw;max-width:520px;max-height:520px;
+  background:var(--green-soft);clip-path:polygon(50% 0,100% 26%,84% 100%,16% 86%,0 34%);}
+.hero__shapes .s2{bottom:-14%;left:-6%;width:30vw;height:30vw;max-width:420px;max-height:420px;
+  background:rgba(210,74,50,.06);clip-path:polygon(0 0,100% 12%,78% 100%,0 74%);}
+.hero__grid{position:relative;display:grid;grid-template-columns:1.15fr .95fr;gap:clamp(28px,4vw,56px);align-items:center;}
+.hero__grid>*{min-width:0;}
+@media(max-width:900px){.hero__grid{grid-template-columns:1fr;gap:30px;}}
+.hero__status{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--green);display:flex;align-items:center;gap:10px;margin-bottom:24px;
+}
+.hero__status::before{content:"";width:7px;height:7px;background:var(--green);display:inline-block;}
+.hero h1{
+  font-family:var(--grotesk);font-weight:900;letter-spacing:-.035em;line-height:.98;
+  font-size:clamp(34px,6.6vw,74px);color:var(--paper);text-wrap:balance;overflow-wrap:break-word;
+}
+.split>*,.vgrid3>*,.cols>*,.figrow>*{min-width:0;}
+.hero h1 .m2r{color:var(--green);}
+.hero__sub{
+  font-family:var(--serif);font-size:clamp(17px,2vw,21px);line-height:1.5;
+  color:rgba(244,242,234,.82);margin-top:26px;max-width:38rem;
+}
+.hero__authors{margin-top:30px;}
+.hero__names{font-family:var(--grotesk);font-weight:600;font-size:18px;letter-spacing:-.01em;color:var(--paper);}
+.hero__names a{color:var(--paper);border-bottom:1px solid rgba(244,242,234,.35);}
+.hero__names a:hover{color:var(--green);border-bottom-color:var(--green);}
+.hero__affil{font-family:var(--mono);font-size:12px;color:rgba(244,242,234,.6);margin-top:10px;line-height:1.7;}
+.hero__affil a{color:rgba(244,242,234,.75);}
+.hero__affil a:hover{color:var(--green);}
+
+/* action buttons */
+.acts{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px;}
+.act{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.01em;
+  padding:10px 15px;border:1px solid rgba(244,242,234,.28);border-radius:2px;
+  color:var(--paper);transition:border-color .15s,background .15s,color .15s,transform .15s;
+}
+.act:hover{border-color:var(--green);color:var(--green);transform:translateY(-1px);}
+.act.primary{background:var(--green);border-color:var(--green);color:#08130e;font-weight:600;}
+.act.primary:hover{background:#2bbf85;border-color:#2bbf85;color:#08130e;}
+.act[aria-disabled="true"]{opacity:.45;cursor:not-allowed;}
+.act svg{width:15px;height:15px;flex-shrink:0;}
+.acts--secondary{margin-top:12px;}
+.acts--secondary .act{font-size:12px;padding:8px 12px;color:rgba(244,242,234,.72);border-color:rgba(244,242,234,.18);}
+.acts--secondary .act:hover{color:var(--green);border-color:var(--green);}
+
+/* hero logos — subordinate, no boxes */
+.hero__logos{display:flex;align-items:center;gap:22px;margin-top:34px;}
+.hero__logos a{opacity:.72;line-height:0;transition:opacity .15s;}
+.hero__logos a:hover{opacity:1;}
+.hero__logos img{display:block;filter:brightness(0) invert(1);}
+.hero__logos .logo-eth{height:19px;}
+.hero__logos .logo-srl{height:38px;}
+.hero__logos .divider{width:1px;height:30px;background:rgba(244,242,234,.2);}
+
+/* hero mask→RGB reveal media */
+.reveal{position:relative;overflow:hidden;background:#000;line-height:0;}
+.reveal img{display:block;width:100%;height:auto;}
+.reveal__mask{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  filter:grayscale(1) brightness(1.05) contrast(1.35) sepia(1) hue-rotate(78deg) saturate(4.2);
+  clip-path:inset(0 0 0 0);transition:clip-path 1.25s cubic-bezier(.2,.7,.2,1);
+}
+html:not(.js-anim) .reveal__mask{display:none;}
+.reveal.is-in .reveal__mask{clip-path:inset(0 0 0 100%);}
+.reveal__tag{
+  position:absolute;left:12px;bottom:12px;z-index:2;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:#eafff5;text-shadow:0 1px 6px rgba(0,0,0,.6);
+}
+.reveal__tag .to{opacity:.55;margin:0 6px;}
+.reveal__tag .real{color:var(--green);opacity:.5;transition:opacity .8s;}
+.reveal.is-in .reveal__tag .real{opacity:1;}
+.reveal.is-in .reveal__tag .mask{opacity:.5;}
+
+.hero__caption{
+  font-family:var(--mono);font-size:11.5px;line-height:1.65;color:rgba(244,242,234,.6);
+  margin-top:14px;max-width:40rem;
+}
+.hero__caption b{color:rgba(244,242,234,.85);}
+.hero__caption em{font-style:normal;color:var(--green);}
+
+/* ─────────────────────────  MEDIA / FIGURES  ───────────────────────── */
+figure{margin:0;}
+.fig{margin-top:clamp(28px,4vw,48px);}
+.fig img{display:block;width:100%;height:auto;background:#0c0d0b;}
+.fig--wide{max-width:none;}
+.fig--bleed{width:min(100%,1180px);}
+.cap{
+  font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--ink-3);
+  margin-top:14px;max-width:52rem;
+}
+.band--dark .cap{color:rgba(244,242,234,.55);}
+.cap b{color:var(--ink-2);font-weight:600;}
+.band--dark .cap b{color:rgba(244,242,234,.82);}
+.cap em{font-style:italic;color:var(--ink-2);}
+.band--dark .cap em{color:rgba(244,242,234,.72);}
+
+/* overview video — cinematic, no chrome */
+.cinema{margin-top:clamp(26px,4vw,44px);}
+.cinema video{display:block;width:100%;height:auto;background:#000;aspect-ratio:16/9;}
+
+/* ─────────────────────────  ABSTRACT DATA BAND  ───────────────────────── */
+.databand{
+  display:flex;flex-wrap:wrap;gap:clamp(30px,5vw,64px);
+  margin-top:40px;padding-top:34px;border-top:1px solid var(--line-2);
+}
+.datum{flex:0 1 auto;}
+.datum__val{
+  display:block;font-family:var(--grotesk);font-weight:800;letter-spacing:-.04em;line-height:1;
+  font-size:clamp(40px,6vw,64px);color:var(--ink);
+}
+.datum__val .u{font-size:.5em;color:var(--green-2);margin-left:2px;letter-spacing:0;}
+.datum__lbl{
+  font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--ink-3);
+  margin-top:10px;max-width:16rem;
+}
+.datum--accent .datum__val{color:var(--green-2);}
+
+/* ─────────────────────────  KEY IDEA  ───────────────────────── */
+.statement{
+  font-family:var(--grotesk);font-weight:800;letter-spacing:-.03em;line-height:1.05;
+  font-size:clamp(28px,4.6vw,46px);margin-top:30px;max-width:24ch;text-wrap:balance;
+}
+.statement em{color:var(--green);font-style:normal;}
+/* continuous action→mask→rgb sequence (one shared system, no boxes) */
+.flow{margin-top:clamp(34px,5vw,52px);}
+.flow__track{
+  display:flex;align-items:stretch;flex-wrap:wrap;gap:6px 4px;
+  font-family:var(--mono);
+}
+.flow__node{
+  display:flex;flex-direction:column;justify-content:center;gap:5px;
+  padding:14px 2px;min-width:0;
+}
+.flow__node .n-lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);}
+.flow__node .n-val{font-family:var(--grotesk);font-weight:700;font-size:clamp(15px,2vw,19px);letter-spacing:-.01em;}
+.flow__node--in .n-val{color:var(--ink);}
+.flow__node--mask .n-val{color:var(--green-2);}
+.flow__node--rgb .n-val{color:var(--red);}
+.flow__arrow{align-self:center;color:var(--ink-3);font-size:18px;padding:0 4px;}
+.flow__sys{align-self:center;padding:0 4px;}
+.flow__sys .s-val{
+  font-family:var(--grotesk);font-weight:600;font-size:clamp(13px,1.7vw,16px);
+  color:var(--ink);background:var(--green-soft);padding:8px 12px;display:inline-block;border-radius:2px;
+}
+/* shared-system bracket spanning the two WM stages */
+.flow__system{
+  position:relative;margin-top:16px;padding-top:16px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--green-2);
+}
+.flow__system::before{
+  content:"";position:absolute;top:0;left:22%;right:22%;height:10px;
+  border:1px solid var(--green);border-bottom:0;border-radius:4px 4px 0 0;opacity:.6;
+}
+@media(max-width:640px){
+  .flow__track{flex-direction:column;align-items:flex-start;gap:2px;}
+  .flow__arrow{transform:rotate(90deg);padding:4px 0;}
+  .flow__system::before{left:0;right:auto;width:60px;}
+}
+
+/* three typographic concept columns (no cards, no icons) */
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,50px);margin-top:clamp(38px,5vw,58px);}
+@media(max-width:760px){.cols{grid-template-columns:1fr;gap:34px;}}
+.col__k{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--green-2);}
+.col h3{font-family:var(--grotesk);font-weight:700;font-size:20px;letter-spacing:-.02em;margin:12px 0 8px;}
+.col p{font-size:16px;line-height:1.6;color:var(--ink-2);max-width:22rem;margin:0;}
+
+/* method figure rhythm */
+.figrow{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(24px,4vw,48px);align-items:center;}
+.figrow .cap{margin-top:0;}
+@media(max-width:820px){.figrow{grid-template-columns:1fr;gap:18px;}}
+
+/* ─────────────────────────  DEMO  ───────────────────────── */
+.demo__frame{
+  position:relative;margin-top:clamp(28px,4vw,44px);
+  background:#000;line-height:0;border:1px solid var(--line-d);
+}
+.demo__frame iframe{width:100%;height:640px;border:0;display:block;background:#0b0c0a;}
+.demo__top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:26px;}
+.demo__open{font-family:var(--mono);font-size:12px;white-space:nowrap;}
+.demo__hint{font-family:var(--mono);font-size:12px;color:rgba(244,242,234,.5);margin-top:16px;max-width:44rem;line-height:1.6;}
+.demo__hint b{color:var(--green);}
+@media(max-width:720px){.demo__frame iframe{height:560px;}}
+
+/* ─────────────────────────  VIDEO GRIDS (no cards)  ───────────────────────── */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,34px);margin-top:clamp(28px,4vw,44px);}
+@media(max-width:760px){.split{grid-template-columns:1fr;gap:26px;}}
+.vgrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.4vw,26px);margin-top:clamp(28px,4vw,44px);}
+@media(max-width:820px){.vgrid3{grid-template-columns:1fr;gap:24px;}}
+
+.vframe{position:relative;line-height:0;background:#000;}
+.vframe video{display:block;width:100%;height:auto;object-fit:contain;background:#000;aspect-ratio:480/256;}
+.vcap{font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--ink-2);margin-top:12px;}
+.band--dark .vcap{color:rgba(244,242,234,.7);}
+.vcap b{color:var(--ink);}
+.band--dark .vcap b{color:var(--paper);}
+.vcap .seq{color:var(--green-2);}
+.band--dark .vcap .seq{color:var(--green);}
+
+/* view labels overlaid on stacked two-view clips */
+.viewlbl{
+  position:absolute;left:8px;z-index:2;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.82);text-shadow:0 1px 5px rgba(0,0,0,.8);pointer-events:none;
+}
+.viewlbl--top{top:7px;}
+.viewlbl--mid{top:calc(50% + 5px);}
+
+/* injected play/pause control */
+.vtoggle{
+  position:absolute;right:8px;bottom:8px;z-index:3;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+  color:#fff;background:rgba(10,12,10,.62);border:1px solid rgba(255,255,255,.25);
+  border-radius:2px;padding:5px 9px;cursor:pointer;line-height:1;
+  opacity:0;transition:opacity .18s,background .15s,border-color .15s;
+}
+.vframe:hover .vtoggle,.vtoggle:focus-visible,.vtoggle.is-paused{opacity:1;}
+.vtoggle:hover{background:rgba(24,160,107,.85);border-color:var(--green);}
+
+/* object gallery — image-led sequence */
+.objseq{margin-top:clamp(30px,4vw,50px);display:flex;flex-direction:column;gap:clamp(30px,5vw,64px);}
+.objseq figure:nth-child(even){margin-left:auto;max-width:88%;}
+@media(max-width:760px){.objseq figure:nth-child(even){max-width:100%;}}
+
+/* ─────────────────────────  BIBTEX  ───────────────────────── */
+.cite-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.copybtn{
+  font-family:var(--mono);font-size:12px;color:var(--paper);
+  background:transparent;border:1px solid rgba(244,242,234,.3);border-radius:2px;
+  padding:8px 14px;cursor:pointer;transition:border-color .15s,color .15s,background .15s;
+}
+.copybtn:hover{border-color:var(--green);color:var(--green);}
+.copybtn.done{border-color:var(--green);color:#08130e;background:var(--green);}
+pre.cite{
+  margin-top:24px;padding:26px clamp(18px,3vw,30px);overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.7;color:rgba(244,242,234,.9);
+  border-top:1px solid var(--line-d);border-bottom:1px solid var(--line-d);
+  background:transparent;
+}
+
+/* ─────────────────────────  FOOTER  ───────────────────────── */
+.foot{background:var(--obs);color:rgba(244,242,234,.55);padding:56px 0 66px;font-family:var(--mono);font-size:12px;}
+.foot__logos{display:flex;align-items:center;gap:24px;margin-bottom:24px;}
+.foot__logos a{opacity:.5;line-height:0;transition:opacity .15s;}
+.foot__logos a:hover{opacity:.9;}
+.foot__logos img{display:block;filter:brightness(0) invert(1);}
+.foot__logos .logo-eth{height:17px;}
+.foot__logos .logo-srl{height:32px;}
+.foot p{max-width:none;line-height:1.75;margin-bottom:6px;}
+.foot a{color:rgba(244,242,234,.75);}
+.foot a:hover{color:var(--green);}
+
+/* ─────────────────────────  MOTION  ───────────────────────── */
+html.js-anim .r-up{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+html.js-anim .r-up.is-in{opacity:1;transform:none;}
+
+:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:1px;}
+.band--dark :focus-visible,.hero :focus-visible{outline-color:#3fd39a;}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *,*::before,*::after{transition:none!important;animation:none!important;}
+}
+@media(max-width:720px){
+  body{font-size:17px;}
 }
 </style>
 </head>
 <body>
 
+<!-- ════════════ NAV ════════════ -->
+<nav class="nav" aria-label="Primary">
+  <div class="nav__in">
+    <a class="nav__mark" href="#top"><b>Mask2Real</b>-WM</a>
+    <div class="nav__links">
+      <a href="#abstract">Abstract</a>
+      <a href="#idea">Key Idea</a>
+      <a href="#method">Method</a>
+      <a href="#demo">Demo</a>
+      <a href="#results">Results</a>
+      <a href="#rollouts">Rollouts</a>
+      <a href="#objects">Objects</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+    <div class="nav__cta">
+      <a class="demo" href="#demo">Interactive Demo</a>
+      <a class="paper" href="https://arxiv.org/abs/2607.04546v1" target="_blank" rel="noopener">Paper</a>
+    </div>
+  </div>
+</nav>
+
 <!-- ════════════ HERO ════════════ -->
-<header class="hero">
+<header class="hero" id="top">
+  <span class="hero__shapes" aria-hidden="true"><i class="s1"></i><i class="s2"></i></span>
   <div class="wrap">
-    <span class="venue">CoRL 2026 — Under Review</span>
-    <h1><span class="mask">Mask2Real-WM</span>: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</h1>
-    <p class="subtitle">A two-stage action-conditioned world model that decouples <em>dynamics</em> from <em>rendering</em>, using segmentation masks to unlock large-scale synthetic pretraining for 23-DoF dexterous manipulation.</p>
+    <div class="hero__grid">
+      <div class="hero__intro">
+        <span class="hero__status">CoRL 2026 · Under Review</span>
+        <h1><span class="m2r">Mask2Real-WM</span>: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</h1>
+        <p class="hero__sub">A two-stage action-conditioned world model that decouples <em>dynamics</em> from <em>rendering</em>, using segmentation masks to unlock large-scale synthetic pretraining for 23-DoF dexterous manipulation.</p>
 
-    <div class="authors">
-      <div class="name"><a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Davide Liconti · Chenyu Yang · Robert K. Katzschmann</div>
-      <div class="affil"><a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a> · Department of Mechanical and Process Engineering · ETH Zürich</div>
-      <div class="affil">Correspondence: <a href="mailto:riccardofeingold@gmail.com">riccardofeingold@gmail.com</a></div>
-    </div>
+        <div class="hero__authors">
+          <div class="hero__names"><a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> &nbsp; Davide Liconti &nbsp; Chenyu Yang &nbsp; Robert K. Katzschmann</div>
+          <div class="hero__affil"><a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a> · Dept. of Mechanical and Process Engineering · ETH&nbsp;Zürich<br>Correspondence: <a href="mailto:riccardofeingold@gmail.com">riccardofeingold@gmail.com</a></div>
+        </div>
 
-    <div class="orglogos">
-      <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich"></a>
-      <span class="sep"></span>
-      <a href="https://srl.ethz.ch/" target="_blank" rel="noopener" aria-label="Soft Robotics Lab"><img class="logo-srl" src="assets/img/logos/srl_logo.svg" alt="Soft Robotics Lab"></a>
-    </div>
+        <div class="acts">
+          <a class="act primary" href="#demo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Interactive Demo
+          </a>
+          <a class="act" href="https://arxiv.org/abs/2607.04546v1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Paper · arXiv
+          </a>
+        </div>
+        <div class="acts acts--secondary">
+          <a class="act" href="supplementary.html">Supplementary</a>
+          <span class="act" id="code-link" aria-disabled="true">Code · Coming soon</span>
+          <a class="act" href="#bibtex">BibTeX</a>
+          <a class="act" href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Author Website</a>
+        </div>
 
-    <div class="btns">
-      <a class="btn primary" href="#demo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Interactive Demo
-      </a>
-      <a class="btn" href="https://arxiv.org/abs/2607.04546v1" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Paper · arXiv
-      </a>
-      <a class="btn" href="supplementary.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
-        Supplementary
-      </a>
-      <span class="btn" id="code-link" aria-disabled="true" style="opacity:0.6;cursor:not-allowed;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Code · Coming soon
-      </span>
-      <a class="btn" href="#bibtex">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        BibTeX
-      </a>
-      <a class="btn" href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        Author Website
-      </a>
+        <div class="hero__logos">
+          <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich" width="120" height="19"></a>
+          <span class="divider"></span>
+          <a href="https://srl.ethz.ch/" target="_blank" rel="noopener" aria-label="Soft Robotics Lab"><img class="logo-srl" src="assets/img/logos/srl_logo.svg" alt="Soft Robotics Lab" width="120" height="38"></a>
+        </div>
+      </div>
+
+      <div class="hero__media">
+        <figure class="reveal" id="hero-reveal">
+          <img src="assets/img/teaser_controllability.png" alt="Mask2Real-WM predicting future segmentation masks and rendering them as photorealistic RGB across the 23-DoF action sequence." width="1373" height="553">
+          <span class="reveal__mask" style="background-image:url(assets/img/teaser_controllability.png);" aria-hidden="true"></span>
+          <span class="reveal__tag" aria-hidden="true"><span class="mask">Mask</span><span class="to">→</span><span class="real">RGB</span></span>
+        </figure>
+        <p class="hero__caption"><b>Mask2Real-WM.</b> A <em>Dynamics WM</em> predicts future segmentation masks from past masks and the 23-DoF action sequence (6-DoF end-effector pose + 17-DoF hand joints), pretrained on &gt;50&nbsp;h of simulation; a <em>Rendering WM</em> paints photorealistic RGB onto the predicted masks, trained on &lt;2.5&nbsp;h of real demonstrations.</p>
+      </div>
     </div>
   </div>
 </header>
 
 <!-- ════════════ OVERVIEW VIDEO ════════════ -->
-<section id="overview-video" style="padding-top:40px;">
+<section class="band band--dark" id="overview">
   <div class="wrap">
-    <h2>Overview Video</h2>
-    <figure style="margin-top:18px;">
+    <span class="kicker r-up">Overview Video</span>
+    <h2 class="title r-up">A narrated tour of the method</h2>
+    <div class="cinema r-up">
       <video src="assets/video/corl_submission.mp4" controls playsinline preload="metadata"
-             poster="assets/img/teaser_controllability.png"
-             style="width:100%;border-radius:4px;border:1px solid var(--rule-2);background:#000;display:block;">
+             poster="assets/img/teaser_controllability.png" width="1920" height="1080">
+        Your browser does not support the video tag. The overview video walks through the Mask2Real-WM method, hardware setup, and results.
       </video>
-      <figcaption>Mask2Real-WM — narrated overview of the method, setup, and results.</figcaption>
-    </figure>
-  </div>
-</section>
-
-<!-- ════════════ TEASER ════════════ -->
-<section style="padding-top:40px;">
-  <div class="wrap">
-    <figure class="teaser-fig" style="margin-top:0;">
-      <img src="assets/img/teaser_controllability.png" alt="Mask2Real-WM teaser">
-      <figcaption><b>Mask2Real-WM.</b> A <em>Dynamics WM</em> predicts future segmentation masks from past masks and the 23-DoF action sequence (6-DoF end-effector pose + 17-DoF hand joints), pretrained on &gt;50&nbsp;h of simulation; a <em>Rendering WM</em> paints photorealistic RGB onto the predicted masks, trained on &lt;2.5&nbsp;h of real demonstrations.</figcaption>
-    </figure>
+      <p class="cap">Narrated overview of the method, hardware setup, and results.</p>
+    </div>
   </div>
 </section>
 
 <!-- ════════════ ABSTRACT ════════════ -->
-<section id="abstract">
+<section class="band" id="abstract">
   <div class="wrap">
-    <h2>Abstract</h2>
-    <p>Action-conditioned world models enable robots to imagine the future consequences of their actions without physical interaction, making them a powerful tool for policy evaluation, planning, and data augmentation. We present <strong>Mask2Real-WM</strong>, a two-stage action-conditioned world model for dexterous manipulation that <strong>decouples</strong> pixel prediction into a <strong>dynamics model</strong> and a <strong>rendering model</strong>.</p>
-    <p>The dynamics model predicts future segmentation masks from past masks and the 23-DoF action sequence; the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale pretraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on fewer than <strong>2.5&nbsp;h of real demonstrations</strong> — an avenue largely unexplored for image-space world models.</p>
-    <p>Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation pretraining are necessary for per-DoF action controllability across all 23 degrees of freedom, while monolithic baselines collapse to coarse end-effector motion.</p>
+    <span class="kicker r-up">Abstract</span>
+    <h2 class="title r-up">Decoupling dynamics from rendering</h2>
+    <div class="body">
+      <p class="r-up">Action-conditioned world models let robots imagine the future consequences of their actions without physical interaction, making them a powerful tool for policy evaluation, planning, and data augmentation. We present <strong>Mask2Real-WM</strong>, a two-stage action-conditioned world model for dexterous manipulation that <strong>decouples</strong> pixel prediction into a <strong>dynamics model</strong> and a <strong>rendering model</strong>.</p>
+      <p class="r-up">The dynamics model predicts future segmentation masks from past masks and the 23-DoF action sequence; the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale pretraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on fewer than <strong>2.5&nbsp;h of real demonstrations</strong> — an avenue largely unexplored for image-space world models.</p>
+      <p class="r-up">Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation pretraining are necessary for per-DoF action controllability across all 23 degrees of freedom, while monolithic baselines collapse to coarse end-effector motion.</p>
+    </div>
 
-    <div class="stats">
-      <div class="stat"><div class="num">23</div><div class="lbl">DoF controlled<br>(6 arm + 17 hand)</div></div>
-      <div class="stat"><div class="num">&gt;50 h</div><div class="lbl">synthetic pretraining</div></div>
-      <div class="stat"><div class="num">&lt;2.5 h</div><div class="lbl">real demonstrations</div></div>
-      <div class="stat"><div class="num">0.95</div><div class="lbl">ID controllability<br>(vs. 0.60 baseline)</div></div>
+    <div class="databand r-up">
+      <div class="datum"><span class="datum__val">23</span><span class="datum__lbl">DoF controlled — 6&nbsp;arm + 17&nbsp;hand</span></div>
+      <div class="datum"><span class="datum__val">&gt;50<span class="u">h</span></span><span class="datum__lbl">synthetic pretraining</span></div>
+      <div class="datum"><span class="datum__val">&lt;2.5<span class="u">h</span></span><span class="datum__lbl">real demonstrations</span></div>
+      <div class="datum datum--accent"><span class="datum__val">0.95</span><span class="datum__lbl">ID controllability — vs. 0.60 baseline</span></div>
     </div>
   </div>
 </section>
 
 <!-- ════════════ KEY IDEA ════════════ -->
-<section id="idea">
+<section class="band band--paper2" id="idea">
   <div class="wrap">
-    <h2>Key Idea</h2>
-    <p class="lead">Decouple <em>what moves where</em> from <em>what it looks like</em>.</p>
-    <p>Predicting dexterous manipulation in raw pixels forces a single model to learn both physics and appearance at once — and the sim-to-real appearance gap blocks the use of cheap synthetic data. Mask2Real-WM instead factorizes the problem into two stages chained autoregressively at inference:</p>
-
-    <div class="pipeline">
-      <div class="stage wm1">
-        <span class="tag">WM1 · Dynamics</span>
-        <h3>Masks from actions</h3>
-        <p>An action-conditioned video-diffusion model (SVD backbone) predicts future segmentation masks from past masks and the 23-DoF action sequence. Masks have a tiny sim-to-real gap, so WM1 is pretrained on &gt;50&nbsp;h of IsaacLab data, then fine-tuned on real data with LoRA.</p>
-      </div>
-      <div class="stage wm2">
-        <span class="tag">WM2 · Rendering</span>
-        <h3>RGB from masks</h3>
-        <p>A ControlNet-augmented SVD backbone paints photorealistic two-view RGB onto WM1's predicted masks. Trained on real data only (&lt;2.5&nbsp;h), since appearance is where the sim-to-real gap is largest. A lightweight CNN encodes masks before ControlNet injection.</p>
-      </div>
+    <span class="kicker r-up">Key Idea</span>
+    <p class="statement r-up">Decouple <em>what moves where</em> from <em>what it looks like</em>.</p>
+    <div class="body">
+      <p class="r-up">Predicting dexterous manipulation in raw pixels forces a single model to learn both physics and appearance at once — and the sim-to-real appearance gap blocks the use of cheap synthetic data. Mask2Real-WM instead factorizes the problem into one shared system of two stages, chained autoregressively at inference.</p>
     </div>
 
-    <div class="cards" style="margin-top:18px;">
-      <div class="card"><div class="icon">🌉</div><h3>Segmentation as a bridge</h3><p>Masks are nearly domain-invariant, enabling synthetic pretraining that is impractical in RGB space.</p></div>
-      <div class="card"><div class="icon">🎛️</div><h3>Per-DoF controllability</h3><p>Each of the 23 joints responds faithfully and independently — no coupling collapse.</p></div>
-      <div class="card"><div class="icon">🏷️</div><h3>Automatic labels</h3><p>SAM&nbsp;3 produces masks from text prompts alone, supervising the intermediate representation at scale.</p></div>
+    <div class="flow r-up">
+      <div class="flow__track">
+        <span class="flow__node flow__node--in"><span class="n-lbl">Input</span><span class="n-val">Actions</span></span>
+        <span class="flow__arrow" aria-hidden="true">→</span>
+        <span class="flow__sys"><span class="s-val">Dynamics WM</span></span>
+        <span class="flow__arrow" aria-hidden="true">→</span>
+        <span class="flow__node flow__node--mask"><span class="n-lbl">Intermediate</span><span class="n-val">Segmentation Masks</span></span>
+        <span class="flow__arrow" aria-hidden="true">→</span>
+        <span class="flow__sys"><span class="s-val">Rendering WM</span></span>
+        <span class="flow__arrow" aria-hidden="true">→</span>
+        <span class="flow__node flow__node--rgb"><span class="n-lbl">Output</span><span class="n-val">RGB</span></span>
+      </div>
+      <div class="flow__system">One Mask2Real-WM system — WM1 dynamics &amp; WM2 rendering share the SVD backbone</div>
+    </div>
+
+    <div class="cols">
+      <div class="col r-up">
+        <span class="col__k">Bridge</span>
+        <h3>Segmentation as a bridge</h3>
+        <p>Masks are nearly domain-invariant, enabling synthetic pretraining that is impractical in RGB space.</p>
+      </div>
+      <div class="col r-up">
+        <span class="col__k">Control</span>
+        <h3>Per-DoF controllability</h3>
+        <p>Each of the 23 joints responds faithfully and independently — no coupling collapse to coarse end-effector motion.</p>
+      </div>
+      <div class="col r-up">
+        <span class="col__k">Labels</span>
+        <h3>Automatic labels</h3>
+        <p>SAM&nbsp;3 produces masks from text prompts alone, supervising the intermediate representation at scale.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ════════════ METHOD ════════════ -->
-<section id="method">
+<section class="band band--dark" id="method">
   <div class="wrap">
-    <h2>Method</h2>
-    <figure class="dark">
-      <img src="assets/img/method_dexwm.png" alt="Method overview">
-      <figcaption><b>Method overview.</b> <em>Left (WM1):</em> an action-conditioned dynamics model denoises future segmentation masks from past masks and the past/future action sequence; pretrained on simulation. <em>Right (WM2):</em> a rendering model paints photorealistic RGB onto the predicted masks via a ControlNet branch on a LoRA-adapted SVD backbone; trained on real data. The two stages are chained autoregressively at inference.</figcaption>
+    <span class="kicker r-up">Method</span>
+    <h2 class="title r-up">A two-stage world model, told as a picture</h2>
+
+    <figure class="fig fig--wide r-up">
+      <img src="assets/img/method_dexwm.png" alt="Method overview: a dynamics model denoises future segmentation masks from past masks and actions, and a rendering model paints RGB onto the predicted masks via a ControlNet branch." width="1192" height="492">
+      <figcaption class="cap"><b>Method overview.</b> <em>Left (WM1):</em> an action-conditioned dynamics model denoises future segmentation masks from past masks and the past/future action sequence; pretrained on simulation. <em>Right (WM2):</em> a rendering model paints photorealistic RGB onto the predicted masks via a ControlNet branch on a LoRA-adapted SVD backbone; trained on real data. The two stages are chained autoregressively at inference.</figcaption>
     </figure>
 
-    <figure class="dark">
-      <img src="assets/img/robot_setup.png" alt="Hardware setup">
-      <figcaption><b>Hardware.</b> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (23 DoF total), observed from a fixed workspace camera and a wrist-mounted camera that captures finger–object contacts in a tilted-wall arena.</figcaption>
+    <figure class="figrow fig r-up">
+      <img src="assets/img/robot_setup.png" alt="Hardware setup: a 7-DoF Franka Emika Panda arm with a 17-DoF ORCA hand observed from a workspace camera and a wrist-mounted camera." width="2167" height="2108">
+      <figcaption class="cap"><b>Hardware.</b> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (23 DoF total), observed from a fixed workspace camera and a wrist-mounted camera that captures finger–object contacts in a tilted-wall arena.</figcaption>
     </figure>
 
-    <figure class="dark">
-      <img src="assets/img/dataset_coverage.png" alt="Action coverage simulation vs real">
-      <figcaption><b>Action coverage: sim vs. real.</b> Per-dimension action range across all 23 DoF. Simulation (&gt;50&nbsp;h) spans a far wider range than real demonstrations (&lt;2.5&nbsp;h), motivating large-scale synthetic pretraining of WM1.</figcaption>
+    <figure class="fig fig--wide r-up">
+      <img src="assets/img/dataset_coverage.png" alt="Per-dimension action range across all 23 DoF, comparing the wide coverage of simulation against the narrow coverage of real demonstrations." width="2069" height="1471">
+      <figcaption class="cap"><b>Action coverage: sim vs. real.</b> Per-dimension action range across all 23 DoF. Simulation (&gt;50&nbsp;h) spans a far wider range than real demonstrations (&lt;2.5&nbsp;h), motivating large-scale synthetic pretraining of WM1.</figcaption>
     </figure>
 
-    <figure class="dark">
-      <img src="assets/img/gt_masks_comparison.png" alt="Segmentation masks sim vs real">
-      <figcaption><b>The sim-to-real bridge.</b> Segmentation masks (hand: green, object: red, background: black) look nearly identical across simulation and reality, unlike raw RGB — this small domain gap is what makes synthetic pretraining of the dynamics model effective.</figcaption>
+    <figure class="fig fig--wide r-up">
+      <img src="assets/img/gt_masks_comparison.png" alt="Segmentation masks in simulation and reality look nearly identical, unlike raw RGB, illustrating the small domain gap in mask space." width="1710" height="577">
+      <figcaption class="cap"><b>The sim-to-real bridge.</b> Segmentation masks (hand: green, object: red, background: black) look nearly identical across simulation and reality, unlike raw RGB — this small domain gap is what makes synthetic pretraining of the dynamics model effective.</figcaption>
     </figure>
   </div>
 </section>
 
 <!-- ════════════ INTERACTIVE DEMO ════════════ -->
-<section id="demo">
-  <div class="wrap">
-    <h2>Interactive Demo · DOF Controllability</h2>
-    <p class="lead">Click any joint on the 3D ORCA hand (or a button) to see the world model's prediction when that single action component is perturbed. Switch models and samples to compare side by side.</p>
-
-    <div class="demo-shell">
-      <div class="demo-bar">
-        <span class="dot" style="background:#ff5f57"></span>
-        <span class="dot" style="background:#febc2e"></span>
-        <span class="dot" style="background:#28c840"></span>
-        <span class="t">OrcaHand — DOF Controllability Demo</span>
-        <a class="open" href="demo/index.html" target="_blank" rel="noopener">Open full screen ↗</a>
-      </div>
-      <iframe class="demo-frame" src="demo/index.html" title="OrcaHand DOF Controllability Demo" loading="lazy"></iframe>
+<section class="band band--dark" id="demo" style="padding-top:0;">
+  <hr class="rule">
+  <div class="wrap" style="padding-top:clamp(56px,8vw,104px);">
+    <span class="kicker r-up">Interactive Demo</span>
+    <div class="demo__top r-up">
+      <h2 class="title" style="margin:0;">Per-DoF controllability, in 3D</h2>
+      <a class="demo__open" href="demo/index.html" target="_blank" rel="noopener">Open full screen ↗</a>
     </div>
-    <p class="demo-hint">Compare <b style="color:var(--teal)">WM + LoRA (ours)</b>, WM Mid-train, WM Real-Only, and the monolithic Baseline across 23 degrees of freedom. The 3D model loads from STL meshes; videos stream on click.</p>
+    <p class="lead r-up">Click any joint on the 3D ORCA hand — or a button — to see the world model's prediction when that single action component is perturbed. Switch models and samples to compare side by side.</p>
+
+    <div class="demo__frame r-up">
+      <iframe src="demo/index.html" title="OrcaHand per-DoF controllability interactive demo" loading="lazy"></iframe>
+    </div>
+    <p class="demo__hint">Compare <b>WM + LoRA (ours)</b>, WM Mid-train, WM Real-Only, and the monolithic Baseline across 23 degrees of freedom. The 3D model loads from STL meshes; videos stream on click.</p>
   </div>
 </section>
 
 <!-- ════════════ RESULTS ════════════ -->
-<section id="results">
+<section class="band" id="results">
   <div class="wrap">
-    <h2>Results</h2>
+    <span class="kicker r-up">Results</span>
+    <h2 class="title r-up">What mask conditioning and sim pretraining buy</h2>
 
-    <h3 style="font-size:15px;margin:6px 0 4px;">Action controllability</h3>
-    <figure class="dark">
-      <img src="assets/img/controllability.png" alt="Controllability results">
-      <figcaption><b>Action controllability.</b> <em>Left:</em> model responses to sinusoidal perturbation of individual action components. <em>Right:</em> mean controllability score for ID (top) and OOD (bottom). Our full model (WM1 sim→real, WM2 real) reaches ≈0.95 ID and ≈0.87 OOD; the monolithic baseline falls below 0.5 on OOD.</figcaption>
+    <h3 class="subhead r-up" style="margin-top:clamp(40px,6vw,64px);">Action controllability</h3>
+    <figure class="fig fig--wide r-up" style="margin-top:20px;">
+      <img src="assets/img/controllability.png" alt="Model responses to sinusoidal perturbation of individual action components, and mean controllability scores for in-distribution and out-of-distribution settings." width="1348" height="930">
+      <figcaption class="cap"><b>Action controllability.</b> <em>Left:</em> model responses to sinusoidal perturbation of individual action components. <em>Right:</em> mean controllability score for ID (top) and OOD (bottom). Our full model (WM1 sim→real, WM2 real) reaches ≈0.95 ID and ≈0.87 OOD; the monolithic baseline falls below 0.5 on OOD.</figcaption>
     </figure>
-    <p>Isolated single-finger motion is <strong>absent from the real training set</strong>, which predominantly contains cube-grasping. Simulation pretraining alone lifts controllability from ≈0.68→0.85 (ID) and ≈0.51→0.73 (OOD); real fine-tuning then closes the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations.</p>
+    <div class="body">
+      <p class="r-up">Isolated single-finger motion is <strong>absent from the real training set</strong>, which predominantly contains cube-grasping. Simulation pretraining alone lifts controllability from ≈0.68→0.85 (ID) and ≈0.51→0.73 (OOD); real fine-tuning then closes the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations.</p>
+    </div>
 
-    <h3 style="font-size:15px;margin:26px 0 4px;">Video prediction quality</h3>
-    <figure class="dark">
-      <img src="assets/img/results_perceptual.png" alt="Perceptual metrics">
-      <figcaption><b>Perceptual metrics across WM1 training configurations.</b> PSNR, SSIM, LPIPS on ID (top) and LPIPS on three OOD splits — <em>No Object</em>, <em>Random Play</em>, <em>Background</em> (bottom) — for real-only, sim-only, and sim-then-real (ours) WM1, all paired with the same WM2. Sim pretraining substantially reduces OOD degradation while real fine-tuning maintains strong ID performance.</figcaption>
+    <h3 class="subhead r-up" style="margin-top:clamp(40px,6vw,64px);">Video prediction quality</h3>
+    <figure class="fig fig--wide r-up" style="margin-top:20px;">
+      <img src="assets/img/results_perceptual.png" alt="PSNR, SSIM and LPIPS across WM1 training configurations for in-distribution and three out-of-distribution splits." width="2159" height="892">
+      <figcaption class="cap"><b>Perceptual metrics across WM1 training configurations.</b> PSNR, SSIM, LPIPS on ID (top) and LPIPS on three OOD splits — <em>No Object</em>, <em>Random Play</em>, <em>Background</em> (bottom) — for real-only, sim-only, and sim-then-real (ours) WM1, all paired with the same WM2. Sim pretraining substantially reduces OOD degradation while real fine-tuning maintains strong ID performance.</figcaption>
     </figure>
 
-    <h3 style="font-size:15px;margin:26px 0 4px;">WM2 conditioning ablation</h3>
-    <figure class="dark">
-      <img src="assets/img/wm2_ablation.png" alt="WM2 conditioning ablation" style="max-width:680px;margin:0 auto;">
-      <figcaption><b>WM2 conditioning ablation (LPIPS↓).</b> Mask conditioning via ControlNet is the dominant driver of spatial sharpness; adding action conditioning further tightens motion consistency. Masks alone already support competitive quality and zero-shot deployment decoupled from the action space.</figcaption>
+    <h3 class="subhead r-up" style="margin-top:clamp(40px,6vw,64px);">WM2 conditioning ablation</h3>
+    <figure class="fig r-up" style="margin-top:20px;max-width:720px;">
+      <img src="assets/img/wm2_ablation.png" alt="LPIPS results for the WM2 conditioning ablation, comparing mask conditioning and added action conditioning." width="935" height="428">
+      <figcaption class="cap"><b>WM2 conditioning ablation (LPIPS↓).</b> Mask conditioning via ControlNet is the dominant driver of spatial sharpness; adding action conditioning further tightens motion consistency. Masks alone already support competitive quality and zero-shot deployment decoupled from the action space.</figcaption>
     </figure>
   </div>
 </section>
 
 <!-- ════════════ LONG-HORIZON ROLLOUTS ════════════ -->
-<section id="rollouts">
+<section class="band band--dark" id="rollouts">
   <div class="wrap">
-    <h2>Long-Horizon Rollouts</h2>
-    <p class="lead">Autoregressive rollout on a pick-and-place sequence (cup). Ours vs. the monolithic baseline.</p>
-    <div class="vgrid">
-      <div class="vitem">
-        <video src="assets/video/2_stage_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>Mask2Real-WM (ours)</b> — sharp contacts, stable object identity</div>
+    <span class="kicker r-up">Long-Horizon Rollouts</span>
+    <h2 class="title r-up">Autoregressive rollout, ours vs. monolithic</h2>
+    <p class="lead r-up">Autoregressive rollout on a pick-and-place sequence with the cup, comparing Mask2Real-WM against the monolithic baseline.</p>
+
+    <div class="split r-up">
+      <div>
+        <div class="vframe" data-auto>
+          <video src="assets/video/2_stage_long_horizon_cup.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="vcap"><b>Mask2Real-WM (ours)</b> — sharp contacts, stable object identity</p>
       </div>
-      <div class="vitem">
-        <video src="assets/video/baseline_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>Monolithic baseline</b> — blur and drift accumulate</div>
+      <div>
+        <div class="vframe" data-auto>
+          <video src="assets/video/baseline_long_horizon_cup.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="vcap"><b>Monolithic baseline</b> — blur and drift accumulate</p>
       </div>
     </div>
 
-    <figure class="dark" style="margin-top:30px;">
-      <img src="assets/img/ours_strip.png" alt="Long-horizon strip ours">
-      <figcaption><b>Ours</b> — long-horizon mask→RGB rollout strip.</figcaption>
+    <figure class="fig fig--wide r-up">
+      <img src="assets/img/ours_strip.png" alt="Long-horizon mask-to-RGB rollout strip for Mask2Real-WM." width="972" height="150" loading="lazy">
+      <figcaption class="cap"><b>Ours</b> — long-horizon mask→RGB rollout strip.</figcaption>
     </figure>
-    <figure class="dark">
-      <img src="assets/img/baseline_strip.png" alt="Long-horizon strip baseline">
-      <figcaption><b>Baseline</b> — long-horizon rollout strip; note the loss of finger and object detail over time.</figcaption>
+    <figure class="fig fig--wide r-up">
+      <img src="assets/img/baseline_strip.png" alt="Long-horizon rollout strip for the monolithic baseline, showing loss of finger and object detail over time." width="972" height="150" loading="lazy">
+      <figcaption class="cap"><b>Baseline</b> — long-horizon rollout strip; note the loss of finger and object detail over time.</figcaption>
     </figure>
   </div>
 </section>
 
-<!-- ════════════ POLICY ROLLOUTS (OOD) ════════════ -->
-<section id="policy-rollouts">
+<!-- ════════════ LONG-HORIZON POLICY ROLLOUTS ════════════ -->
+<section class="band" id="policy-rollouts">
   <div class="wrap">
-    <h2>Policy Rollouts · Out-of-Distribution</h2>
-    <p class="lead">Real policies rolled out through Mask2Real-WM on out-of-distribution episodes. Three policy families &mdash; ACT, Diffusion Policy, and Flow Matching &mdash; evaluated through the same world model, with predicted-vs-real PSNR / SSIM. Videos show the wrist-camera view.</p>
-    <div class="vgrid3">
-      <div class="vitem">
-        <div class="crop-bottom"><video src="assets/video/rollouts/ood_act_1.mp4" autoplay loop muted playsinline></video></div>
-        <div class="cap"><b>ACT</b> &middot; OOD <span class="m">&mdash; PSNR 23.2 / SSIM 0.843</span></div>
+    <span class="kicker r-up">Long-Horizon Policy Rollouts</span>
+    <h2 class="title r-up">Behavior unfolding inside the world model</h2>
+    <p class="lead r-up">These examples visualize how long-horizon behavior unfolds as ACT, Diffusion Policy, and Flow Matching are rolled out inside Mask2Real-WM. Each video shows both the third-person and wrist-camera views.</p>
+
+    <div class="vgrid3 r-up">
+      <div>
+        <div class="vframe vframe--169" data-auto data-views>
+          <video src="assets/video/rollouts/ood_act_1.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="vcap"><b>ACT</b> <span class="seq">· Sequence A</span></p>
       </div>
-      <div class="vitem">
-        <div class="crop-bottom"><video src="assets/video/rollouts/ood_dp_1.mp4" autoplay loop muted playsinline></video></div>
-        <div class="cap"><b>Diffusion Policy</b> &middot; OOD <span class="m">&mdash; PSNR 22.5 / SSIM 0.828</span></div>
+      <div>
+        <div class="vframe vframe--169" data-auto data-views>
+          <video src="assets/video/rollouts/ood_dp_1.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="vcap"><b>Diffusion Policy</b> <span class="seq">· Sequence A</span></p>
       </div>
-      <div class="vitem">
-        <div class="crop-bottom"><video src="assets/video/rollouts/ood_fm_1.mp4" autoplay loop muted playsinline></video></div>
-        <div class="cap"><b>Flow Matching</b> &middot; OOD <span class="m">&mdash; PSNR 23.0 / SSIM 0.833</span></div>
+      <div>
+        <div class="vframe vframe--169" data-auto data-views>
+          <video src="assets/video/rollouts/ood_fm_1.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="vcap"><b>Flow Matching</b> <span class="seq">· Sequence A</span></p>
       </div>
-      <div class="vitem">
-        <div class="crop-bottom"><video src="assets/video/rollouts/ood_act_2.mp4" autoplay loop muted playsinline></video></div>
-        <div class="cap"><b>ACT</b> &middot; OOD <span class="m">&mdash; PSNR 22.8 / SSIM 0.838</span></div>
+      <div>
+        <div class="vframe vframe--169" data-auto data-views>
+          <video src="assets/video/rollouts/ood_act_2.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="vcap"><b>ACT</b> <span class="seq">· Sequence B</span></p>
       </div>
-      <div class="vitem">
-        <div class="crop-bottom"><video src="assets/video/rollouts/ood_dp_2.mp4" autoplay loop muted playsinline></video></div>
-        <div class="cap"><b>Diffusion Policy</b> &middot; OOD <span class="m">&mdash; PSNR 22.5 / SSIM 0.825</span></div>
+      <div>
+        <div class="vframe vframe--169" data-auto data-views>
+          <video src="assets/video/rollouts/ood_dp_2.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="vcap"><b>Diffusion Policy</b> <span class="seq">· Sequence B</span></p>
       </div>
-      <div class="vitem">
-        <div class="crop-bottom"><video src="assets/video/rollouts/ood_fm_2.mp4" autoplay loop muted playsinline></video></div>
-        <div class="cap"><b>Flow Matching</b> &middot; OOD <span class="m">&mdash; PSNR 22.7 / SSIM 0.845</span></div>
+      <div>
+        <div class="vframe vframe--169" data-auto data-views>
+          <video src="assets/video/rollouts/ood_fm_2.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="vcap"><b>Flow Matching</b> <span class="seq">· Sequence B</span></p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════════════ QUALITATIVE ════════════ -->
-<section id="qualitative">
+<!-- ════════════ GENERALIZATION ACROSS OBJECTS ════════════ -->
+<section class="band band--paper2" id="objects">
   <div class="wrap">
-    <h2>Generalization Across Objects</h2>
-    <p class="lead">Qualitative predictions on different manipulation targets.</p>
-    <figure class="dark"><img src="assets/img/cup.png" alt="Cup"><figcaption><b>Cup</b></figcaption></figure>
-    <figure class="dark"><img src="assets/img/banana.png" alt="Banana"><figcaption><b>Banana</b></figcaption></figure>
-    <figure class="dark"><img src="assets/img/cylinder.png" alt="Cylinder"><figcaption><b>Cylinder</b></figcaption></figure>
+    <span class="kicker r-up">Generalization Across Objects</span>
+    <h2 class="title r-up">Cup, banana, cylinder</h2>
+    <p class="lead r-up">Qualitative predictions on different manipulation targets.</p>
+
+    <div class="objseq">
+      <figure class="fig r-up" style="margin-top:0;">
+        <img src="assets/img/cup.png" alt="Qualitative Mask2Real-WM prediction manipulating a cup." width="2022" height="308" loading="lazy">
+        <figcaption class="cap"><b>Cup</b></figcaption>
+      </figure>
+      <figure class="fig r-up" style="margin-top:0;">
+        <img src="assets/img/banana.png" alt="Qualitative Mask2Real-WM prediction manipulating a banana." width="2022" height="308" loading="lazy">
+        <figcaption class="cap"><b>Banana</b></figcaption>
+      </figure>
+      <figure class="fig r-up" style="margin-top:0;">
+        <img src="assets/img/cylinder.png" alt="Qualitative Mask2Real-WM prediction manipulating a cylinder." width="2022" height="308" loading="lazy">
+        <figcaption class="cap"><b>Cylinder</b></figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
-<!-- ════════════ CITATION ════════════ -->
-<section id="bibtex">
+<!-- ════════════ BIBTEX ════════════ -->
+<section class="band band--dark" id="bibtex">
   <div class="wrap">
-    <h2>BibTeX</h2>
-    <pre class="cite">@inproceedings{feingold2026mask2realwm,
+    <div class="cite-head">
+      <div>
+        <span class="kicker" style="margin-bottom:10px;">BibTeX</span>
+        <h2 class="title">Cite this work</h2>
+      </div>
+      <button class="copybtn" id="copy-cite" type="button" aria-live="polite">Copy citation</button>
+    </div>
+    <pre class="cite" id="cite-text">@inproceedings{feingold2026mask2realwm,
   title     = {Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge
                for Controllable Dexterous World Models},
   author    = {Feingold, Riccardo Orion and Liconti, Davide and
@@ -525,16 +812,130 @@ footer p { line-height: 1.7; }
   </div>
 </section>
 
-<footer>
+<!-- ════════════ FOOTER ════════════ -->
+<footer class="foot">
   <div class="wrap">
-    <div class="footlogos">
-      <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich"></a>
-      <a href="https://srl.ethz.ch/" target="_blank" rel="noopener" aria-label="Soft Robotics Lab"><img class="logo-srl" src="assets/img/logos/srl_logo.svg" alt="Soft Robotics Lab"></a>
+    <div class="foot__logos">
+      <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich" width="110" height="17"></a>
+      <a href="https://srl.ethz.ch/" target="_blank" rel="noopener" aria-label="Soft Robotics Lab"><img class="logo-srl" src="assets/img/logos/srl_logo.svg" alt="Soft Robotics Lab" width="110" height="32"></a>
     </div>
-    <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a>, ETH Zürich · CoRL 2026</p>
-    <p style="margin-top:8px;">Built by <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Interactive demo built with Three.js · Robot meshes © the ORCA hand project</p>
+    <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a>, ETH&nbsp;Zürich · CoRL 2026</p>
+    <p>Built by <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Interactive demo built with Three.js · Robot meshes © the ORCA hand project</p>
   </div>
 </footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var supportsIO = 'IntersectionObserver' in window;
+
+  /* ── scroll reveals ── */
+  if(!reduce && supportsIO){
+    var revIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('is-in'); revIO.unobserve(e.target); }
+      });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.08});
+    document.querySelectorAll('.r-up').forEach(function(el){ revIO.observe(el); });
+
+    var reveal = document.getElementById('hero-reveal');
+    if(reveal){
+      var heroIO = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ reveal.classList.add('is-in'); heroIO.disconnect(); } });
+      }, {threshold:0.35});
+      heroIO.observe(reveal);
+    }
+  }
+
+  /* ── scroll-spy nav ── */
+  if(supportsIO){
+    var links = {}, order = [];
+    document.querySelectorAll('.nav__links a').forEach(function(a){
+      var id = a.getAttribute('href').slice(1); links[id] = a; order.push(id);
+    });
+    var visible = {};
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var best = null, bestR = 0;
+      order.forEach(function(id){ if(visible[id] > bestR){ bestR = visible[id]; best = id; } });
+      order.forEach(function(id){ links[id].classList.toggle('is-active', id === best); });
+    }, {rootMargin:'-45% 0px -50% 0px', threshold:[0,0.25,0.5,1]});
+    order.forEach(function(id){ var s = document.getElementById(id); if(s) spy.observe(s); });
+  }
+
+  /* ── autoplay videos: play in view, pause out of view, per-video toggle, dual-view labels ── */
+  document.querySelectorAll('.vframe[data-auto]').forEach(function(frame){
+    var v = frame.querySelector('video');
+    if(!v) return;
+    v.userPaused = false;
+
+    if(frame.hasAttribute('data-views')){
+      var t = document.createElement('span'); t.className = 'viewlbl viewlbl--top'; t.textContent = 'Third-person view';
+      var m = document.createElement('span'); m.className = 'viewlbl viewlbl--mid'; m.textContent = 'Wrist-camera view';
+      frame.appendChild(t); frame.appendChild(m);
+    }
+
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'vtoggle'; btn.textContent = 'Pause';
+    btn.setAttribute('aria-label','Pause video');
+    frame.appendChild(btn);
+
+    function play(){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }
+    function setBtn(){
+      var paused = v.paused;
+      btn.textContent = paused ? 'Play' : 'Pause';
+      btn.setAttribute('aria-label', paused ? 'Play video' : 'Pause video');
+      btn.classList.toggle('is-paused', paused);
+    }
+    btn.addEventListener('click', function(){
+      if(v.paused){ v.userPaused = false; play(); } else { v.userPaused = true; v.pause(); }
+      setBtn();
+    });
+
+    if(supportsIO){
+      var vIO = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting && e.intersectionRatio >= 0.25){
+            if(!v.userPaused) play();
+          } else {
+            if(!v.paused) v.pause();
+          }
+          setBtn();
+        });
+      }, {threshold:[0,0.25,0.6]});
+      vIO.observe(frame);
+    } else {
+      v.setAttribute('autoplay',''); play();
+    }
+    v.addEventListener('play', setBtn);
+    v.addEventListener('pause', setBtn);
+  });
+
+  /* ── copy BibTeX ── */
+  var copyBtn = document.getElementById('copy-cite');
+  var citeEl = document.getElementById('cite-text');
+  if(copyBtn && citeEl){
+    copyBtn.addEventListener('click', function(){
+      var text = citeEl.textContent;
+      var done = function(){
+        copyBtn.textContent = 'Copied ✓'; copyBtn.classList.add('done');
+        setTimeout(function(){ copyBtn.textContent = 'Copy citation'; copyBtn.classList.remove('done'); }, 2000);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else { fallback(text, done); }
+    });
+  }
+  function fallback(text, done){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly',''); ta.style.position='absolute'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); done();
+    }catch(err){}
+  }
+})();
+</script>
 
 </body>
 </html>
