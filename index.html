@@ -9,10 +9,10 @@
 <meta name="author" content="Riccardo Orion Feingold, Davide Liconti, Chenyu Yang, Robert K. Katzschmann">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="https://srl-ethz.github.io/Mask2Real-WM/">
-<meta name="theme-color" content="#f6f5f1">
+<meta name="theme-color" content="#f4f2ec">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -52,469 +52,477 @@
   "keywords": "world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, ORCA hand, Franka Panda"
 }
 </script>
+
+<!-- Opt into reveal styles only when motion is welcome, before first paint. -->
+<script>if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){document.documentElement.classList.add('js-anim');}</script>
+
+<link rel="stylesheet" href="assets/css/site.css">
+
 <style>
-:root {
-  --paper:   #f3f2ec;   /* warm paper background */
-  --panel:   #fbfaf6;   /* lighter raised panel */
-  --ink:     #1b1a17;   /* near-black text */
-  --ink-2:   #56544d;   /* secondary text */
-  --ink-3:   #8d8a80;   /* faint text / captions */
-  --rule:    #e2e0d6;   /* hairline rule */
-  --rule-2:  #cbc8bc;   /* stronger rule */
-  --teal:    #0e7c6b;   /* accent */
-  --teal-2:  #0a5e51;   /* accent deep / hover */
-  --teal-soft: rgba(14,124,107,.10);
-  --max: 1020px;
-  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --serif: 'Source Serif 4', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+/* ── opening ──
+   Text block and teaser sit side by side; everything in the text block
+   shares one left edge. */
+.masthead { padding-block: clamp(56px, 8vw, 96px) clamp(40px, 5vw, 60px); }
+.masthead-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+  column-gap: clamp(36px, 4.4vw, 76px);
+  align-items: center;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--serif);
-  background: var(--paper); color: var(--ink);
-  line-height: 1.7; font-size: 18px; -webkit-font-smoothing: antialiased;
-  counter-reset: section;
+.masthead h1 { margin-top: 24px; }
+.masthead .standfirst {
+  margin-top: 26px;
+  max-width: 46ch;
+  font-size: clamp(17px, 1.5vw, 19.5px);
+  color: var(--ink-2);
 }
-a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); transition: border-color .15s, color .15s; }
-a:hover { color: var(--teal-2); border-bottom-color: var(--teal); }
-em { font-style: italic; }
-.wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-.mono { font-family: var(--mono); }
+.masthead-figure figcaption { margin-top: 16px; }
 
-/* ── hero ── */
-header.hero {
-  text-align: center; padding: 76px 0 40px;
-  border-bottom: 1px solid var(--rule-2);
-  background:
-    linear-gradient(var(--paper), var(--paper)) padding-box,
-    radial-gradient(ellipse 70% 55% at 50% -8%, var(--teal-soft), transparent 72%);
+/* ── control-space equation ── */
+.equation-block { margin-top: clamp(46px, 6vw, 72px); }
+.equation {
+  margin-top: 18px;
+  font-size: clamp(23px, 3.4vw, 42px);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .28em;
 }
-.venue {
-  display: inline-block; font-family: var(--mono);
-  font-size: 11.5px; letter-spacing: 2.5px; text-transform: uppercase;
-  color: var(--teal); font-weight: 500;
-  border: 1px solid var(--rule-2); border-radius: 2px; padding: 5px 14px; margin-bottom: 26px;
+.equation .op { color: var(--teal); }
+.equation .unit {
+  font-family: var(--mono);
+  font-size: .4em;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: var(--ink-2);
+  margin-inline: .3em .34em;
 }
-header.hero h1 {
-  font-family: var(--mono); font-weight: 600;
-  font-size: clamp(24px, 4.4vw, 39px); line-height: 1.25;
-  max-width: 880px; margin: 0 auto 6px; letter-spacing: -0.8px;
+.equation .sum .unit { color: var(--teal-2); }
+.equation-note {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-3);
+  margin-top: 18px;
+  max-width: 62ch;
 }
-header.hero h1 .mask { color: var(--teal); }
-header.hero .subtitle { color: var(--ink-2); font-size: 18px; max-width: 700px; margin: 18px auto 0; }
-.authors { margin-top: 30px; font-size: 18px; }
-.authors .name { font-weight: 600; letter-spacing: -0.2px; }
-.authors .name a { border-bottom-color: transparent; }
-.authors .name a:hover { border-bottom-color: var(--teal); }
-.affil {
-  font-family: var(--mono); color: var(--ink-2);
-  font-size: 12.5px; letter-spacing: .2px; margin-top: 8px;
-}
-.affil a { border-bottom-color: transparent; }
-.affil a:hover { border-bottom-color: var(--teal); }
 
-/* ── org logos ── */
-.orglogos {
-  display: flex; align-items: center; justify-content: center; gap: 26px;
-  margin-top: 26px; flex-wrap: wrap;
+/* ── data annotations ── */
+.datarun {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: clamp(40px, 5vw, 58px);
+  padding-top: 26px;
+  border-top: 1px solid var(--rule);
 }
-.orglogos a { border-bottom: 0; line-height: 0; opacity: .82; transition: opacity .15s; }
-.orglogos a:hover { opacity: 1; }
-.orglogos .logo-eth { height: 21px; width: auto; display: block; }
-.orglogos .logo-srl { height: 42px; width: auto; display: block; }
-.orglogos .sep { width: 1px; height: 34px; background: var(--rule-2); }
+.datarun dt { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+.datarun dd { font-size: 27px; font-weight: 600; letter-spacing: -0.02em; margin-top: 8px; line-height: 1.2; }
+.datarun .qual { display: block; font-family: var(--mono); font-size: 11.5px; font-weight: 400; letter-spacing: 0; color: var(--ink-3); margin-top: 6px; }
 
-/* ── action buttons ── */
-.btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
-.btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--mono); font-size: 12.5px; font-weight: 500;
-  letter-spacing: .3px; text-transform: uppercase;
-  padding: 9px 16px; border-radius: 3px;
-  border: 1px solid var(--rule-2); background: var(--panel); color: var(--ink);
-  transition: all .15s;
+/* ── stages & notes: notation + heading + prose, no containers ── */
+.stages {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(30px, 4vw, 54px);
+  margin-top: clamp(40px, 5vw, 60px);
 }
-.btn:hover { border-color: var(--teal); color: var(--teal-2); transform: translateY(-1px); }
-.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--panel); }
-.btn.primary:hover { background: var(--teal); border-color: var(--teal); color: #fff; }
-.btn svg { width: 15px; height: 15px; }
+.stage .notation { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); }
+.stage h3 { margin-top: 12px; }
+.stage p { margin-top: 12px; font-size: 17px; color: var(--ink-2); }
 
-/* ── sections ── */
-section { padding: 56px 0; }
-section + section { border-top: 1px solid var(--rule); }
-section h2 {
-  font-family: var(--mono); font-size: 21px; font-weight: 600; letter-spacing: -0.3px;
-  display: flex; align-items: baseline; gap: 14px;
-  margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--rule);
+.notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(26px, 3vw, 44px);
+  margin-top: clamp(46px, 6vw, 72px);
 }
-section h2::before {
-  counter-increment: section;
-  content: counter(section, decimal-leading-zero);
-  color: var(--teal); font-size: 13px; font-weight: 500; flex-shrink: 0;
+.note { padding-top: 22px; border-top: 1px solid var(--rule); }
+.note h3 { font-size: 18px; }
+.note p { margin-top: 10px; font-size: 16px; color: var(--ink-2); }
+
+/* ── demo ── */
+.demo-frame {
+  width: 100%; height: 620px; border: 1px solid var(--rule); display: block; background: #111;
+  margin-top: clamp(36px, 4vw, 52px);
 }
-section h3 { font-family: var(--mono); font-weight: 600; }
-section .lead { color: var(--ink-2); font-size: 16px; font-style: italic; margin-bottom: 26px; }
-section p { margin-bottom: 16px; color: var(--ink); }
-section p strong { font-weight: 600; }
-
-figure { margin: 28px 0; }
-figure img { width: 100%; border-radius: 4px; border: 1px solid var(--rule-2); background: #fff; display: block; }
-figcaption {
-  font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--ink-3);
-  margin-top: 12px; padding-left: 14px; border-left: 2px solid var(--rule-2); text-align: left;
+.demo-meta {
+  display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+  margin-top: 14px;
 }
-figcaption b { color: var(--ink-2); }
-figcaption em { font-style: normal; color: var(--ink-2); }
+.demo-meta b { color: var(--teal); font-weight: 500; }
 
-/* ── highlight cards ── */
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 8px 0 4px; }
-.card {
-  background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 22px;
-}
-.card .icon { font-size: 20px; margin-bottom: 10px; }
-.card h3 { font-family: var(--mono); font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
-.card p { font-size: 15px; color: var(--ink-2); margin: 0; }
-
-/* ── stats ── */
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; margin-top: 28px; border: 1px solid var(--rule-2); border-radius: 4px; overflow: hidden; }
-.stat { padding: 22px 18px; text-align: center; border-right: 1px solid var(--rule); }
-.stat:last-child { border-right: 0; }
-.stat .num { font-family: var(--mono); font-size: 27px; font-weight: 600; color: var(--teal); line-height: 1.1; }
-.stat .lbl { font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--ink-3); margin-top: 8px; }
-
-/* ── two-stage pipeline ── */
-.pipeline { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 8px 0; }
-.stage { background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 24px; position: relative; }
-.stage::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 4px 0 0 4px; }
-.stage.wm1::before { background: var(--teal); }
-.stage.wm2::before { background: var(--rule-2); }
-.stage .tag { display: inline-block; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 2px; margin-bottom: 14px; }
-.stage.wm1 .tag { background: var(--teal-soft); color: var(--teal-2); }
-.stage.wm2 .tag { background: #eceae1; color: var(--ink-2); }
-.stage h3 { font-family: var(--mono); font-size: 15px; color: var(--ink); margin-bottom: 10px; }
-.stage p { font-size: 15px; color: var(--ink-2); margin: 0; }
-
-/* ── demo embed ── */
-.demo-shell {
-  background: var(--panel); border: 1px solid var(--rule-2); border-radius: 5px;
-  overflow: hidden; margin-top: 8px;
-}
-.demo-bar {
-  display: flex; align-items: center; gap: 9px; padding: 10px 14px;
-  background: #ecebe3; border-bottom: 1px solid var(--rule-2);
-}
-.demo-bar .dot { width: 11px; height: 11px; border-radius: 50%; }
-.demo-bar .t { font-family: var(--mono); font-size: 12px; color: var(--ink-2); margin-left: 6px; }
-.demo-bar .open { font-family: var(--mono); font-size: 11.5px; margin-left: auto; }
-.demo-frame { width: 100%; height: 620px; border: 0; display: block; background: #111; }
-.demo-hint { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-top: 14px; text-align: center; }
-
-/* ── video grid ── */
-.vgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.vitem { background: var(--panel); border: 1px solid var(--rule-2); border-radius: 4px; overflow: hidden; }
-.vitem video { width: 100%; display: block; background: #000; }
-.vitem .cap { font-family: var(--mono); padding: 10px 13px; font-size: 12px; color: var(--ink-2); }
-.vitem .cap b { color: var(--ink); }
-.vitem .cap .m { color: var(--ink-3); }
-/* crop a stacked two-view clip to just its lower (wrist-camera) half */
-.crop-bottom { position: relative; width: 100%; aspect-ratio: 480 / 128; overflow: hidden; background: #000; }
-.crop-bottom video { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; display: block; background: #000; }
-.vgrid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-@media (max-width: 720px) { .vgrid3 { grid-template-columns: 1fr; } }
+/* ── clips ── */
+.clips { display: grid; gap: clamp(20px, 2.4vw, 30px); margin-top: clamp(36px, 4vw, 52px); }
+.clips--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.clips--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.clip video { width: 100%; display: block; background: #000; border: 1px solid var(--rule); aspect-ratio: 480 / 256; }
+.clip .cap { font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--ink-3); margin-top: 11px; }
+.clip .cap b { color: var(--ink); font-weight: 500; }
 
 /* ── citation ── */
-pre.cite {
-  background: var(--panel); border: 1px solid var(--rule-2); border-radius: 4px;
-  padding: 20px; overflow-x: auto; font-size: 13px; line-height: 1.65;
-  font-family: var(--mono); color: var(--ink);
+.cite {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink);
+  overflow-x: auto;
+  margin-top: 28px;
+  padding-block: 26px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 
-footer { padding: 44px 0 60px; text-align: center; color: var(--ink-3); font-family: var(--mono); font-size: 12px; border-top: 1px solid var(--rule-2); }
-footer .footlogos { display: flex; align-items: center; justify-content: center; gap: 22px; margin-bottom: 22px; flex-wrap: wrap; }
-footer .footlogos a { border-bottom: 0; line-height: 0; opacity: .55; transition: opacity .15s; }
-footer .footlogos a:hover { opacity: .9; }
-footer .footlogos .logo-eth { height: 18px; width: auto; }
-footer .footlogos .logo-srl { height: 34px; width: auto; }
-footer p { line-height: 1.7; }
-
-@media (max-width: 720px) {
-  body { font-size: 17px; }
-  .pipeline, .vgrid { grid-template-columns: 1fr; }
-  .stat { border-right: 0; border-bottom: 1px solid var(--rule); }
-  .stat:last-child { border-bottom: 0; }
-  .demo-frame { height: 560px; }
+/* ── responsive ── */
+@media (max-width: 1000px) {
+  .masthead-grid { grid-template-columns: 1fr; row-gap: clamp(34px, 5vw, 52px); }
+  .masthead-figure { order: 2; }
+}
+@media (max-width: 760px) {
+  .stages, .notes, .datarun, .clips--2, .clips--3 { grid-template-columns: 1fr; }
+  .datarun { gap: 22px; }
+  .demo-frame { height: 520px; }
+  .equation { font-size: clamp(21px, 6.4vw, 30px); }
 }
 </style>
 </head>
 <body>
 
-<!-- ════════════ HERO ════════════ -->
-<header class="hero">
-  <div class="wrap">
-    <span class="venue">CoRL 2026 — Under Review</span>
-    <h1><span class="mask">Mask2Real-WM</span>: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</h1>
-    <p class="subtitle">A two-stage action-conditioned world model that decouples <em>dynamics</em> from <em>rendering</em>, using segmentation masks to unlock large-scale synthetic pretraining for 23-DoF dexterous manipulation.</p>
+<!-- ════════════ OPENING ════════════ -->
+<header class="masthead">
+  <div class="shell masthead-grid">
+   <div class="masthead-text">
+    <p class="venue">CoRL 2026 — Under Review</p>
+    <h1><span class="name">Mask2Real-WM</span>: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</h1>
+    <p class="standfirst">A two-stage action-conditioned world model that decouples <em>dynamics</em> from <em>rendering</em>, using segmentation masks to unlock large-scale synthetic pretraining for 23-DoF dexterous manipulation.</p>
 
-    <div class="authors">
-      <div class="name"><a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Davide Liconti · Chenyu Yang · Robert K. Katzschmann</div>
-      <div class="affil"><a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a> · Dept. of Mechanical and Process Engineering · ETH Zürich</div>
-      <div class="affil">Correspondence: <a href="mailto:riccardofeingold@gmail.com">riccardofeingold@gmail.com</a></div>
+    <div class="byline">
+      <p class="authors"><a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Davide Liconti · Chenyu Yang · Robert K. Katzschmann</p>
+      <p class="affil"><a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a> · Dept. of Mechanical and Process Engineering · ETH Zürich</p>
+      <p class="affil">Correspondence: <a href="mailto:riccardofeingold@gmail.com">riccardofeingold@gmail.com</a></p>
     </div>
 
     <div class="orglogos">
       <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich"></a>
-      <span class="sep"></span>
       <a href="https://srl.ethz.ch/" target="_blank" rel="noopener" aria-label="Soft Robotics Lab"><img class="logo-srl" src="assets/img/logos/srl_logo.svg" alt="Soft Robotics Lab"></a>
     </div>
 
-    <div class="btns">
-      <a class="btn primary" href="#demo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Interactive Demo
-      </a>
-      <a class="btn" href="https://arxiv.org/abs/2607.04546v1" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Paper · arXiv
-      </a>
-      <a class="btn" href="supplementary.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
-        Supplementary
-      </a>
-      <span class="btn" id="code-link" aria-disabled="true" style="opacity:0.6;cursor:not-allowed;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Code · Coming soon
-      </span>
-      <a class="btn" href="#bibtex">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        BibTeX
-      </a>
-      <a class="btn" href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        Author Website
-      </a>
-    </div>
+    <nav class="entry" aria-label="Paper resources">
+      <a class="lead-link" href="#demo">Interactive demo</a>
+      <a href="https://arxiv.org/abs/2607.04546v1" target="_blank" rel="noopener">Paper · arXiv ↗</a>
+      <a href="supplementary.html">Supplementary</a>
+      <span class="pending">Code · coming soon</span>
+      <a href="#bibtex">BibTeX</a>
+      <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Author website ↗</a>
+    </nav>
+   </div>
+
+   <figure class="masthead-figure">
+     <img src="assets/img/teaser_controllability.png" alt="Mask2Real-WM teaser: predicting future segmentation masks and rendering photorealistic RGB for 23-DoF dexterous manipulation">
+     <figcaption><b>Mask2Real-WM.</b> A <em>Dynamics WM</em> predicts future segmentation masks from past masks and the 23-DoF action sequence (6-DoF end-effector pose + 17-DoF hand joints), pretrained on &gt;50&nbsp;h of simulation; a <em>Rendering WM</em> paints photorealistic RGB onto the predicted masks, trained on &lt;2.5&nbsp;h of real demonstrations.</figcaption>
+   </figure>
   </div>
 </header>
 
+<main>
+
 <!-- ════════════ OVERVIEW VIDEO ════════════ -->
-<section id="overview-video" style="padding-top:40px;">
-  <div class="wrap">
-    <h2>Overview Video</h2>
-    <figure style="margin-top:18px;">
+<section class="section" id="overview-video" style="padding-top: clamp(16px, 2vw, 28px);">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Overview video</p>
+      <div class="flow reveal">
+        <h2>A narrated tour of the method</h2>
+      </div>
+    </div>
+    <figure class="wide inset reveal">
       <video src="assets/video/corl_submission.mp4" controls playsinline preload="metadata"
-             poster="assets/img/teaser_controllability.png"
-             style="width:100%;border-radius:4px;border:1px solid var(--rule-2);background:#000;display:block;">
-      </video>
+             poster="assets/img/teaser_controllability.png"></video>
       <figcaption>Narrated overview of the method, hardware setup, and results.</figcaption>
     </figure>
   </div>
 </section>
 
-<!-- ════════════ TEASER ════════════ -->
-<section style="padding-top:40px;">
-  <div class="wrap">
-    <figure class="teaser-fig" style="margin-top:0;">
-      <img src="assets/img/teaser_controllability.png" alt="Mask2Real-WM teaser">
-      <figcaption><b>Mask2Real-WM.</b> A <em>Dynamics WM</em> predicts future segmentation masks from past masks and the 23-DoF action sequence (6-DoF end-effector pose + 17-DoF hand joints), pretrained on &gt;50&nbsp;h of simulation; a <em>Rendering WM</em> paints photorealistic RGB onto the predicted masks, trained on &lt;2.5&nbsp;h of real demonstrations.</figcaption>
-    </figure>
-  </div>
-</section>
-
 <!-- ════════════ ABSTRACT ════════════ -->
-<section id="abstract">
-  <div class="wrap">
-    <h2>Abstract</h2>
-    <p>Action-conditioned world models let robots imagine the future consequences of their actions without physical interaction, making them a powerful tool for policy evaluation, planning, and data augmentation. We present <strong>Mask2Real-WM</strong>, a two-stage action-conditioned world model for dexterous manipulation that <strong>decouples</strong> pixel prediction into a <strong>dynamics model</strong> and a <strong>rendering model</strong>.</p>
-    <p>The dynamics model predicts future segmentation masks from past masks and the 23-DoF action sequence; the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale pretraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on fewer than <strong>2.5&nbsp;h of real demonstrations</strong> — an avenue largely unexplored for image-space world models.</p>
-    <p>Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation pretraining are necessary for per-DoF action controllability across all 23 degrees of freedom, while monolithic baselines collapse to coarse end-effector motion.</p>
+<section class="section" id="abstract">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Abstract</p>
+      <div class="flow reveal">
+        <h2>Decoupling dynamics from rendering</h2>
+        <p class="lede">Action-conditioned world models let robots imagine the future consequences of their actions without physical interaction, making them a powerful tool for policy evaluation, planning, and data augmentation. We present <strong>Mask2Real-WM</strong>, a two-stage action-conditioned world model for dexterous manipulation that <strong>decouples</strong> pixel prediction into a <strong>dynamics model</strong> and a <strong>rendering model</strong>.</p>
+        <p>The dynamics model predicts future segmentation masks from past masks and the 23-DoF action sequence; the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale pretraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on fewer than <strong>2.5&nbsp;h of real demonstrations</strong> — an avenue largely unexplored for image-space world models.</p>
+        <p>Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation pretraining are necessary for per-DoF action controllability across all 23 degrees of freedom, while monolithic baselines collapse to coarse end-effector motion.</p>
 
-    <div class="stats">
-      <div class="stat"><div class="num">23</div><div class="lbl">DoF controlled<br>(6 arm + 17 hand)</div></div>
-      <div class="stat"><div class="num">&gt;50 h</div><div class="lbl">synthetic pretraining</div></div>
-      <div class="stat"><div class="num">&lt;2.5 h</div><div class="lbl">real demonstrations</div></div>
-      <div class="stat"><div class="num">0.95</div><div class="lbl">ID controllability<br>(vs. 0.60 baseline)</div></div>
+        <div class="equation-block reveal">
+          <p class="eyebrow">Control space</p>
+          <p class="equation">
+            <span>6<span class="unit">DoF</span>arm</span>
+            <span class="op">+</span>
+            <span>17<span class="unit">DoF</span>hand</span>
+            <span class="op">=</span>
+            <span class="sum">23<span class="unit">DoF</span>controlled</span>
+          </p>
+          <p class="equation-note">A 6-DoF end-effector pose and 17 ORCA hand joints are driven as one action sequence — every degree of freedom conditions the dynamics model directly, rather than through a coarse end-effector proxy.</p>
+        </div>
+
+        <dl class="datarun reveal">
+          <div>
+            <dt>Synthetic pretraining</dt>
+            <dd>&gt;50 h<span class="qual">IsaacLab simulation</span></dd>
+          </div>
+          <div>
+            <dt>Real demonstrations</dt>
+            <dd>&lt;2.5 h<span class="qual">Fine-tuning budget</span></dd>
+          </div>
+          <div>
+            <dt>ID controllability</dt>
+            <dd>0.95<span class="qual">vs. 0.60 baseline</span></dd>
+          </div>
+        </dl>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ════════════ KEY IDEA ════════════ -->
-<section id="idea">
-  <div class="wrap">
-    <h2>Key Idea</h2>
-    <p class="lead">Decouple <em>what moves where</em> from <em>what it looks like</em>.</p>
-    <p>Predicting dexterous manipulation in raw pixels forces a single model to learn both physics and appearance at once — and the sim-to-real appearance gap blocks the use of cheap synthetic data. Mask2Real-WM instead factorizes the problem into one shared system of two stages, chained autoregressively at inference:</p>
-
-    <div class="pipeline">
-      <div class="stage wm1">
-        <span class="tag">WM1 · Dynamics</span>
-        <h3>Masks from actions</h3>
-        <p>An action-conditioned video-diffusion model (SVD backbone) predicts future segmentation masks from past masks and the 23-DoF action sequence. Masks have a tiny sim-to-real gap, so WM1 is pretrained on &gt;50&nbsp;h of IsaacLab data, then fine-tuned on real data with LoRA.</p>
-      </div>
-      <div class="stage wm2">
-        <span class="tag">WM2 · Rendering</span>
-        <h3>RGB from masks</h3>
-        <p>A ControlNet-augmented SVD backbone paints photorealistic two-view RGB onto WM1's predicted masks. Trained on real data only (&lt;2.5&nbsp;h), since appearance is where the sim-to-real gap is largest. A lightweight CNN encodes masks before ControlNet injection.</p>
+<section class="section" id="idea">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Key idea</p>
+      <div class="flow reveal">
+        <h2>Decouple what moves where from what it looks like</h2>
+        <p>Predicting dexterous manipulation in raw pixels forces a single model to learn both physics and appearance at once — and the sim-to-real appearance gap blocks the use of cheap synthetic data. Mask2Real-WM instead factorizes the problem into one shared system of two stages, chained autoregressively at inference:</p>
       </div>
     </div>
 
-    <div class="cards" style="margin-top:18px;">
-      <div class="card"><div class="icon">🌉</div><h3>Segmentation as a bridge</h3><p>Masks are nearly domain-invariant, enabling synthetic pretraining that is impractical in RGB space.</p></div>
-      <div class="card"><div class="icon">🎛️</div><h3>Per-DoF controllability</h3><p>Each of the 23 joints responds faithfully and independently — no coupling collapse to coarse end-effector motion.</p></div>
-      <div class="card"><div class="icon">🏷️</div><h3>Automatic labels</h3><p>SAM&nbsp;3 produces masks from text prompts alone, supervising the intermediate representation at scale.</p></div>
+    <div class="inset">
+      <div class="stages reveal">
+        <div class="stage">
+          <p class="notation">WM1 · Dynamics</p>
+          <h3>Masks from actions</h3>
+          <p>An action-conditioned video-diffusion model (SVD backbone) predicts future segmentation masks from past masks and the 23-DoF action sequence. Masks have a tiny sim-to-real gap, so WM1 is pretrained on &gt;50&nbsp;h of IsaacLab data, then fine-tuned on real data with LoRA.</p>
+        </div>
+        <div class="stage">
+          <p class="notation">WM2 · Rendering</p>
+          <h3>RGB from masks</h3>
+          <p>A ControlNet-augmented SVD backbone paints photorealistic two-view RGB onto WM1's predicted masks. Trained on real data only (&lt;2.5&nbsp;h), since appearance is where the sim-to-real gap is largest. A lightweight CNN encodes masks before ControlNet injection.</p>
+        </div>
+      </div>
+
+      <div class="notes reveal">
+        <div class="note">
+          <h3>Segmentation as a bridge</h3>
+          <p>Masks are nearly domain-invariant, enabling synthetic pretraining that is impractical in RGB space.</p>
+        </div>
+        <div class="note">
+          <h3>Per-DoF controllability</h3>
+          <p>Each of the 23 joints responds faithfully and independently — no coupling collapse to coarse end-effector motion.</p>
+        </div>
+        <div class="note">
+          <h3>Automatic labels</h3>
+          <p>SAM&nbsp;3 produces masks from text prompts alone, supervising the intermediate representation at scale.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ════════════ METHOD ════════════ -->
-<section id="method">
-  <div class="wrap">
-    <h2>Method</h2>
-    <figure class="dark">
-      <img src="assets/img/method_dexwm.png" alt="Method overview">
+<section class="section" id="method">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Method</p>
+      <div class="flow reveal">
+        <h2>A two-stage world model, told as a picture</h2>
+      </div>
+    </div>
+
+    <figure class="wide reveal">
+      <img src="assets/img/method_dexwm.png" alt="Method overview: dynamics model denoises future masks, rendering model paints RGB via ControlNet">
       <figcaption><b>Method overview.</b> <em>Left (WM1):</em> an action-conditioned dynamics model denoises future segmentation masks from past masks and the past/future action sequence; pretrained on simulation. <em>Right (WM2):</em> a rendering model paints photorealistic RGB onto the predicted masks via a ControlNet branch on a LoRA-adapted SVD backbone; trained on real data. The two stages are chained autoregressively at inference.</figcaption>
     </figure>
 
-    <figure class="dark">
-      <img src="assets/img/robot_setup.png" alt="Hardware setup">
+    <figure class="wide reveal">
+      <img src="assets/img/robot_setup.png" alt="Hardware setup: Franka Panda arm with ORCA hand, workspace and wrist cameras">
       <figcaption><b>Hardware.</b> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (23 DoF total), observed from a fixed workspace camera and a wrist-mounted camera that captures finger–object contacts in a tilted-wall arena.</figcaption>
     </figure>
 
-    <figure class="dark">
-      <img src="assets/img/dataset_coverage.png" alt="Action coverage simulation vs real">
+    <figure class="wide reveal">
+      <img src="assets/img/dataset_coverage.png" alt="Action coverage across 23 DoF, simulation versus real">
       <figcaption><b>Action coverage: sim vs. real.</b> Per-dimension action range across all 23 DoF. Simulation (&gt;50&nbsp;h) spans a far wider range than real demonstrations (&lt;2.5&nbsp;h), motivating large-scale synthetic pretraining of WM1.</figcaption>
     </figure>
 
-    <figure class="dark">
-      <img src="assets/img/gt_masks_comparison.png" alt="Segmentation masks sim vs real">
+    <figure class="wide reveal">
+      <img src="assets/img/gt_masks_comparison.png" alt="Segmentation masks in simulation versus reality look nearly identical">
       <figcaption><b>The sim-to-real bridge.</b> Segmentation masks (hand: green, object: red, background: black) look nearly identical across simulation and reality, unlike raw RGB — this small domain gap is what makes synthetic pretraining of the dynamics model effective.</figcaption>
     </figure>
   </div>
 </section>
 
 <!-- ════════════ INTERACTIVE DEMO ════════════ -->
-<section id="demo">
-  <div class="wrap">
-    <h2>Interactive Demo · DOF Controllability</h2>
-    <p class="lead">Click any joint on the 3D ORCA hand (or a button) to see the world model's prediction when that single action component is perturbed. Switch models and samples to compare side by side.</p>
-
-    <div class="demo-shell">
-      <div class="demo-bar">
-        <span class="dot" style="background:#ff5f57"></span>
-        <span class="dot" style="background:#febc2e"></span>
-        <span class="dot" style="background:#28c840"></span>
-        <span class="t">OrcaHand — DOF Controllability Demo</span>
-        <a class="open" href="demo/index.html" target="_blank" rel="noopener">Open full screen ↗</a>
+<section class="section" id="demo">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Interactive demo</p>
+      <div class="flow reveal">
+        <h2>Per-DoF controllability, in 3D</h2>
+        <p>Click any joint on the 3D ORCA hand — or a button — to see the world model's prediction when that single action component is perturbed. Switch models and samples to compare side by side.</p>
       </div>
-      <iframe class="demo-frame" src="demo/index.html" title="OrcaHand DOF Controllability Demo" loading="lazy"></iframe>
     </div>
-    <p class="demo-hint">Compare <b style="color:var(--teal)">WM + LoRA (ours)</b>, WM Mid-train, WM Real-Only, and the monolithic Baseline across 23 degrees of freedom. The 3D model loads from STL meshes; videos stream on click.</p>
+
+    <div class="wide reveal">
+      <iframe class="demo-frame" src="demo/index.html" title="OrcaHand DOF controllability demo" loading="lazy"></iframe>
+      <div class="demo-meta">
+        <span>Compare <b>WM + LoRA (ours)</b>, WM Mid-train, WM Real-Only, and the monolithic Baseline across 23 degrees of freedom. The 3D model loads from STL meshes; videos stream on click.</span>
+        <a href="demo/index.html" target="_blank" rel="noopener">Open full screen ↗</a>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ════════════ RESULTS ════════════ -->
-<section id="results">
-  <div class="wrap">
-    <h2>Results</h2>
+<section class="section" id="results">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Results</p>
+      <div class="flow reveal">
+        <h2>What mask conditioning and sim pretraining buy</h2>
+        <p>Isolated single-finger motion is <strong>absent from the real training set</strong>, which predominantly contains cube-grasping. Simulation pretraining alone lifts controllability from ≈0.68→0.85 (ID) and ≈0.51→0.73 (OOD); real fine-tuning then closes the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations.</p>
+      </div>
+    </div>
 
-    <h3 style="font-size:15px;margin:6px 0 4px;">Action controllability</h3>
-    <figure class="dark">
-      <img src="assets/img/controllability.png" alt="Controllability results">
+    <figure class="wide reveal">
+      <img src="assets/img/controllability.png" alt="Controllability results across models and degrees of freedom">
       <figcaption><b>Action controllability.</b> <em>Left:</em> model responses to sinusoidal perturbation of individual action components. <em>Right:</em> mean controllability score for ID (top) and OOD (bottom). Our full model (WM1 sim→real, WM2 real) reaches ≈0.95 ID and ≈0.87 OOD; the monolithic baseline falls below 0.5 on OOD.</figcaption>
     </figure>
-    <p>Isolated single-finger motion is <strong>absent from the real training set</strong>, which predominantly contains cube-grasping. Simulation pretraining alone lifts controllability from ≈0.68→0.85 (ID) and ≈0.51→0.73 (OOD); real fine-tuning then closes the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations.</p>
 
-    <h3 style="font-size:15px;margin:26px 0 4px;">Video prediction quality</h3>
-    <figure class="dark">
-      <img src="assets/img/results_perceptual.png" alt="Perceptual metrics">
+    <figure class="wide reveal">
+      <img src="assets/img/results_perceptual.png" alt="Perceptual metrics across WM1 training configurations">
       <figcaption><b>Perceptual metrics across WM1 training configurations.</b> PSNR, SSIM, LPIPS on ID (top) and LPIPS on three OOD splits — <em>No Object</em>, <em>Random Play</em>, <em>Background</em> (bottom) — for real-only, sim-only, and sim-then-real (ours) WM1, all paired with the same WM2. Sim pretraining substantially reduces OOD degradation while real fine-tuning maintains strong ID performance.</figcaption>
     </figure>
 
-    <h3 style="font-size:15px;margin:26px 0 4px;">WM2 conditioning ablation</h3>
-    <figure class="dark">
-      <img src="assets/img/wm2_ablation.png" alt="WM2 conditioning ablation" style="max-width:680px;margin:0 auto;">
+    <figure class="wide reveal">
+      <img src="assets/img/wm2_ablation.png" alt="WM2 conditioning ablation measured in LPIPS">
       <figcaption><b>WM2 conditioning ablation (LPIPS↓).</b> Mask conditioning via ControlNet is the dominant driver of spatial sharpness; adding action conditioning further tightens motion consistency. Masks alone already support competitive quality and zero-shot deployment decoupled from the action space.</figcaption>
     </figure>
   </div>
 </section>
 
 <!-- ════════════ LONG-HORIZON ROLLOUTS ════════════ -->
-<section id="rollouts">
-  <div class="wrap">
-    <h2>Long-Horizon Rollouts</h2>
-    <p class="lead">Autoregressive rollout on a pick-and-place sequence with the cup, comparing Mask2Real-WM against the monolithic baseline.</p>
-    <div class="vgrid">
-      <div class="vitem">
-        <video src="assets/video/2_stage_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>Mask2Real-WM (ours)</b> — sharp contacts, stable object identity</div>
-      </div>
-      <div class="vitem">
-        <video src="assets/video/baseline_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>Monolithic baseline</b> — blur and drift accumulate</div>
+<section class="section" id="rollouts">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Long-horizon rollouts</p>
+      <div class="flow reveal">
+        <h2>Autoregressive rollout, ours vs. monolithic</h2>
+        <p>Autoregressive rollout on a pick-and-place sequence with the cup, comparing Mask2Real-WM against the monolithic baseline.</p>
       </div>
     </div>
 
-    <figure class="dark" style="margin-top:30px;">
-      <img src="assets/img/ours_strip.png" alt="Long-horizon strip ours">
+    <div class="wide reveal">
+      <div class="clips clips--2" style="margin-top:0;">
+        <div class="clip">
+          <video src="assets/video/2_stage_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Mask2Real-WM (ours)</b> — sharp contacts, stable object identity</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/baseline_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Monolithic baseline</b> — blur and drift accumulate</p>
+        </div>
+      </div>
+    </div>
+
+    <figure class="wide reveal">
+      <img src="assets/img/ours_strip.png" alt="Long-horizon mask-to-RGB rollout strip, ours">
       <figcaption><b>Ours</b> — long-horizon mask→RGB rollout strip.</figcaption>
     </figure>
-    <figure class="dark">
-      <img src="assets/img/baseline_strip.png" alt="Long-horizon strip baseline">
+    <figure class="wide reveal">
+      <img src="assets/img/baseline_strip.png" alt="Long-horizon rollout strip, baseline">
       <figcaption><b>Baseline</b> — long-horizon rollout strip; note the loss of finger and object detail over time.</figcaption>
     </figure>
   </div>
 </section>
 
-<!-- ════════════ POLICY ROLLOUTS (OOD) ════════════ -->
-<section id="policy-rollouts">
-  <div class="wrap">
-    <h2>Long-Horizon Policy Rollouts</h2>
-    <p class="lead">These examples visualize how long-horizon behavior unfolds as ACT, Diffusion Policy, and Flow Matching are rolled out inside Mask2Real-WM. Each video shows both the third-person and wrist-camera views: the upper half is the starting image for each view, and the lower half is the policy rollout.</p>
-    <div class="vgrid3">
-      <div class="vitem">
-        <video src="assets/video/rollouts/ood_act_1.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>ACT</b> <span class="m">&middot; Sequence A</span></div>
+<!-- ════════════ POLICY ROLLOUTS ════════════ -->
+<section class="section" id="policy-rollouts">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Policy rollouts</p>
+      <div class="flow reveal">
+        <h2>Behavior unfolding inside the world model</h2>
+        <p>These examples visualize how long-horizon behavior unfolds as ACT, Diffusion Policy, and Flow Matching are rolled out inside Mask2Real-WM. Each video shows both the third-person and wrist-camera views: the upper half is the starting image for each view, and the lower half is the policy rollout.</p>
       </div>
-      <div class="vitem">
-        <video src="assets/video/rollouts/ood_dp_1.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>Diffusion Policy</b> <span class="m">&middot; Sequence A</span></div>
-      </div>
-      <div class="vitem">
-        <video src="assets/video/rollouts/ood_fm_1.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>Flow Matching</b> <span class="m">&middot; Sequence A</span></div>
-      </div>
-      <div class="vitem">
-        <video src="assets/video/rollouts/ood_act_2.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>ACT</b> <span class="m">&middot; Sequence B</span></div>
-      </div>
-      <div class="vitem">
-        <video src="assets/video/rollouts/ood_dp_2.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>Diffusion Policy</b> <span class="m">&middot; Sequence B</span></div>
-      </div>
-      <div class="vitem">
-        <video src="assets/video/rollouts/ood_fm_2.mp4" autoplay loop muted playsinline></video>
-        <div class="cap"><b>Flow Matching</b> <span class="m">&middot; Sequence B</span></div>
+    </div>
+
+    <div class="wide reveal">
+      <div class="clips clips--3" style="margin-top:0;">
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_act_1.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>ACT</b> · Sequence A</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_dp_1.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Diffusion Policy</b> · Sequence A</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_fm_1.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Flow Matching</b> · Sequence A</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_act_2.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>ACT</b> · Sequence B</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_dp_2.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Diffusion Policy</b> · Sequence B</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_fm_2.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Flow Matching</b> · Sequence B</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ════════════ QUALITATIVE ════════════ -->
-<section id="qualitative">
-  <div class="wrap">
-    <h2>Generalization Across Objects</h2>
-    <p class="lead">Qualitative predictions on different manipulation targets.</p>
-    <figure class="dark"><img src="assets/img/cup.png" alt="Cup"><figcaption><b>Cup</b></figcaption></figure>
-    <figure class="dark"><img src="assets/img/banana.png" alt="Banana"><figcaption><b>Banana</b></figcaption></figure>
-    <figure class="dark"><img src="assets/img/cylinder.png" alt="Cylinder"><figcaption><b>Cylinder</b></figcaption></figure>
+<section class="section" id="qualitative">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Generalization</p>
+      <div class="flow reveal">
+        <h2>Cup, banana, cylinder</h2>
+        <p>Qualitative predictions on different manipulation targets.</p>
+      </div>
+    </div>
+
+    <figure class="wide reveal">
+      <img src="assets/img/cup.png" alt="Qualitative prediction: cup">
+      <figcaption><b>Cup</b></figcaption>
+    </figure>
+    <figure class="wide reveal">
+      <img src="assets/img/banana.png" alt="Qualitative prediction: banana">
+      <figcaption><b>Banana</b></figcaption>
+    </figure>
+    <figure class="wide reveal">
+      <img src="assets/img/cylinder.png" alt="Qualitative prediction: cylinder">
+      <figcaption><b>Cylinder</b></figcaption>
+    </figure>
   </div>
 </section>
 
 <!-- ════════════ CITATION ════════════ -->
-<section id="bibtex">
-  <div class="wrap">
-    <h2>BibTeX</h2>
-    <pre class="cite">@inproceedings{feingold2026mask2realwm,
+<section class="section" id="bibtex">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">BibTeX</p>
+      <div class="flow reveal">
+        <h2>Cite this work</h2>
+        <pre class="cite">@inproceedings{feingold2026mask2realwm,
   title     = {Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge
                for Controllable Dexterous World Models},
   author    = {Feingold, Riccardo Orion and Liconti, Davide and
@@ -522,19 +530,61 @@ footer p { line-height: 1.7; }
   booktitle = {Conference on Robot Learning (CoRL)},
   year      = {2026}
 }</pre>
+      </div>
+    </div>
   </div>
 </section>
 
+</main>
+
 <footer>
-  <div class="wrap">
+  <div class="shell">
     <div class="footlogos">
       <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich"></a>
       <a href="https://srl.ethz.ch/" target="_blank" rel="noopener" aria-label="Soft Robotics Lab"><img class="logo-srl" src="assets/img/logos/srl_logo.svg" alt="Soft Robotics Lab"></a>
     </div>
     <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a>, ETH Zürich · CoRL 2026</p>
-    <p style="margin-top:8px;">Built by <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Interactive demo built with Three.js · Robot meshes © the ORCA hand project</p>
+    <p>Built by <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Interactive demo built with Three.js · Robot meshes © the ORCA hand project</p>
   </div>
 </footer>
+
+<script>
+// Gentle reveal as each block enters the viewport. The js-anim class is only set
+// when the visitor has not asked for reduced motion, so this stays inert otherwise.
+(function () {
+  if (!document.documentElement.classList.contains('js-anim')) return;
+  var targets = document.querySelectorAll('.reveal');
+  var each = function (fn) { Array.prototype.forEach.call(targets, fn); };
+  var showAll = function () { each(function (el) { el.classList.add('is-in'); }); };
+
+  try {
+    if (!('IntersectionObserver' in window)) return showAll();
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    each(function (el) { io.observe(el); });
+
+    // These blocks start transparent, so anything the observer fails to report
+    // would stay invisible for good. Sweep up whatever is already in view.
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        each(function (el) {
+          if (!el.classList.contains('is-in') && el.getBoundingClientRect().top < window.innerHeight) {
+            el.classList.add('is-in');
+          }
+        });
+      }, 1000);
+    });
+  } catch (err) {
+    showAll();
+  }
+})();
+</script>
 
 </body>
 </html>

@@ -1,0 +1,200 @@
+/* Mask2Real-WM — editorial design system shared by index.html and supplementary.html.
+   Page-specific composition stays inline in each page. */
+
+:root {
+  --paper:  #f4f2ec;
+  --ink:    #17170f;
+  --ink-2:  #4f4d44;
+  --ink-3:  #86837a;
+  --rule:   #dedbcf;
+  --teal:   #0e7c6b;
+  --teal-2: #0a5e51;
+
+  --mono:  'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --serif: 'Source Serif 4', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+
+  --shell: 1120px;
+  --aside: 190px;
+  --gutter: clamp(28px, 4.5vw, 68px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-size: 19px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: var(--teal); text-decoration: none; }
+a:hover { color: var(--teal-2); }
+em { font-style: italic; }
+abbr { text-decoration: none; }
+
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+/* ── composition ─────────────────────────────────────────────
+   One shell, one asymmetric spread: a narrow notation column
+   beside a wider narrative column. Figures break past both. */
+.shell { width: min(100% - 2 * var(--gutter), var(--shell)); margin-inline: auto; }
+
+.spread {
+  display: grid;
+  grid-template-columns: var(--aside) minmax(0, 690px);
+  column-gap: var(--gutter);
+  align-items: start;
+}
+.spread > .eyebrow { position: sticky; top: 34px; padding-top: .55em; }
+
+.flow > * + * { margin-top: 1.1em; }
+.flow > h2 + p, .flow > h3 + p { margin-top: .85em; }
+
+.section { padding-block: clamp(68px, 9vw, 124px); }
+
+/* ── typography ── */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: clamp(31px, 3.5vw, 46px);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+h1 .name { color: var(--teal); }
+
+h2 {
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+h3 {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+}
+
+p strong { font-weight: 600; }
+
+.lede { font-size: clamp(19px, 2vw, 22px); color: var(--ink-2); }
+
+.venue {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+/* ── byline & marks ── */
+.byline { margin-top: clamp(32px, 4vw, 46px); }
+.byline .authors { font-weight: 600; letter-spacing: -0.01em; }
+.byline .affil {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--ink-2);
+  margin-top: 6px;
+}
+.byline a { color: inherit; border-bottom: 1px solid rgba(14,124,107,.35); }
+.byline a:hover { color: var(--teal-2); border-bottom-color: var(--teal); }
+
+.orglogos {
+  display: flex; align-items: center; gap: 30px; flex-wrap: wrap;
+  margin-top: 30px;
+}
+.orglogos a { line-height: 0; opacity: .8; transition: opacity .15s; }
+.orglogos a:hover { opacity: 1; }
+.orglogos .logo-eth { height: 21px; width: auto; }
+.orglogos .logo-srl { height: 42px; width: auto; }
+
+/* entry links — document notation, not buttons */
+.entry {
+  display: flex; flex-wrap: wrap; gap: 10px 24px;
+  margin-top: clamp(30px, 4vw, 44px);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.entry a {
+  color: var(--ink-2);
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--rule);
+  transition: color .15s, border-color .15s;
+}
+.entry a:hover { color: var(--teal-2); border-bottom-color: var(--teal); }
+.entry a.lead-link { color: var(--teal); border-bottom-color: rgba(14,124,107,.5); font-weight: 500; }
+.entry a.lead-link:hover { color: var(--teal-2); border-bottom-color: var(--teal); }
+.entry .pending { color: var(--ink-3); padding-bottom: 3px; border-bottom: 1px dashed var(--rule); }
+
+/* ── figures ── */
+figure { margin: 0; }
+figure img, figure video { width: 100%; display: block; background: #fff; border: 1px solid var(--rule); }
+figcaption {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ink-3);
+  margin-top: 14px;
+  max-width: 96ch;
+}
+figcaption b { color: var(--ink-2); font-weight: 500; }
+figcaption em { font-style: normal; color: var(--ink-2); }
+
+.wide { margin-top: clamp(40px, 5vw, 64px); }
+.wide + .wide { margin-top: clamp(48px, 6vw, 78px); }
+/* offset to sit under the narrative column, not the notation column */
+.inset { margin-left: calc(var(--aside) + var(--gutter)); }
+
+/* ── footer ── */
+footer { padding-block: 54px 72px; margin-top: clamp(60px, 8vw, 96px); border-top: 1px solid var(--rule); }
+footer .footlogos { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 22px; }
+footer .footlogos a { line-height: 0; opacity: .5; transition: opacity .15s; }
+footer .footlogos a:hover { opacity: .85; }
+footer .footlogos .logo-eth { height: 17px; width: auto; }
+footer .footlogos .logo-srl { height: 32px; width: auto; }
+footer p { font-family: var(--mono); font-size: 12px; line-height: 1.8; color: var(--ink-3); }
+footer a { color: var(--ink-2); border-bottom: 1px solid var(--rule); }
+footer a:hover { color: var(--teal-2); border-bottom-color: var(--teal); }
+
+/* ── motion ── */
+.js-anim .reveal { opacity: 0; transform: translateY(14px); transition: opacity .75s ease, transform .75s ease; }
+.js-anim .reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .js-anim .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ── responsive ── */
+@media (max-width: 1000px) {
+  .spread { grid-template-columns: 1fr; }
+  .spread > .eyebrow { position: static; padding-top: 0; margin-bottom: 14px; }
+  .inset { margin-left: 0; }
+}
+@media (max-width: 760px) {
+  body { font-size: 17.5px; }
+}
