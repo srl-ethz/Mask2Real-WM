@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</title>
 <meta name="description" content="A two-stage action-conditioned world model for dexterous manipulation that decouples dynamics (segmentation masks) from rendering (RGB), using segmentation space as a sim-to-real bridge.">
-<meta name="keywords" content="world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, CoRL 2026, ORCA hand, Franka Panda, ETH Zurich, Mask2Real-WM">
+<meta name="keywords" content="world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, preprint 2026, ORCA hand, Franka Panda, ETH Zurich, Mask2Real-WM">
 <meta name="author" content="Riccardo Orion Feingold, Davide Liconti, Chenyu Yang, Robert K. Katzschmann">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="https://srl-ethz.github.io/Mask2Real-WM/">
@@ -47,8 +47,8 @@
     { "@type": "Person", "name": "Robert K. Katzschmann" }
   ],
   "affiliation": { "@type": "Organization", "name": "Soft Robotics Lab, ETH Zurich", "url": "https://srl.ethz.ch/" },
-  "publisher": { "@type": "Organization", "name": "Conference on Robot Learning (CoRL)" },
-  "abstract": "We present Mask2Real-WM, a two-stage action-conditioned world model for dexterous manipulation that decouples pixel prediction into a dynamics model (predicting future segmentation masks from past masks and the 23-DoF action sequence) and a rendering model (painting photorealistic RGB onto the predicted masks). Because segmentation space has a small sim-to-real gap, the dynamics model is pretrained on over 50 hours of synthetic simulation data and fine-tuned on fewer than 2.5 hours of real demonstrations.",
+  "publisher": { "@type": "Organization", "name": "arXiv" },
+  "abstract": "We present Mask2Real-WM, a two-stage action-conditioned world model for dexterous manipulation that decouples pixel prediction into a dynamics model (predicting future segmentation masks from past masks and a 23-dimensional action sequence: a 6-D Cartesian end-effector pose and 17 hand-joint positions) and a rendering model (painting photorealistic RGB onto the predicted masks). Because segmentation space has a small sim-to-real gap, the dynamics model is pretrained on over 50 hours of synthetic simulation data and fine-tuned on approximately 2.5 hours of real demonstrations.",
   "keywords": "world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, ORCA hand, Franka Panda"
 }
 </script>
@@ -195,7 +195,7 @@
 <header class="masthead">
   <div class="shell masthead-grid">
    <div class="masthead-text">
-    <p class="venue">CoRL 2026 — Under Review</p>
+    <p class="venue">Preprint · 2026</p>
     <h1><span class="name">Mask2Real-WM</span>: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</h1>
     <p class="standfirst">A two-stage action-conditioned world model that decouples <em>dynamics</em> from <em>rendering</em>, using segmentation masks to unlock large-scale synthetic pretraining for 23-DoF dexterous manipulation.</p>
 
@@ -222,7 +222,7 @@
 
    <figure class="masthead-figure">
      <img src="assets/img/teaser_controllability.png" alt="Mask2Real-WM teaser: predicting future segmentation masks and rendering photorealistic RGB for 23-DoF dexterous manipulation">
-     <figcaption><b>Mask2Real-WM.</b> A <em>Dynamics WM</em> predicts future segmentation masks from past masks and the 23-DoF action sequence (6-DoF end-effector pose + 17-DoF hand joints), pretrained on &gt;50&nbsp;h of simulation; a <em>Rendering WM</em> paints photorealistic RGB onto the predicted masks, trained on &lt;2.5&nbsp;h of real demonstrations.</figcaption>
+     <figcaption><b>Mask2Real-WM.</b> A <em>Dynamics WM</em> predicts future segmentation masks from past masks and a 23-dimensional action sequence (6-D Cartesian end-effector pose + 17 hand-joint positions), pretrained on &gt;50&nbsp;h of simulation; a <em>Rendering WM</em> paints photorealistic RGB onto the predicted masks, trained on &approx;2.5&nbsp;h of real demonstrations.</figcaption>
    </figure>
   </div>
 </header>
@@ -254,19 +254,19 @@
       <div class="flow reveal">
         <h2>Decoupling dynamics from rendering</h2>
         <p class="lede">Action-conditioned world models let robots imagine the future consequences of their actions without physical interaction, making them a powerful tool for policy evaluation, planning, and data augmentation. We present <strong>Mask2Real-WM</strong>, a two-stage action-conditioned world model for dexterous manipulation that <strong>decouples</strong> pixel prediction into a <strong>dynamics model</strong> and a <strong>rendering model</strong>.</p>
-        <p>The dynamics model predicts future segmentation masks from past masks and the 23-DoF action sequence; the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale pretraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on fewer than <strong>2.5&nbsp;h of real demonstrations</strong> — an avenue largely unexplored for image-space world models.</p>
-        <p>Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation pretraining are necessary for per-DoF action controllability across all 23 degrees of freedom, while monolithic baselines collapse to coarse end-effector motion.</p>
+        <p>The dynamics model predicts future segmentation masks from past masks and a 23-dimensional action sequence (a 6-D Cartesian end-effector pose and 17 hand-joint positions); the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale pretraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on approximately <strong>2.5&nbsp;h of real demonstrations</strong> — an avenue largely unexplored for image-space world models.</p>
+        <p>Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation pretraining are necessary to achieve high mean command-response controllability across the 23 action dimensions, while monolithic baselines capture only coarse end-effector motion.</p>
 
         <div class="equation-block reveal">
-          <p class="eyebrow">Control space</p>
+          <p class="eyebrow">Action space</p>
           <p class="equation">
-            <span>6<span class="unit">DoF</span>arm</span>
+            <span>6<span class="unit">D</span>EE&nbsp;pose</span>
             <span class="op">+</span>
-            <span>17<span class="unit">DoF</span>hand</span>
+            <span>17<span class="unit">hand</span>joints</span>
             <span class="op">=</span>
-            <span class="sum">23<span class="unit">DoF</span>controlled</span>
+            <span class="sum">23<span class="unit">action</span>dims</span>
           </p>
-          <p class="equation-note">A 6-DoF end-effector pose and 17 ORCA hand joints are driven as one action sequence — every degree of freedom conditions the dynamics model directly, rather than through a coarse end-effector proxy.</p>
+          <p class="equation-note">A 6-D Cartesian end-effector pose and 17 ORCA hand-joint positions are driven as one action sequence — every action dimension conditions the dynamics model directly, rather than through a coarse end-effector proxy. (The physical robot has 24 actuated joint DoF: 7 in the arm, 17 in the hand; the arm is commanded in Cartesian end-effector space.)</p>
         </div>
 
         <dl class="datarun reveal">
@@ -276,7 +276,7 @@
           </div>
           <div>
             <dt>Real demonstrations</dt>
-            <dd>&lt;2.5 h<span class="qual">Fine-tuning budget</span></dd>
+            <dd>&approx;2.5 h<span class="qual">Fine-tuning budget</span></dd>
           </div>
           <div>
             <dt>ID controllability</dt>
@@ -309,22 +309,22 @@
         <div class="stage">
           <p class="notation">WM2 · Rendering</p>
           <h3>RGB from masks</h3>
-          <p>A ControlNet-augmented SVD backbone paints photorealistic two-view RGB onto WM1's predicted masks. Trained on real data only (&lt;2.5&nbsp;h), since appearance is where the sim-to-real gap is largest. A lightweight CNN encodes masks before ControlNet injection.</p>
+          <p>A ControlNet-augmented SVD backbone paints photorealistic two-view RGB onto WM1's predicted masks. Trained on real data only (&approx;2.5&nbsp;h), since appearance is where the sim-to-real gap is largest. A lightweight CNN encodes masks before ControlNet injection.</p>
         </div>
       </div>
 
       <div class="notes reveal">
         <div class="note">
           <h3>Segmentation as a bridge</h3>
-          <p>Masks are nearly domain-invariant, enabling synthetic pretraining that is impractical in RGB space.</p>
+          <p>Masks have a substantially smaller sim-to-real gap than RGB, enabling synthetic pretraining that is impractical in RGB space.</p>
         </div>
         <div class="note">
-          <h3>Per-DoF controllability</h3>
-          <p>Each of the 23 joints responds faithfully and independently — no coupling collapse to coarse end-effector motion.</p>
+          <h3>Command-response controllability</h3>
+          <p>High mean command-response controllability across the 23 action dimensions, with substantially reduced coupling versus the monolithic baseline.</p>
         </div>
         <div class="note">
           <h3>Automatic labels</h3>
-          <p>SAM&nbsp;3 produces masks from text prompts alone, supervising the intermediate representation at scale.</p>
+          <p>SAM&nbsp;3 produces segmentation pseudo-labels without manual per-frame annotation (wrist view initialized with a short auxiliary clip and a bounding box), supervising the intermediate representation at scale.</p>
         </div>
       </div>
     </div>
@@ -348,12 +348,12 @@
 
     <figure class="wide reveal">
       <img src="assets/img/robot_setup.png" alt="Hardware setup: Franka Panda arm with ORCA hand, workspace and wrist cameras">
-      <figcaption><b>Hardware.</b> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (23 DoF total), observed from a fixed workspace camera and a wrist-mounted camera that captures finger–object contacts in a tilted-wall arena.</figcaption>
+      <figcaption><b>Hardware.</b> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (24 actuated joint DoF total: 7 arm + 17 hand), commanded through a 23-dimensional action space (6-D Cartesian end-effector pose + 17 hand-joint positions). Observed from a fixed workspace camera and a wrist-mounted camera that captures finger–object contacts in a tilted-wall arena.</figcaption>
     </figure>
 
     <figure class="wide reveal">
-      <img src="assets/img/dataset_coverage.png" alt="Action coverage across 23 DoF, simulation versus real">
-      <figcaption><b>Action coverage: sim vs. real.</b> Per-dimension action range across all 23 DoF. Simulation (&gt;50&nbsp;h) spans a far wider range than real demonstrations (&lt;2.5&nbsp;h), motivating large-scale synthetic pretraining of WM1.</figcaption>
+      <img src="assets/img/dataset_coverage.png" alt="Action coverage across 23 action dimensions, simulation versus real">
+      <figcaption><b>Action coverage: sim vs. real.</b> Per-dimension action range across all 23 action dimensions. Simulation (&gt;50&nbsp;h) spans a far wider range than real demonstrations (&approx;2.5&nbsp;h), motivating large-scale synthetic pretraining of WM1.</figcaption>
     </figure>
 
     <figure class="wide reveal">
@@ -369,15 +369,15 @@
     <div class="spread">
       <p class="eyebrow">Interactive demo</p>
       <div class="flow reveal">
-        <h2>Per-DoF controllability, in 3D</h2>
-        <p>Click any joint on the 3D ORCA hand — or a button — to see the world model's prediction when that single action component is perturbed. Switch models and samples to compare side by side.</p>
+        <h2>Per-dimension controllability, in 3D</h2>
+        <p>Click any joint on the 3D ORCA hand — or a button — to see the world model's prediction when that single action dimension is perturbed. Switch models and samples to compare side by side.</p>
       </div>
     </div>
 
     <div class="wide reveal">
       <iframe class="demo-frame" src="demo/index.html" title="OrcaHand DOF controllability demo" loading="lazy"></iframe>
       <div class="demo-meta">
-        <span>Compare <b>WM + LoRA (ours)</b>, WM Mid-train, WM Real-Only, and the monolithic Baseline across 23 degrees of freedom. The 3D model loads from STL meshes; videos stream on click.</span>
+        <span>Compare <b>WM + LoRA (ours)</b>, WM Mid-train, WM Real-Only, and the monolithic Baseline across 23 action dimensions. The 3D model loads from STL meshes; videos stream on click.</span>
         <a href="demo/index.html" target="_blank" rel="noopener">Open full screen ↗</a>
       </div>
     </div>
@@ -522,13 +522,13 @@
       <p class="eyebrow">BibTeX</p>
       <div class="flow reveal">
         <h2>Cite this work</h2>
-        <pre class="cite">@inproceedings{feingold2026mask2realwm,
-  title     = {Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge
-               for Controllable Dexterous World Models},
-  author    = {Feingold, Riccardo Orion and Liconti, Davide and
-               Yang, Chenyu and Katzschmann, Robert K.},
-  booktitle = {Conference on Robot Learning (CoRL)},
-  year      = {2026}
+        <pre class="cite">@article{feingold2026mask2realwm,
+  title   = {Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge
+             for Controllable Dexterous World Models},
+  author  = {Feingold, Riccardo Orion and Liconti, Davide and
+             Yang, Chenyu and Katzschmann, Robert K.},
+  journal = {arXiv preprint arXiv:2607.04546},
+  year    = {2026}
 }</pre>
       </div>
     </div>
@@ -543,7 +543,7 @@
       <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich"></a>
       <a href="https://srl.ethz.ch/" target="_blank" rel="noopener" aria-label="Soft Robotics Lab"><img class="logo-srl" src="assets/img/logos/srl_logo.svg" alt="Soft Robotics Lab"></a>
     </div>
-    <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a>, ETH Zürich · CoRL 2026</p>
+    <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a>, ETH Zürich · Preprint 2026</p>
     <p>Built by <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Interactive demo built with Three.js · Robot meshes © the ORCA hand project</p>
   </div>
 </footer>

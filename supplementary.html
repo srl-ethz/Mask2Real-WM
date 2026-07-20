@@ -17,7 +17,7 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Mask2Real-WM">
 <meta property="og:title" content="Supplementary Material · Mask2Real-WM">
-<meta property="og:description" content="Extended results, ablations, failure analyses, and implementation details for Mask2Real-WM (CoRL 2026).">
+<meta property="og:description" content="Extended results, ablations, failure analyses, and implementation details for Mask2Real-WM (preprint 2026).">
 <meta property="og:url" content="https://srl-ethz.github.io/Mask2Real-WM/supplementary.html">
 <meta property="og:image" content="https://srl-ethz.github.io/Mask2Real-WM/assets/img/teaser_controllability.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -126,7 +126,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
 <!-- ════════════ OPENING ════════════ -->
 <header class="masthead">
   <div class="shell">
-    <p class="venue">CoRL 2026 · Appendix</p>
+    <p class="venue">Preprint 2026 · Appendix</p>
     <h1>Supplementary Material for <span class="name">Mask2Real-WM</span></h1>
     <p class="standfirst">Extended results, ablations, failure analyses, and implementation details accompanying the main paper.</p>
 
@@ -171,7 +171,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <div class="flow reveal">
         <h2>Baseline comparison &amp; the effect of simulation midtraining</h2>
         <p class="lede">What does large-scale simulation midtraining of WM₁ contribute to the full system?</p>
-        <p>We compare four regimes that all share the <strong>same WM₂ renderer</strong>: the single-stage <em>baseline</em> (Ctrl-World, fine-tuned end-to-end on real RGB), and three two-stage models whose WM₁ is trained on (i)&nbsp;real data only, (ii)&nbsp;simulation only (midtraining), and (iii)&nbsp;simulation midtraining then real LoRA fine-tuning (<em>sim+real</em>, ours).</p>
+        <p>The three <strong>two-stage variants share the same WM₂ renderer</strong> and differ only in how WM₁ is trained: (i)&nbsp;real data only, (ii)&nbsp;simulation only (midtraining), and (iii)&nbsp;simulation midtraining then real LoRA fine-tuning (<em>sim+real</em>, ours). We additionally compare against a <strong>separately trained, single-stage Ctrl-World RGB baseline</strong>, fine-tuned end-to-end on real RGB, which predicts RGB directly and uses neither WM₁ nor the WM₂ renderer.</p>
       </div>
     </div>
 
@@ -224,7 +224,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <div class="flow reveal">
         <h2>Per-component action controllability</h2>
         <p class="lede">Does the model respond to <em>each</em> action dimension independently?</p>
-        <p>We drive a single action dimension at a time with a sinusoid (holding the others fixed) and roll the model out for all 23 dimensions: the 6-DoF end-effector pose (dims 0–5: x, y, z, roll, pitch, yaw) and the 17 ORCA hand joints (dims 6–22). The model produces a coherent, <strong>dimension-specific</strong> response across the entire action space.</p>
+        <p>We drive a single action dimension at a time with a sinusoid (holding the others fixed) and roll the model out for all 23 dimensions: the 6-DoF end-effector pose (dims 0–5: x, y, z, roll, pitch, yaw) and the 17 ORCA hand joints (dims 6–22). Qualitatively, the model produces a coherent, <strong>dimension-specific</strong> visual response for the perturbed dimensions — illustrative of command-response controllability rather than a quantitative measure of per-dimension physical fidelity or cross-axis independence.</p>
       </div>
     </div>
     <figure class="wide reveal">
@@ -323,7 +323,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
           </tbody>
         </table>
       </div>
-      <p>The baseline scores higher on per-pixel appearance metrics owing to the blurry-prediction bias, but <strong>WM₁ maintains high segmentation-space fidelity</strong> (SSIM ≈ 0.86) on these objects — the factorization transfers without retraining the dynamics model; only WM₂ would need updating to match new textures. Qualitative rollouts for each object (ours vs. baseline) are on the <a href="index.html#qualitative">main page</a>.</p>
+      <p>The baseline scores higher on per-pixel appearance metrics owing to the blurry-prediction bias, but <strong>WM₁ maintains high segmentation-space fidelity</strong> (SSIM ≈ 0.86) on these objects. The result is specific to WM₁: the mask dynamics model transfers segmentation dynamics to objects seen in simulation pretraining but absent from real-world training, without retraining the dynamics model — not evidence of superior zero-shot generalization of the full RGB pipeline (which scores worse than the baseline on pixel metrics here). Only WM₂ would need updating to match new textures. Qualitative rollouts for each object (ours vs. baseline) are on the <a href="index.html#qualitative">main page</a>.</p>
     </div>
   </div>
 </section>
@@ -409,7 +409,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <p class="eyebrow">Appendix J</p>
       <div class="flow reveal">
         <h2>Implementation details</h2>
-        <p><strong>Real-world rig.</strong> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (23 actuated DoF) inside a fixed arena, observed by a static third-person camera and a wrist-mounted camera (two Luxonis OAK-D RGB cameras). The setup figure is on the <a href="index.html#method">main page</a>.</p>
+        <p><strong>Real-world rig.</strong> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (24 actuated joint DoF total: 7 arm + 17 hand; commanded through a 23-dimensional action space of a 6-D Cartesian end-effector pose and 17 hand-joint positions) inside a fixed arena, observed by a static third-person camera and a wrist-mounted camera (two Luxonis OAK-D RGB cameras). The setup figure is on the <a href="index.html#method">main page</a>.</p>
         <p><strong>Simulation assets.</strong> Default Franka Panda URDF and the ORCA hand USD; the arena is reconstructed from physical measurements. No material, lighting or texture tuning is applied.</p>
         <p><strong>System identification.</strong> To reduce the kinematic gap between the simulated and physical ORCA hand, per-joint PD gains and friction coefficients are optimized with CMA-ES (following Bjelonic et&nbsp;al. 2025) to minimise tracking error under a chirp command. After calibration the simulated trajectory closely follows the measured one across the full frequency sweep — sufficient for the joint-angle-driven segmentation representation to stay accurate.</p>
         <h3>SAM 3 prompt engineering</h3>
@@ -496,7 +496,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich"></a>
       <a href="https://srl.ethz.ch/" target="_blank" rel="noopener" aria-label="Soft Robotics Lab"><img class="logo-srl" src="assets/img/logos/srl_logo.svg" alt="Soft Robotics Lab"></a>
     </div>
-    <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a>, ETH Zürich · CoRL 2026 — Supplementary Material</p>
+    <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a>, ETH Zürich · Preprint 2026 — Supplementary Material</p>
     <p>Built by <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a></p>
   </div>
 </footer>
