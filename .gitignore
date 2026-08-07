@@ -5,5 +5,5 @@ node_modules/
 .vscode/
 
 # Large source video (exceeds GitHub's 100MB limit); a compressed
-# web-friendly corl_submission.mp4 is committed instead.
+# web-friendly overview_video.mp4 is committed instead.
 *.mov

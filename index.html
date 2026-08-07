@@ -239,7 +239,7 @@
       </div>
     </div>
     <figure class="wide inset reveal">
-      <video src="assets/video/corl_submission.mp4" controls playsinline preload="metadata"
+      <video src="assets/video/overview_video.mp4" controls playsinline preload="metadata"
              poster="assets/img/teaser_controllability.png"></video>
       <figcaption>Narrated overview of the method, hardware setup, and results.</figcaption>
     </figure>
@@ -254,7 +254,7 @@
       <div class="flow reveal">
         <h2>Decoupling dynamics from rendering</h2>
         <p class="lede">Action-conditioned world models let robots imagine the future consequences of their actions without physical interaction, making them a powerful tool for policy evaluation, planning, and data augmentation. We present <strong>Mask2Real-WM</strong>, a two-stage action-conditioned world model for dexterous manipulation that <strong>decouples</strong> pixel prediction into a <strong>dynamics model</strong> and a <strong>rendering model</strong>.</p>
-        <p>The dynamics model predicts future segmentation masks from past masks and a 23-dimensional action sequence (a 6-D Cartesian end-effector pose and 17 hand-joint positions); the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale pretraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on approximately <strong>2.5&nbsp;h of real demonstrations</strong> — an avenue largely unexplored for image-space world models.</p>
+        <p>The dynamics model predicts future segmentation masks from past masks and a 23-dimensional action sequence (a 6-D Cartesian end-effector pose and 17 hand-joint positions); the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale pretraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on approximately <strong>2.5&nbsp;h of real demonstrations</strong> (an avenue largely unexplored for image-space world models).</p>
         <p>Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation pretraining are necessary to achieve high mean command-response controllability across the 23 action dimensions, while monolithic baselines capture only coarse end-effector motion.</p>
 
         <div class="equation-block reveal">
@@ -266,7 +266,7 @@
             <span class="op">=</span>
             <span class="sum">23<span class="unit">action</span>dims</span>
           </p>
-          <p class="equation-note">A 6-D Cartesian end-effector pose and 17 ORCA hand-joint positions are driven as one action sequence — every action dimension conditions the dynamics model directly, rather than through a coarse end-effector proxy. (The physical robot has 24 actuated joint DoF: 7 in the arm, 17 in the hand; the arm is commanded in Cartesian end-effector space.)</p>
+          <p class="equation-note">A 6-D Cartesian end-effector pose and 17 ORCA hand-joint positions are driven as one action sequence: every action dimension conditions the dynamics model directly, rather than through a coarse end-effector proxy. (The physical robot has 24 actuated joint DoF: 7 in the arm, 17 in the hand; the arm is commanded in Cartesian end-effector space.)</p>
         </div>
 
         <dl class="datarun reveal">
@@ -295,7 +295,7 @@
       <p class="eyebrow">Key idea</p>
       <div class="flow reveal">
         <h2>Decouple what moves where from what it looks like</h2>
-        <p>Predicting dexterous manipulation in raw pixels forces a single model to learn both physics and appearance at once — and the sim-to-real appearance gap blocks the use of cheap synthetic data. Mask2Real-WM instead factorizes the problem into one shared system of two stages, chained autoregressively at inference:</p>
+        <p>Predicting dexterous manipulation in raw pixels forces a single model to learn both physics and appearance at once, and the sim-to-real appearance gap blocks the use of cheap synthetic data. Mask2Real-WM instead factorizes the problem into one shared system of two stages, chained autoregressively at inference:</p>
       </div>
     </div>
 
@@ -348,7 +348,7 @@
 
     <figure class="wide reveal">
       <img src="assets/img/robot_setup.png" alt="Hardware setup: Franka Panda arm with ORCA hand, workspace and wrist cameras">
-      <figcaption><b>Hardware.</b> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (24 actuated joint DoF total: 7 arm + 17 hand), commanded through a 23-dimensional action space (6-D Cartesian end-effector pose + 17 hand-joint positions). Observed from a fixed workspace camera and a wrist-mounted camera that captures finger–object contacts in a tilted-wall arena.</figcaption>
+      <figcaption><b>Hardware.</b> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (24 actuated joint DoF total: 7 arm + 17 hand), commanded through a 23-dimensional action space (6-D Cartesian end-effector pose + 17 hand-joint positions). Observed from a fixed workspace camera and a wrist-mounted camera that captures finger-object contacts in a tilted-wall arena.</figcaption>
     </figure>
 
     <figure class="wide reveal">
@@ -358,7 +358,7 @@
 
     <figure class="wide reveal">
       <img src="assets/img/gt_masks_comparison.png" alt="Segmentation masks in simulation versus reality look nearly identical">
-      <figcaption><b>The sim-to-real bridge.</b> Segmentation masks (hand: green, object: red, background: black) look nearly identical across simulation and reality, unlike raw RGB — this small domain gap is what makes synthetic pretraining of the dynamics model effective.</figcaption>
+      <figcaption><b>The sim-to-real bridge.</b> Segmentation masks (hand: green, object: red, background: black) look nearly identical across simulation and reality, unlike raw RGB; this small domain gap is what makes synthetic pretraining of the dynamics model effective.</figcaption>
     </figure>
   </div>
 </section>
@@ -370,7 +370,7 @@
       <p class="eyebrow">Interactive demo</p>
       <div class="flow reveal">
         <h2>Per-dimension controllability, in 3D</h2>
-        <p>Click any joint on the 3D ORCA hand — or a button — to see the world model's prediction when that single action dimension is perturbed. Switch models and samples to compare side by side.</p>
+        <p>Click any joint on the 3D ORCA hand (or a button) to see the world model's prediction when that single action dimension is perturbed. Switch models and samples to compare side by side.</p>
       </div>
     </div>
 
@@ -391,7 +391,7 @@
       <p class="eyebrow">Results</p>
       <div class="flow reveal">
         <h2>What mask conditioning and sim pretraining buy</h2>
-        <p>Isolated single-finger motion is <strong>absent from the real training set</strong>, which predominantly contains cube-grasping. Simulation pretraining alone lifts controllability from ≈0.68→0.85 (ID) and ≈0.51→0.73 (OOD); real fine-tuning then closes the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations.</p>
+        <p>The real training data is concentrated around grasping and free-play manipulation and contains only <strong>limited isolated single-finger motion</strong>. Simulation pretraining alone lifts controllability from ≈0.68→0.85 (ID) and ≈0.51→0.73 (OOD); real fine-tuning then closes the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations.</p>
       </div>
     </div>
 
@@ -402,7 +402,7 @@
 
     <figure class="wide reveal">
       <img src="assets/img/results_perceptual.png" alt="Perceptual metrics across WM1 training configurations">
-      <figcaption><b>Perceptual metrics across WM1 training configurations.</b> PSNR, SSIM, LPIPS on ID (top) and LPIPS on three OOD splits — <em>No Object</em>, <em>Random Play</em>, <em>Background</em> (bottom) — for real-only, sim-only, and sim-then-real (ours) WM1, all paired with the same WM2. Sim pretraining substantially reduces OOD degradation while real fine-tuning maintains strong ID performance.</figcaption>
+      <figcaption><b>Perceptual metrics across WM1 training configurations.</b> PSNR, SSIM, LPIPS on ID (top) and LPIPS on three OOD splits (<em>No Object</em>, <em>Random Play</em>, <em>Background</em>) in the bottom row, for real-only, sim-only, and sim-then-real (ours) WM1, all paired with the same WM2. Sim pretraining substantially reduces OOD degradation while real fine-tuning maintains strong ID performance.</figcaption>
     </figure>
 
     <figure class="wide reveal">
@@ -427,22 +427,22 @@
       <div class="clips clips--2" style="margin-top:0;">
         <div class="clip">
           <video src="assets/video/2_stage_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>Mask2Real-WM (ours)</b> — sharp contacts, stable object identity</p>
+          <p class="cap"><b>Mask2Real-WM (ours)</b>: sharp contacts, stable object identity</p>
         </div>
         <div class="clip">
           <video src="assets/video/baseline_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>Monolithic baseline</b> — blur and drift accumulate</p>
+          <p class="cap"><b>Monolithic baseline</b>: blur and drift accumulate</p>
         </div>
       </div>
     </div>
 
     <figure class="wide reveal">
       <img src="assets/img/ours_strip.png" alt="Long-horizon mask-to-RGB rollout strip, ours">
-      <figcaption><b>Ours</b> — long-horizon mask→RGB rollout strip.</figcaption>
+      <figcaption><b>Ours</b>: long-horizon mask→RGB rollout strip.</figcaption>
     </figure>
     <figure class="wide reveal">
       <img src="assets/img/baseline_strip.png" alt="Long-horizon rollout strip, baseline">
-      <figcaption><b>Baseline</b> — long-horizon rollout strip; note the loss of finger and object detail over time.</figcaption>
+      <figcaption><b>Baseline</b>: long-horizon rollout strip; note the loss of finger and object detail over time.</figcaption>
     </figure>
   </div>
 </section>

@@ -97,7 +97,7 @@ table.data thead th {
 table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; padding-right: 0; }
 table.data tbody tr:last-child td { border-bottom: 0; }
 /* a rowspan group cell starts rows before the last one, so tr:last-child can't
-   reach it — it would leave a rule stub hanging under the final group label */
+   reach it (it would leave a rule stub hanging under the final group label) */
 table.data td.grp.last { border-bottom: 0; }
 table.data .best { color: var(--teal-2); font-weight: 600; }
 table.data .grp { color: var(--ink); font-weight: 500; }
@@ -180,7 +180,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
     </div>
     <figure class="wide reveal">
       <img src="assets/img/supp/ctrl_world_appearance.png" alt="Baseline versus two-stage appearance metrics across splits">
-      <figcaption><b>Baseline vs. the three two-stage variants, per split and metric.</b> Per-sample-view PSNR, SSIM and LPIPS on the ID and three OOD splits, each split by camera view. The baseline looks competitive on raw pixel metrics despite producing blurrier video — per-pixel metrics reward temporally averaged frames.</figcaption>
+      <figcaption><b>Baseline vs. the three two-stage variants, per split and metric.</b> Per-sample-view PSNR, SSIM and LPIPS on the ID and three OOD splits, each split by camera view. The baseline looks competitive on raw pixel metrics despite producing blurrier video; per-pixel metrics reward temporally averaged frames.</figcaption>
     </figure>
 
     <div class="inset prose reveal">
@@ -192,7 +192,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
     </figure>
     <figure class="wide inset reveal">
       <img src="assets/img/supp/lpips_vs_sharpness.png" alt="LPIPS versus sharpness scatter" style="max-width:620px;">
-      <figcaption><b>Pixel quality vs. sharpness.</b> The baseline attains good (low) LPIPS yet the lowest sharpness — good pixel scores can coincide with blurry output.</figcaption>
+      <figcaption><b>Pixel quality vs. sharpness.</b> The baseline attains good (low) LPIPS yet the lowest sharpness; good pixel scores can coincide with blurry output.</figcaption>
     </figure>
 
     <div class="inset prose reveal">
@@ -224,7 +224,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <div class="flow reveal">
         <h2>Per-component action controllability</h2>
         <p class="lede">Does the model respond to <em>each</em> action dimension independently?</p>
-        <p>We drive a single action dimension at a time with a sinusoid (holding the others fixed) and roll the model out for all 23 dimensions: the 6-DoF end-effector pose (dims 0–5: x, y, z, roll, pitch, yaw) and the 17 ORCA hand joints (dims 6–22). Qualitatively, the model produces a coherent, <strong>dimension-specific</strong> visual response for the perturbed dimensions — illustrative of command-response controllability rather than a quantitative measure of per-dimension physical fidelity or cross-axis independence.</p>
+        <p>We drive a single action dimension at a time with a sinusoid (holding the others fixed) and roll the model out for all 23 dimensions: the 6-DoF end-effector pose (dims 0 to 5: x, y, z, roll, pitch, yaw) and the 17 ORCA hand joints (dims 6 to 22). Qualitatively, the model produces a coherent, <strong>dimension-specific</strong> visual response for the perturbed dimensions, illustrative of command-response controllability rather than a quantitative measure of per-dimension physical fidelity or cross-axis independence.</p>
       </div>
     </div>
     <figure class="wide reveal">
@@ -262,7 +262,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <p class="eyebrow">Appendix D</p>
       <div class="flow reveal">
         <h2>Error accumulation in autoregressive rollouts</h2>
-        <p class="lede">In autoregressive rollout each predicted frame conditions the next, so small mistakes compound — and WM₁ mask errors propagate into WM₂.</p>
+        <p class="lede">In autoregressive rollout each predicted frame conditions the next, so small mistakes compound, and WM₁ mask errors propagate into WM₂.</p>
       </div>
     </div>
     <figure class="wide reveal">
@@ -284,11 +284,11 @@ table.data .grp { color: var(--ink); font-weight: 500; }
     </div>
     <figure class="wide reveal">
       <img src="assets/img/supp/cube_vanish_strip.png" alt="Failure mode: object vanishing under occlusion">
-      <figcaption><b>Object vanishing under occlusion.</b> Third-person frames from a 149-frame rollout. The cube is present early (t=0,30), disappears while the hand occludes it (t=59–118), and reappears once the occlusion clears (t=148).</figcaption>
+      <figcaption><b>Object vanishing under occlusion.</b> Third-person frames from a 149-frame rollout. The cube is present early (t=0,30), disappears while the hand occludes it (t=59 to 118), and reappears once the occlusion clears (t=148).</figcaption>
     </figure>
     <figure class="wide reveal">
       <img src="assets/img/supp/spawning_cube_strip.png" alt="Failure mode: object duplication">
-      <figcaption><b>Object duplication / spawning.</b> WM₁ predicts an incorrect object state — a second cube appears (t=99) and the object is re-spawned at a shifted location. Both failures originate in WM₁'s dynamics, not WM₂'s rendering: with ground-truth masks WM₂ renders the object correctly (see&nbsp;<a href="#gt-masks">G</a>).</figcaption>
+      <figcaption><b>Object duplication / spawning.</b> WM₁ predicts an incorrect object state: a second cube appears (t=99) and the object is re-spawned at a shifted location. Both failures originate in WM₁'s dynamics, not WM₂'s rendering: with ground-truth masks WM₂ renders the object correctly (see&nbsp;<a href="#gt-masks">G</a>).</figcaption>
     </figure>
   </div>
 </section>
@@ -300,7 +300,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <p class="eyebrow">Appendix F</p>
       <div class="flow reveal">
         <h2>Generalization to objects unseen in real data</h2>
-        <p class="lede">The real demos are almost exclusively red-cube manipulation. We evaluate the full pipeline <strong>zero-shot</strong> on a banana, cup and cylinder — objects WM₁ has seen <em>in simulation</em> but that WM₂ (real-only) has never rendered.</p>
+        <p class="lede">The real demos are almost exclusively red-cube manipulation. We evaluate the full pipeline <strong>zero-shot</strong> on a banana, cup and cylinder: objects WM₁ has seen <em>in simulation</em> but that WM₂ (real-only) has never rendered.</p>
         <p>Because WM₁ operates in segmentation space and is largely agnostic to appearance, the dynamics model transfers directly; only WM₂ must render the new appearance.</p>
       </div>
     </div>
@@ -323,7 +323,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
           </tbody>
         </table>
       </div>
-      <p>The baseline scores higher on per-pixel appearance metrics owing to the blurry-prediction bias, but <strong>WM₁ maintains high segmentation-space fidelity</strong> (SSIM ≈ 0.86) on these objects. The result is specific to WM₁: the mask dynamics model transfers segmentation dynamics to objects seen in simulation pretraining but absent from real-world training, without retraining the dynamics model — not evidence of superior zero-shot generalization of the full RGB pipeline (which scores worse than the baseline on pixel metrics here). Only WM₂ would need updating to match new textures. Qualitative rollouts for each object (ours vs. baseline) are on the <a href="index.html#qualitative">main page</a>.</p>
+      <p>The baseline scores higher on per-pixel appearance metrics owing to the blurry-prediction bias, but <strong>WM₁ maintains high segmentation-space fidelity</strong> (SSIM ≈ 0.86) on these objects. The result is specific to WM₁: the mask dynamics model transfers segmentation dynamics to objects seen in simulation pretraining but absent from real-world training, without retraining the dynamics model, not evidence of superior zero-shot generalization of the full RGB pipeline (which scores worse than the baseline on pixel metrics here). Only WM₂ would need updating to match new textures. Qualitative rollouts for each object (ours vs. baseline) are on the <a href="index.html#qualitative">main page</a>.</p>
     </div>
   </div>
 </section>
@@ -353,7 +353,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <div class="flow reveal">
         <h2>CNN mask encoder vs. VAE encoder for ControlNet</h2>
         <p class="lede">Why a dedicated CNN encoder rather than the SVD VAE encoder to condition ControlNet?</p>
-        <p>We measure a <em>boundary-response score</em> — the ratio of feature-gradient magnitude at segmentation-class boundaries to that in flat interiors (&gt;1 means boundary-selective features). Across 128 frames the CNN attains <strong>4.41&nbsp;±&nbsp;0.74</strong> vs. <strong>2.98&nbsp;±&nbsp;0.43</strong> for the VAE — class boundaries encoded ≈48% more strongly, on every frame.</p>
+        <p>We measure a <em>boundary-response score</em>: the ratio of feature-gradient magnitude at segmentation-class boundaries to that in flat interiors (&gt;1 means boundary-selective features). Across 128 frames the CNN attains <strong>4.41&nbsp;±&nbsp;0.74</strong> vs. <strong>2.98&nbsp;±&nbsp;0.43</strong> for the VAE; class boundaries encoded ≈48% more strongly, on every frame.</p>
       </div>
     </div>
     <figure class="wide reveal">
@@ -362,7 +362,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
     </figure>
     <figure class="wide inset reveal">
       <img src="assets/img/supp/pca_feature_comparison.png" alt="PCA of conditioning features" style="max-width:780px;">
-      <figcaption><b>PCA of the conditioning features</b> (input mask, CNN, VAE, boundary mask). CNN features preserve sharp class boundaries; the VAE — trained to reconstruct natural RGB, not flat categorical masks — smears across them.</figcaption>
+      <figcaption><b>PCA of the conditioning features</b> (input mask, CNN, VAE, boundary mask). CNN features preserve sharp class boundaries; the VAE (trained to reconstruct natural RGB, not flat categorical masks) smears across them.</figcaption>
     </figure>
   </div>
 </section>
@@ -411,7 +411,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
         <h2>Implementation details</h2>
         <p><strong>Real-world rig.</strong> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (24 actuated joint DoF total: 7 arm + 17 hand; commanded through a 23-dimensional action space of a 6-D Cartesian end-effector pose and 17 hand-joint positions) inside a fixed arena, observed by a static third-person camera and a wrist-mounted camera (two Luxonis OAK-D RGB cameras). The setup figure is on the <a href="index.html#method">main page</a>.</p>
         <p><strong>Simulation assets.</strong> Default Franka Panda URDF and the ORCA hand USD; the arena is reconstructed from physical measurements. No material, lighting or texture tuning is applied.</p>
-        <p><strong>System identification.</strong> To reduce the kinematic gap between the simulated and physical ORCA hand, per-joint PD gains and friction coefficients are optimized with CMA-ES (following Bjelonic et&nbsp;al. 2025) to minimise tracking error under a chirp command. After calibration the simulated trajectory closely follows the measured one across the full frequency sweep — sufficient for the joint-angle-driven segmentation representation to stay accurate.</p>
+        <p><strong>System identification.</strong> To reduce the kinematic gap between the simulated and physical ORCA hand, per-joint PD gains and friction coefficients are optimized with CMA-ES (following Bjelonic et&nbsp;al. 2025) to minimise tracking error under a chirp command. After calibration the simulated trajectory closely follows the measured one across the full frequency sweep, sufficient for the joint-angle-driven segmentation representation to stay accurate.</p>
         <h3>SAM 3 prompt engineering</h3>
         <p>For the third-person view, the prompts <code>"hand"</code> and the object name (e.g. <code>"red cube"</code>) are used. For the wrist view, a short initialization clip is prepended in which the hand moves clearly into frame; the bounding box from this clip seeds SAM&nbsp;3's tracker for the rest of the sequence.</p>
       </div>
@@ -423,7 +423,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
     </figure>
 
     <div class="inset prose reveal">
-      <p><strong>CNN mask encoder.</strong> Three convolutional blocks (Conv2d + GroupNorm + SiLU) with strided downsampling, a transposed convolution to restore resolution, and a final 1×1 convolution to match the ControlNet feature dimension. Operating on decoded pixel-space masks rather than VAE latents is key — see&nbsp;<a href="#cnn-vae">H</a>.</p>
+      <p><strong>CNN mask encoder.</strong> Three convolutional blocks (Conv2d + GroupNorm + SiLU) with strided downsampling, a transposed convolution to restore resolution, and a final 1×1 convolution to match the ControlNet feature dimension. Operating on decoded pixel-space masks rather than VAE latents is key (see&nbsp;<a href="#cnn-vae">H</a>).</p>
     </div>
   </div>
 </section>
@@ -444,7 +444,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
           <caption><b>Training hyperparameters for WM₁ and WM₂.</b></caption>
           <thead><tr><th>Hyperparameter</th><th>WM₁</th><th>WM₂</th></tr></thead>
           <tbody>
-            <tr><td>Training steps (sim)</td><td>55,000</td><td>—</td></tr>
+            <tr><td>Training steps (sim)</td><td>55,000</td><td>n/a</td></tr>
             <tr><td>Training steps (real / total)</td><td>45,000</td><td>70,000</td></tr>
             <tr><td>Learning rate</td><td>10⁻⁴ / 5×10⁻⁶</td><td>10⁻⁴</td></tr>
             <tr><td>LR scheduler</td><td>Cosine</td><td>Cosine</td></tr>
@@ -472,15 +472,15 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <div class="flow reveal">
         <h2>Future work &amp; policy rollouts in imagination</h2>
         <p class="lede">Scaling the data generator, conditioning on camera intrinsics/extrinsics, multi-object segmentation vocabularies, and distilling both stages into few-step samplers for near-real-time rollouts.</p>
-        <p>We roll out three policies trained on the real robot — a flow-matching policy, a diffusion policy, and an ACT policy (all trained on red-cube grasps and placements onto the red ramp) — inside both Mask2Real-WM and the baseline world model. Using Mask2Real-WM as a <strong>policy evaluator</strong> — scoring candidate policies by their predicted outcomes in imagination — is a natural extension we leave to future work.</p>
+        <p>We roll out three policies trained on the real robot (a flow-matching policy, a diffusion policy, and an ACT policy, all trained on red-cube grasps and placements onto the red ramp) inside both Mask2Real-WM and the baseline world model. Using Mask2Real-WM as a <strong>policy evaluator</strong> (scoring candidate policies by their predicted outcomes in imagination) is a natural extension we leave to future work.</p>
       </div>
     </div>
 
     <div class="wide reveal">
       <div class="trio" style="margin-top:0;">
-        <figure><img src="assets/img/supp/policy_fm.png" alt="Flow-matching policy rollout"><figcaption><b>Flow-matching policy</b> — ours (top) vs. baseline (bottom).</figcaption></figure>
-        <figure><img src="assets/img/supp/policy_dp.png" alt="Diffusion policy rollout"><figcaption><b>Diffusion policy</b> — ours (top) vs. baseline (bottom).</figcaption></figure>
-        <figure><img src="assets/img/supp/policy_act.png" alt="ACT policy rollout"><figcaption><b>ACT policy</b> — ours (top) vs. baseline (bottom).</figcaption></figure>
+        <figure><img src="assets/img/supp/policy_fm.png" alt="Flow-matching policy rollout"><figcaption><b>Flow-matching policy</b>: ours (top) vs. baseline (bottom).</figcaption></figure>
+        <figure><img src="assets/img/supp/policy_dp.png" alt="Diffusion policy rollout"><figcaption><b>Diffusion policy</b>: ours (top) vs. baseline (bottom).</figcaption></figure>
+        <figure><img src="assets/img/supp/policy_act.png" alt="ACT policy rollout"><figcaption><b>ACT policy</b>: ours (top) vs. baseline (bottom).</figcaption></figure>
       </div>
       <p class="trio-note">Each: 100-frame rollout (5 frames predicted per step), 4 frames shown ≈33 apart; both views, lower half generated.</p>
       <a class="backlink" href="index.html">← Back to the main page</a>
@@ -496,7 +496,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich"></a>
       <a href="https://srl.ethz.ch/" target="_blank" rel="noopener" aria-label="Soft Robotics Lab"><img class="logo-srl" src="assets/img/logos/srl_logo.svg" alt="Soft Robotics Lab"></a>
     </div>
-    <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a>, ETH Zürich · Preprint 2026 — Supplementary Material</p>
+    <p>Mask2Real-WM · <a href="https://srl.ethz.ch/" target="_blank" rel="noopener">Soft Robotics Lab</a>, ETH Zürich · Preprint 2026 · Supplementary Material</p>
     <p>Built by <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a></p>
   </div>
 </footer>

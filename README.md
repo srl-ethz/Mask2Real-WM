@@ -1,6 +1,6 @@
 # Mask2Real-WM — Project Website
 
-Project page for **"Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models"** (CoRL 2025).
+Project page for **"Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models"** (preprint, 2026).
 
 A two-stage action-conditioned world model for dexterous manipulation that decouples
 **dynamics** (segmentation-mask prediction, pretrained on >50 h of simulation) from
