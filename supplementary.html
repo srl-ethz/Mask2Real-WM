@@ -171,7 +171,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <div class="flow reveal">
         <h2>Baseline comparison &amp; the effect of simulation midtraining</h2>
         <p class="lede">What does large-scale simulation midtraining of WM₁ contribute to the full system?</p>
-        <p>The three <strong>two-stage variants share the same WM₂ renderer</strong> and differ only in how WM₁ is trained: (i)&nbsp;real data only, (ii)&nbsp;simulation only (midtraining), and (iii)&nbsp;simulation midtraining then real LoRA fine-tuning (<em>sim+real</em>, ours). We additionally compare against a <strong>separately trained, single-stage Ctrl-World RGB baseline</strong>, fine-tuned end-to-end on real RGB, which predicts RGB directly and uses neither WM₁ nor the WM₂ renderer.</p>
+        <p>The three <strong>two-stage variants share the same WM₂ renderer</strong> and differ only in how WM₁ is trained: (i)&nbsp;real data only, (ii)&nbsp;simulation only (midtraining), and (iii)&nbsp;simulation midtraining then real LoRA fine-tuning (<em>sim+real</em>, ours). We additionally compare against a <strong>separately trained, single-stage Ctrl-World RGB baseline</strong>. Like WM₁ and WM₂, it's initialized from SVD and LoRA-adapted (rank 16, α=16); unlike them, it's trained end-to-end for 70,000 steps exclusively on the real dataset (≈2.5&nbsp;h), with <strong>no simulation exposure</strong>. It predicts RGB directly and uses neither WM₁ nor the WM₂ renderer.</p>
       </div>
     </div>
 
@@ -196,22 +196,37 @@ table.data .grp { color: var(--ink); font-weight: 500; }
     </figure>
 
     <div class="inset prose reveal">
-      <h3>Mask-space quality reveals the generalization benefit</h3>
+      <h3>Fréchet Video Distance does not corroborate the OOD advantage</h3>
+      <p>As a complementary check less directly tied to per-pixel reconstruction, we compute Fréchet Video Distance (FVD) between each model's generated rollouts and paired ground-truth clips, using the standard Kinetics-pretrained I3D feature extractor. On ID, Mask2Real-WM is roughly on par with the baseline (95.1 vs. 98.4), though the real-only WM₁ variant scores lowest overall (73.2). On the combined OOD split (n=150, pooling all three OOD conditions), <strong>the baseline is in fact the lowest-FVD model</strong> (351.0 vs. 386.3 for ours) — the opposite ranking from the controllability and sharpness results. We don't have a confirmed explanation for this reversal; plausible contributors include the sample size (still below the ≥2048 clips recommended for a stable estimate, even pooled) and a domain mismatch between I3D's Kinetics-pretrained features, tuned for holistic human-action recognition, and the fine per-joint articulation our controllability protocol targets. We report this result for completeness rather than because it supports our claims: unlike PSNR/SSIM/LPIPS, sharpness, and controllability, <strong>FVD at this sample size does not favor Mask2Real-WM over the baseline</strong>.</p>
       <div class="tbl-wrap">
         <table class="data">
-          <caption><b>WM₁ segmentation-space quality</b> (both views pooled). Best per split in bold.</caption>
-          <thead><tr><th>Split</th><th>WM₁ regime</th><th class="num">PSNR ↑</th><th class="num">LPIPS ↓</th></tr></thead>
+          <caption><b>Fréchet Video Distance</b> (RGB, third-person + wrist pooled) between generated and ground-truth rollouts. OOD pools all three OOD splits (n=150) to keep the sample size comparable to ID; the individual 50-sample splits are too small relative to the 400-dim I3D feature space for a stable covariance estimate. Best (lowest) per row in bold.</caption>
+          <thead><tr><th>Split</th><th class="num">Baseline</th><th class="num">WM1 real only</th><th class="num">WM1 sim only</th><th class="num">WM1 sim+real (ours)</th></tr></thead>
           <tbody>
-            <tr><td class="grp" rowspan="3">ID</td><td>WM1 real only</td><td class="num best">22.00</td><td class="num best">0.119</td></tr>
-            <tr><td>WM1 sim only</td><td class="num">19.03</td><td class="num">0.229</td></tr>
-            <tr><td>WM1 sim+real (ours)</td><td class="num">20.72</td><td class="num">0.158</td></tr>
-            <tr><td class="grp last" rowspan="3">OOD</td><td>WM1 real only</td><td class="num">20.48</td><td class="num">0.147</td></tr>
-            <tr><td>WM1 sim only</td><td class="num">20.33</td><td class="num">0.184</td></tr>
-            <tr><td>WM1 sim+real (ours)</td><td class="num best">21.74</td><td class="num best">0.122</td></tr>
+            <tr><td>ID (n=150)</td><td class="num">98.4</td><td class="num best">73.2</td><td class="num">211.6</td><td class="num">95.1</td></tr>
+            <tr><td>OOD, combined (n=150)</td><td class="num best">351.0</td><td class="num">406.2</td><td class="num">410.2</td><td class="num">386.3</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Real-only training fits the ID distribution best, but simulation midtraining followed by fine-tuning <strong>generalizes best under distribution shift</strong> (OOD PSNR 21.7 vs. 20.5), because the synthetic corpus covers contact-rich motions absent from the small real dataset. Long-horizon rollout strips comparing ours vs. the baseline are shown on the <a href="index.html#rollouts">main page</a>.</p>
+    </div>
+
+    <div class="inset prose reveal">
+      <h3>Mask-space quality reveals the generalization benefit</h3>
+      <div class="tbl-wrap">
+        <table class="data">
+          <caption><b>WM₁ segmentation-space quality</b> (both views pooled). OOD mIoU pools all three OOD splits (n=150); mIoU is averaged over the hand and object classes only (background excluded, as it's the dominant, near-trivial class). Best per split in bold.</caption>
+          <thead><tr><th>Split</th><th>WM₁ regime</th><th class="num">PSNR ↑</th><th class="num">LPIPS ↓</th><th class="num">mIoU ↑</th></tr></thead>
+          <tbody>
+            <tr><td class="grp" rowspan="3">ID</td><td>WM1 real only</td><td class="num best">22.00</td><td class="num best">0.119</td><td class="num best">0.621</td></tr>
+            <tr><td>WM1 sim only</td><td class="num">19.03</td><td class="num">0.229</td><td class="num">0.361</td></tr>
+            <tr><td>WM1 sim+real (ours)</td><td class="num">20.72</td><td class="num">0.158</td><td class="num">0.517</td></tr>
+            <tr><td class="grp last" rowspan="3">OOD</td><td>WM1 real only</td><td class="num">20.48</td><td class="num">0.147</td><td class="num">0.488</td></tr>
+            <tr><td>WM1 sim only</td><td class="num">20.33</td><td class="num">0.184</td><td class="num">0.391</td></tr>
+            <tr><td>WM1 sim+real (ours)</td><td class="num best">21.74</td><td class="num best">0.122</td><td class="num best">0.503</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Real-only training fits the ID distribution best, but simulation midtraining followed by fine-tuning <strong>generalizes best under distribution shift</strong> (OOD PSNR 21.7 vs. 20.5), because the synthetic corpus covers contact-rich motions absent from the small real dataset. mIoU (hand and object classes) shows a consistent pattern: sim-only alone trails both other regimes at every split (ID 0.36, OOD 0.39), and sim+real edges out real-only on OOD (0.50 vs. 0.49, a modest margin) despite trailing it substantially on ID (0.52 vs. 0.62). Long-horizon rollout strips comparing ours vs. the baseline are shown on the <a href="index.html#rollouts">main page</a>.</p>
     </div>
   </div>
 </section>
@@ -323,7 +338,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
           </tbody>
         </table>
       </div>
-      <p>The baseline scores higher on per-pixel appearance metrics owing to the blurry-prediction bias, but <strong>WM₁ maintains high segmentation-space fidelity</strong> (SSIM ≈ 0.86) on these objects. The result is specific to WM₁: the mask dynamics model transfers segmentation dynamics to objects seen in simulation pretraining but absent from real-world training, without retraining the dynamics model, not evidence of superior zero-shot generalization of the full RGB pipeline (which scores worse than the baseline on pixel metrics here). Only WM₂ would need updating to match new textures. Qualitative rollouts for each object (ours vs. baseline) are on the <a href="index.html#qualitative">main page</a>.</p>
+      <p>The baseline scores higher on per-pixel appearance metrics owing to the blurry-prediction bias, but <strong>WM₁ maintains high segmentation-space fidelity</strong> (SSIM ≈ 0.86) on these objects. The result is specific to WM₁: the mask dynamics model transfers segmentation dynamics to objects seen in simulation midtraining but absent from real-world training, without retraining the dynamics model, not evidence of superior zero-shot generalization of the full RGB pipeline (which scores worse than the baseline on pixel metrics here). Only WM₂ would need updating to match new textures. Qualitative rollouts for each object (ours vs. baseline) are on the <a href="index.html#qualitative">main page</a>.</p>
     </div>
   </div>
 </section>

@@ -48,7 +48,7 @@
   ],
   "affiliation": { "@type": "Organization", "name": "Soft Robotics Lab, ETH Zurich", "url": "https://srl.ethz.ch/" },
   "publisher": { "@type": "Organization", "name": "arXiv" },
-  "abstract": "We present Mask2Real-WM, a two-stage action-conditioned world model for dexterous manipulation that decouples pixel prediction into a dynamics model (predicting future segmentation masks from past masks and a 23-dimensional action sequence: a 6-D Cartesian end-effector pose and 17 hand-joint positions) and a rendering model (painting photorealistic RGB onto the predicted masks). Because segmentation space has a small sim-to-real gap, the dynamics model is pretrained on over 50 hours of synthetic simulation data and fine-tuned on approximately 2.5 hours of real demonstrations.",
+  "abstract": "We present Mask2Real-WM, a two-stage action-conditioned world model for dexterous manipulation that decouples pixel prediction into a dynamics model (predicting future segmentation masks from past masks and a 23-dimensional action sequence: a 6-D Cartesian end-effector pose and 17 hand-joint positions) and a rendering model (painting photorealistic RGB onto the predicted masks). Because segmentation space has a small sim-to-real gap, the dynamics model is midtrained on over 50 hours of synthetic simulation data and fine-tuned on approximately 2.5 hours of real demonstrations.",
   "keywords": "world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, ORCA hand, Franka Panda"
 }
 </script>
@@ -197,7 +197,7 @@
    <div class="masthead-text">
     <p class="venue">Preprint · 2026</p>
     <h1><span class="name">Mask2Real-WM</span>: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</h1>
-    <p class="standfirst">A two-stage action-conditioned world model that decouples <em>dynamics</em> from <em>rendering</em>, using segmentation masks to unlock large-scale synthetic pretraining for 23-DoF dexterous manipulation.</p>
+    <p class="standfirst">A two-stage action-conditioned world model that decouples <em>dynamics</em> from <em>rendering</em>, using segmentation masks to unlock large-scale synthetic midtraining for 23-DoF dexterous manipulation.</p>
 
     <div class="byline">
       <p class="authors"><a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Davide Liconti · Chenyu Yang · Robert K. Katzschmann</p>
@@ -222,7 +222,7 @@
 
    <figure class="masthead-figure">
      <img src="assets/img/teaser_controllability.png" alt="Mask2Real-WM teaser: predicting future segmentation masks and rendering photorealistic RGB for 23-DoF dexterous manipulation">
-     <figcaption><b>Mask2Real-WM.</b> A <em>Dynamics WM</em> predicts future segmentation masks from past masks and a 23-dimensional action sequence (6-D Cartesian end-effector pose + 17 hand-joint positions), pretrained on &gt;50&nbsp;h of simulation; a <em>Rendering WM</em> paints photorealistic RGB onto the predicted masks, trained on &approx;2.5&nbsp;h of real demonstrations.</figcaption>
+     <figcaption><b>Mask2Real-WM.</b> A <em>Dynamics WM</em> predicts future segmentation masks from past masks and a 23-dimensional action sequence (6-D Cartesian end-effector pose + 17 hand-joint positions), midtrained on &gt;50&nbsp;h of simulation; a <em>Rendering WM</em> paints photorealistic RGB onto the predicted masks, trained on &approx;2.5&nbsp;h of real demonstrations.</figcaption>
    </figure>
   </div>
 </header>
@@ -254,8 +254,8 @@
       <div class="flow reveal">
         <h2>Decoupling dynamics from rendering</h2>
         <p class="lede">Action-conditioned world models let robots imagine the future consequences of their actions without physical interaction, making them a powerful tool for policy evaluation, planning, and data augmentation. We present <strong>Mask2Real-WM</strong>, a two-stage action-conditioned world model for dexterous manipulation that <strong>decouples</strong> pixel prediction into a <strong>dynamics model</strong> and a <strong>rendering model</strong>.</p>
-        <p>The dynamics model predicts future segmentation masks from past masks and a 23-dimensional action sequence (a 6-D Cartesian end-effector pose and 17 hand-joint positions); the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale pretraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on approximately <strong>2.5&nbsp;h of real demonstrations</strong> (an avenue largely unexplored for image-space world models).</p>
-        <p>Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation pretraining are necessary to achieve high mean command-response controllability across the 23 action dimensions, while monolithic baselines capture only coarse end-effector motion.</p>
+        <p>The dynamics model predicts future segmentation masks from past masks and a 23-dimensional action sequence (a 6-D Cartesian end-effector pose and 17 hand-joint positions); the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale midtraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on approximately <strong>2.5&nbsp;h of real demonstrations</strong> (an avenue underexplored for image-space world models).</p>
+        <p>Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation midtraining are necessary to achieve high mean command-response controllability across the 23 action dimensions, while monolithic baselines capture only coarse end-effector motion.</p>
 
         <div class="equation-block reveal">
           <p class="eyebrow">Action space</p>
@@ -271,7 +271,7 @@
 
         <dl class="datarun reveal">
           <div>
-            <dt>Synthetic pretraining</dt>
+            <dt>Synthetic midtraining</dt>
             <dd>&gt;50 h<span class="qual">IsaacLab simulation</span></dd>
           </div>
           <div>
@@ -304,7 +304,7 @@
         <div class="stage">
           <p class="notation">WM1 · Dynamics</p>
           <h3>Masks from actions</h3>
-          <p>An action-conditioned video-diffusion model (SVD backbone) predicts future segmentation masks from past masks and the 23-DoF action sequence. Masks have a tiny sim-to-real gap, so WM1 is pretrained on &gt;50&nbsp;h of IsaacLab data, then fine-tuned on real data with LoRA.</p>
+          <p>An action-conditioned video-diffusion model (SVD backbone) predicts future segmentation masks from past masks and the 23-DoF action sequence. Masks have a tiny sim-to-real gap, so WM1 is midtrained on &gt;50&nbsp;h of IsaacLab data, then fine-tuned on real data with LoRA.</p>
         </div>
         <div class="stage">
           <p class="notation">WM2 · Rendering</p>
@@ -316,7 +316,7 @@
       <div class="notes reveal">
         <div class="note">
           <h3>Segmentation as a bridge</h3>
-          <p>Masks have a substantially smaller sim-to-real gap than RGB, enabling synthetic pretraining that is impractical in RGB space.</p>
+          <p>Masks have a substantially smaller sim-to-real gap than RGB, enabling synthetic midtraining that is impractical in RGB space.</p>
         </div>
         <div class="note">
           <h3>Command-response controllability</h3>
@@ -343,7 +343,7 @@
 
     <figure class="wide reveal">
       <img src="assets/img/method_dexwm.png" alt="Method overview: dynamics model denoises future masks, rendering model paints RGB via ControlNet">
-      <figcaption><b>Method overview.</b> <em>Left (WM1):</em> an action-conditioned dynamics model denoises future segmentation masks from past masks and the past/future action sequence; pretrained on simulation. <em>Right (WM2):</em> a rendering model paints photorealistic RGB onto the predicted masks via a ControlNet branch on a LoRA-adapted SVD backbone; trained on real data. The two stages are chained autoregressively at inference.</figcaption>
+      <figcaption><b>Method overview.</b> <em>Left (WM1):</em> an action-conditioned dynamics model denoises future segmentation masks from past masks and the past/future action sequence; midtrained on simulation. <em>Right (WM2):</em> a rendering model paints photorealistic RGB onto the predicted masks via a ControlNet branch on a LoRA-adapted SVD backbone; trained on real data. The two stages are chained autoregressively at inference.</figcaption>
     </figure>
 
     <figure class="wide reveal">
@@ -353,12 +353,12 @@
 
     <figure class="wide reveal">
       <img src="assets/img/dataset_coverage.png" alt="Action coverage across 23 action dimensions, simulation versus real">
-      <figcaption><b>Action coverage: sim vs. real.</b> Per-dimension action range across all 23 action dimensions. Simulation (&gt;50&nbsp;h) spans a far wider range than real demonstrations (&approx;2.5&nbsp;h), motivating large-scale synthetic pretraining of WM1.</figcaption>
+      <figcaption><b>Action coverage: sim vs. real.</b> Per-dimension action range across all 23 action dimensions. Simulation (&gt;50&nbsp;h) spans a far wider range than real demonstrations (&approx;2.5&nbsp;h), motivating large-scale synthetic midtraining of WM1.</figcaption>
     </figure>
 
     <figure class="wide reveal">
       <img src="assets/img/gt_masks_comparison.png" alt="Segmentation masks in simulation versus reality look nearly identical">
-      <figcaption><b>The sim-to-real bridge.</b> Segmentation masks (hand: green, object: red, background: black) look nearly identical across simulation and reality, unlike raw RGB; this small domain gap is what makes synthetic pretraining of the dynamics model effective.</figcaption>
+      <figcaption><b>The sim-to-real bridge.</b> Segmentation masks (hand: green, object: red, background: black) look nearly identical across simulation and reality, unlike raw RGB; this small domain gap is what makes synthetic midtraining of the dynamics model effective.</figcaption>
     </figure>
   </div>
 </section>
@@ -390,8 +390,8 @@
     <div class="spread">
       <p class="eyebrow">Results</p>
       <div class="flow reveal">
-        <h2>What mask conditioning and sim pretraining buy</h2>
-        <p>The real training data is concentrated around grasping and free-play manipulation and contains only <strong>limited isolated single-finger motion</strong>. Simulation pretraining alone lifts controllability from ≈0.68→0.85 (ID) and ≈0.51→0.73 (OOD); real fine-tuning then closes the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations.</p>
+        <h2>What mask conditioning and sim midtraining buy</h2>
+        <p>The real training data is concentrated around grasping and free-play manipulation and contains only <strong>limited isolated single-finger motion</strong>. Simulation midtraining alone lifts controllability from ≈0.68→0.85 (ID) and ≈0.51→0.73 (OOD); real fine-tuning then closes the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations.</p>
       </div>
     </div>
 
@@ -402,7 +402,7 @@
 
     <figure class="wide reveal">
       <img src="assets/img/results_perceptual.png" alt="Perceptual metrics across WM1 training configurations">
-      <figcaption><b>Perceptual metrics across WM1 training configurations.</b> PSNR, SSIM, LPIPS on ID (top) and LPIPS on three OOD splits (<em>No Object</em>, <em>Random Play</em>, <em>Background</em>) in the bottom row, for real-only, sim-only, and sim-then-real (ours) WM1, all paired with the same WM2. Sim pretraining substantially reduces OOD degradation while real fine-tuning maintains strong ID performance.</figcaption>
+      <figcaption><b>Perceptual metrics across WM1 training configurations.</b> PSNR, SSIM, LPIPS on ID (top) and LPIPS on three OOD splits (<em>No Object</em>, <em>Random Play</em>, <em>Background</em>) in the bottom row, for real-only, sim-only, and sim-then-real (ours) WM1, all paired with the same WM2. Sim midtraining substantially reduces OOD degradation while real fine-tuning maintains strong ID performance.</figcaption>
     </figure>
 
     <figure class="wide reveal">
