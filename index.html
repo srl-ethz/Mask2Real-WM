@@ -515,6 +515,22 @@
   </div>
 </section>
 
+<!-- ════════════ LIMITATIONS ════════════ -->
+<section class="section" id="limitations">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Limitations</p>
+      <div class="flow reveal">
+        <h2>Where the system still falls short</h2>
+        <p>All principal failure modes trace back to WM1. Without depth information, WM1 loses objects under hand occlusion. Over long horizons, the color-class mask carries no object-level identity, causing drift that text-prompt or object-ID conditioning could address.</p>
+        <p>Synthetic masks are perturbed only with a fixed Gaussian blur on rasterization edges &mdash; a coarse proxy for SAM&nbsp;3's actual real-world error modes (boundary noise, occasional misclassification, temporal flicker); matching that error distribution more closely would likely narrow the sim-to-real gap further. WM1's diffusion backbone also denoises masks in pixel space; a JEPA-style architecture that predicts future states directly in a learned latent space, paired with a decoder trained to recover semantic masks from that latent, is an alternative we haven't explored.</p>
+        <p>WM2 is trained on real data from a single physical arena, so its rendering has not been evaluated in visually distinct scenes beyond the rotated-arena split. Its SVD-ControlNet backbone could also be replaced with a larger, more capable video foundation model such as Cosmos-Transfer, purpose-built for multimodal-conditioned world generation, at the cost of substantially more compute.</p>
+        <p>Because the baseline has no simulation exposure while WM1 is midtrained on over 50&nbsp;h of synthetic data, our comparison can't separate gains from the mask factorization from gains from simply seeing more data. Finally, two sequential diffusion passes are expensive; distilling both stages into consistency models is a promising route to near-real-time inference.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ════════════ CITATION ════════════ -->
 <section class="section" id="bibtex">
   <div class="shell">
