@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</title>
+<title>Mask2Real-WM: Controllable Dexterous World Models via Segmentation Masks as a Sim-to-Real Bridge</title>
 <meta name="description" content="A two-stage action-conditioned world model for dexterous manipulation that decouples dynamics (segmentation masks) from rendering (RGB), using segmentation space as a sim-to-real bridge.">
 <meta name="keywords" content="world model, action-conditioned world model, dexterous manipulation, sim-to-real, segmentation masks, video diffusion, robot learning, preprint 2026, ORCA hand, Franka Panda, ETH Zurich, Mask2Real-WM">
 <meta name="author" content="Riccardo Orion Feingold, Davide Liconti, Chenyu Yang, Robert K. Katzschmann">
@@ -17,7 +17,7 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Mask2Real-WM">
-<meta property="og:title" content="Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models">
+<meta property="og:title" content="Mask2Real-WM: Controllable Dexterous World Models via Segmentation Masks as a Sim-to-Real Bridge">
 <meta property="og:description" content="A two-stage action-conditioned world model for dexterous manipulation that decouples dynamics (segmentation masks) from rendering (RGB), using segmentation space as a sim-to-real bridge.">
 <meta property="og:url" content="https://srl-ethz.github.io/Mask2Real-WM/">
 <meta property="og:image" content="https://srl-ethz.github.io/Mask2Real-WM/assets/img/teaser_controllability.png">
@@ -25,7 +25,7 @@
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models">
+<meta name="twitter:title" content="Mask2Real-WM: Controllable Dexterous World Models via Segmentation Masks as a Sim-to-Real Bridge">
 <meta name="twitter:description" content="A two-stage action-conditioned world model that decouples dynamics (segmentation masks) from rendering (RGB), using segmentation space as a sim-to-real bridge for 23-DoF dexterous manipulation.">
 <meta name="twitter:image" content="https://srl-ethz.github.io/Mask2Real-WM/assets/img/teaser_controllability.png">
 
@@ -34,8 +34,8 @@
 {
   "@context": "https://schema.org",
   "@type": "ScholarlyArticle",
-  "headline": "Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models",
-  "name": "Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models",
+  "headline": "Mask2Real-WM: Controllable Dexterous World Models via Segmentation Masks as a Sim-to-Real Bridge",
+  "name": "Mask2Real-WM: Controllable Dexterous World Models via Segmentation Masks as a Sim-to-Real Bridge",
   "url": "https://srl-ethz.github.io/Mask2Real-WM/",
   "image": "https://srl-ethz.github.io/Mask2Real-WM/assets/img/teaser_controllability.png",
   "datePublished": "2026",
@@ -143,26 +143,6 @@
 .note h3 { font-size: 18px; }
 .note p { margin-top: 10px; font-size: 16px; color: var(--ink-2); }
 
-/* ── demo ── */
-.demo-frame {
-  width: 100%; height: 620px; border: 1px solid var(--rule); display: block; background: #111;
-  margin-top: clamp(36px, 4vw, 52px);
-}
-.demo-meta {
-  display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
-  font-family: var(--mono); font-size: 12px; color: var(--ink-3);
-  margin-top: 14px;
-}
-.demo-meta b { color: var(--teal); font-weight: 500; }
-
-/* ── clips ── */
-.clips { display: grid; gap: clamp(20px, 2.4vw, 30px); margin-top: clamp(36px, 4vw, 52px); }
-.clips--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.clips--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.clip video { width: 100%; display: block; background: #000; border: 1px solid var(--rule); aspect-ratio: 480 / 256; }
-.clip .cap { font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--ink-3); margin-top: 11px; }
-.clip .cap b { color: var(--ink); font-weight: 500; }
-
 /* ── citation ── */
 .cite {
   font-family: var(--mono);
@@ -182,9 +162,8 @@
   .masthead-figure { order: 2; }
 }
 @media (max-width: 760px) {
-  .stages, .notes, .datarun, .clips--2, .clips--3 { grid-template-columns: 1fr; }
+  .stages, .notes, .datarun { grid-template-columns: 1fr; }
   .datarun { gap: 22px; }
-  .demo-frame { height: 520px; }
   .equation { font-size: clamp(21px, 6.4vw, 30px); }
 }
 </style>
@@ -196,8 +175,8 @@
   <div class="shell masthead-grid">
    <div class="masthead-text">
     <p class="venue">Preprint · 2026</p>
-    <h1><span class="name">Mask2Real-WM</span>: Segmentation Masks as a Sim-to-Real Bridge for Controllable Dexterous World Models</h1>
-    <p class="standfirst">A two-stage action-conditioned world model that decouples <em>dynamics</em> from <em>rendering</em>, using segmentation masks to unlock large-scale synthetic midtraining for 23-DoF dexterous manipulation.</p>
+    <h1><span class="name">Mask2Real-WM</span>: Controllable Dexterous World Models via Segmentation Masks as a Sim-to-Real Bridge</h1>
+    <p class="standfirst">A two-stage action-conditioned world model that decouples pixel prediction into a <em>dynamics</em> model and a <em>rendering</em> model, improving controllability for 23-DoF dexterous hands under a limited real-data budget.</p>
 
     <div class="byline">
       <p class="authors"><a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Riccardo O. Feingold</a> · Davide Liconti · Chenyu Yang · Robert K. Katzschmann</p>
@@ -211,10 +190,14 @@
     </div>
 
     <nav class="entry" aria-label="Paper resources">
-      <a class="lead-link" href="#demo">Interactive demo</a>
-      <a href="https://arxiv.org/abs/2607.04546v1" target="_blank" rel="noopener">Paper · arXiv ↗</a>
+      <a class="lead-link" href="supplementary.html#demo">Interactive demo</a>
+      <a href="https://arxiv.org/abs/2607.04546" target="_blank" rel="noopener">Paper · arXiv ↗</a>
       <a href="supplementary.html">Supplementary</a>
-      <span class="pending">Code · coming soon</span>
+      <a href="https://github.com/srl-ethz/Mask2Real-WM" target="_blank" rel="noopener">Code ↗</a>
+      <a href="https://huggingface.co/riccardofeingold/Mask2Real-WM" target="_blank" rel="noopener">Checkpoints ↗</a>
+      <a href="https://github.com/srl-ethz/Mask2Real-SimDataGen" target="_blank" rel="noopener">Simulation ↗</a>
+      <a href="https://github.com/riccardofeingold/sam3_based_labeling_pipeline" target="_blank" rel="noopener">Mask labeling ↗</a>
+      <span class="pending">Dataset · coming soon</span>
       <a href="#bibtex">BibTeX</a>
       <a href="https://riccardofeingold.github.io/" target="_blank" rel="noopener">Author website ↗</a>
     </nav>
@@ -222,7 +205,7 @@
 
    <figure class="masthead-figure">
      <img src="assets/img/teaser_controllability.png" alt="Mask2Real-WM teaser: predicting future segmentation masks and rendering photorealistic RGB for 23-DoF dexterous manipulation">
-     <figcaption><b>Mask2Real-WM.</b> A <em>Dynamics WM</em> predicts future segmentation masks from past masks and a 23-dimensional action sequence (6-D Cartesian end-effector pose + 17 hand-joint positions), midtrained on &gt;50&nbsp;h of simulation; a <em>Rendering WM</em> paints photorealistic RGB onto the predicted masks, trained on &approx;2.5&nbsp;h of real demonstrations.</figcaption>
+     <figcaption><b>Mask2Real-WM.</b> A <em>dynamics world model</em> predicts future segmentation masks from past masks and the 23-D action sequence and is midtrained on synthetic simulation data; a <em>rendering world model</em> paints photorealistic RGB onto the predicted masks and is trained on 2.5&nbsp;h of real-world interactions. Mask2Real-WM faithfully predicts each DoF's commanded motion, including motion patterns poorly represented in real demonstrations.</figcaption>
    </figure>
   </div>
 </header>
@@ -253,9 +236,9 @@
       <p class="eyebrow">Abstract</p>
       <div class="flow reveal">
         <h2>Decoupling dynamics from rendering</h2>
-        <p class="lede">Action-conditioned world models let robots imagine the future consequences of their actions without physical interaction, making them a powerful tool for policy evaluation, planning, and data augmentation. We present <strong>Mask2Real-WM</strong>, a two-stage action-conditioned world model for dexterous manipulation that <strong>decouples</strong> pixel prediction into a <strong>dynamics model</strong> and a <strong>rendering model</strong>.</p>
-        <p>The dynamics model predicts future segmentation masks from past masks and a 23-dimensional action sequence (a 6-D Cartesian end-effector pose and 17 hand-joint positions); the rendering model paints photorealistic RGB onto the predicted masks via a ControlNet-augmented SVD backbone. Because segmentation space has a small sim-to-real gap, the dynamics model benefits from large-scale midtraining on over <strong>50&nbsp;h of synthetic simulation data</strong> followed by fine-tuning on approximately <strong>2.5&nbsp;h of real demonstrations</strong> (an avenue underexplored for image-space world models).</p>
-        <p>Experiments on a dexterous pick-and-place benchmark show that both mask conditioning and simulation midtraining are necessary to achieve high mean command-response controllability across the 23 action dimensions, while monolithic baselines capture only coarse end-effector motion.</p>
+        <p class="lede">Learning action-conditioned world models for dexterous manipulation that are genuinely controllable requires capturing complex, high-dimensional hand kinematics from limited real-world data. We present <strong>Mask2Real-WM</strong>, a two-stage world model that improves controllability for dexterous hands under a limited real-data budget by <strong>decoupling</strong> pixel prediction into a <strong>dynamics model</strong> and a <strong>rendering model</strong>.</p>
+        <p>The dynamics model predicts future segmentation masks from past masks and a high-dimensional action sequence. The rendering model converts the predicted masks into photorealistic RGB images. This design allows us to train the dynamics model on a large synthetic dataset spanning the full range of hand motions and interactions. We then fine-tune the dynamics model and train the rendering model on only <strong>2.5&nbsp;h of real demonstrations</strong> to obtain a controllable world model.</p>
+        <p>We compare five models with matched training recipes on a 23-DoF robotic system, measuring per-DoF controllability both with random target commands and with sinusoidal per-DoF actuation, judged blind by human raters. The decoupled model achieves the strongest controllability, with further gains from simulation data. Beyond improved controllability, Mask2Real-WM produces sharper frames while maintaining comparable perceptual quality.</p>
 
         <div class="equation-block reveal">
           <p class="eyebrow">Action space</p>
@@ -268,22 +251,51 @@
           </p>
           <p class="equation-note">A 6-D Cartesian end-effector pose and 17 ORCA hand-joint positions are driven as one action sequence: every action dimension conditions the dynamics model directly, rather than through a coarse end-effector proxy. (The physical robot has 24 actuated joint DoF: 7 in the arm, 17 in the hand; the arm is commanded in Cartesian end-effector space.)</p>
         </div>
-
-        <dl class="datarun reveal">
-          <div>
-            <dt>Synthetic midtraining</dt>
-            <dd>&gt;50 h<span class="qual">IsaacLab simulation</span></dd>
-          </div>
-          <div>
-            <dt>Real demonstrations</dt>
-            <dd>&approx;2.5 h<span class="qual">Fine-tuning budget</span></dd>
-          </div>
-          <div>
-            <dt>ID controllability</dt>
-            <dd>0.95<span class="qual">vs. 0.60 baseline</span></dd>
-          </div>
-        </dl>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ CONTRIBUTIONS ════════════ -->
+<section class="section" id="contributions">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Contributions</p>
+      <div class="flow reveal">
+        <h2>Three contributions</h2>
+      </div>
+    </div>
+
+    <div class="inset">
+      <div class="notes reveal" style="margin-top: clamp(30px, 3.6vw, 46px);">
+        <div class="note">
+          <h3>1 · A two-stage world model</h3>
+          <p>We introduce Mask2Real-WM, a two-stage action-conditioned world model that decouples pixel prediction into mask dynamics and RGB rendering and uses the mask space as a sim-to-real bridge.</p>
+        </div>
+        <div class="note">
+          <h3>2 · Whole-pose and per-DoF control</h3>
+          <p>We show substantial gains in whole-pose target following and independent per-DoF control on a 23-DoF robotic system: Mask2Real-WM wins 75% of non-tied human comparisons against the strongest monolithic model on random whole-pose targets, and scores higher on single-DoF command sweeps, with sharper frame predictions and without compromising perceptual quality on the evaluated videos.</p>
+        </div>
+        <div class="note">
+          <h3>3 · Training recipes and simulation data</h3>
+          <p>We ablate training recipes and simulation data, showing that simulation training improves controllability in the decoupled model but reduces it in the monolithic model.</p>
+        </div>
+      </div>
+
+      <dl class="datarun reveal">
+        <div>
+          <dt>Synthetic midtraining</dt>
+          <dd>53.7 h<span class="qual">Isaac Lab simulation</span></dd>
+        </div>
+        <div>
+          <dt>Real demonstrations</dt>
+          <dd>2.5 h<span class="qual">Adaptation and rendering</span></dd>
+        </div>
+        <div>
+          <dt>A/B win rate</dt>
+          <dd>75%<span class="qual">Cascade-SR vs. Mono-R, non-tied votes</span></dd>
+        </div>
+      </dl>
     </div>
   </div>
 </section>
@@ -295,7 +307,7 @@
       <p class="eyebrow">Key idea</p>
       <div class="flow reveal">
         <h2>Decouple what moves where from what it looks like</h2>
-        <p>Predicting dexterous manipulation in raw pixels forces a single model to learn both physics and appearance at once, and the sim-to-real appearance gap blocks the use of cheap synthetic data. Mask2Real-WM instead factorizes the problem into one shared system of two stages, chained autoregressively at inference:</p>
+        <p>Dexterous hands are hard to control from limited data: conditioning on 23 action dimensions is more demanding than for parallel-jaw grippers, demonstrations tend to show joints moving together, and fine finger motion must still be resolved clearly. Mask2Real-WM reframes the problem as two more tractable subproblems, chained autoregressively at inference, the first of which can effectively use synthetic simulation data.</p>
       </div>
     </div>
 
@@ -304,23 +316,23 @@
         <div class="stage">
           <p class="notation">WM1 · Dynamics</p>
           <h3>Masks from actions</h3>
-          <p>An action-conditioned video-diffusion model (SVD backbone) predicts future segmentation masks from past masks and the 23-DoF action sequence. Masks have a tiny sim-to-real gap, so WM1 is midtrained on &gt;50&nbsp;h of IsaacLab data, then fine-tuned on real data with LoRA.</p>
+          <p>An action-conditioned video-diffusion model (SVD backbone) predicts future hand and object segmentation masks from past masks and the 23-DoF action sequence. The smaller sim-to-real gap in mask space enables midtraining on 53.7&nbsp;h of simulation, followed by LoRA fine-tuning on real data.</p>
         </div>
         <div class="stage">
           <p class="notation">WM2 · Rendering</p>
           <h3>RGB from masks</h3>
-          <p>A ControlNet-augmented SVD backbone paints photorealistic two-view RGB onto WM1's predicted masks. Trained on real data only (&approx;2.5&nbsp;h), since appearance is where the sim-to-real gap is largest. A lightweight CNN encodes masks before ControlNet injection.</p>
+          <p>A ControlNet-augmented SVD backbone with LoRA paints photorealistic two-view RGB onto WM1's predicted masks. It is trained on real data only, since appearance is where the sim-to-real gap is largest. A lightweight CNN encodes the masks before ControlNet injection.</p>
         </div>
       </div>
 
       <div class="notes reveal">
         <div class="note">
           <h3>Segmentation as a bridge</h3>
-          <p>Masks have a substantially smaller sim-to-real gap than RGB, enabling synthetic midtraining that is impractical in RGB space.</p>
+          <p>Simulation supervises mask dynamics and real RGB supervises appearance, without requiring photorealistic simulation.</p>
         </div>
         <div class="note">
-          <h3>Command-response controllability</h3>
-          <p>High mean command-response controllability across the 23 action dimensions, with substantially reduced coupling versus the monolithic baseline.</p>
+          <h3>Action conditioning</h3>
+          <p>End-effector pose and hand-joint commands pass through separate MLP branches, and their summed per-frame embeddings are injected via frame-wise cross-attention in both stages.</p>
         </div>
         <div class="note">
           <h3>Automatic labels</h3>
@@ -353,7 +365,7 @@
 
     <figure class="wide reveal">
       <img src="assets/img/dataset_coverage.png" alt="Action coverage across 23 action dimensions, simulation versus real">
-      <figcaption><b>Action coverage: sim vs. real.</b> Per-dimension action range across all 23 action dimensions. Simulation (&gt;50&nbsp;h) spans a far wider range than real demonstrations (&approx;2.5&nbsp;h), motivating large-scale synthetic midtraining of WM1.</figcaption>
+      <figcaption><b>Action coverage: sim vs. real.</b> Per-dimension action range across all 23 action dimensions. Simulation (53.7&nbsp;h) spans a far wider range than real demonstrations (2.5&nbsp;h), motivating large-scale synthetic midtraining of WM1.</figcaption>
     </figure>
 
     <figure class="wide reveal">
@@ -363,155 +375,109 @@
   </div>
 </section>
 
-<!-- ════════════ INTERACTIVE DEMO ════════════ -->
-<section class="section" id="demo">
-  <div class="shell">
-    <div class="spread">
-      <p class="eyebrow">Interactive demo</p>
-      <div class="flow reveal">
-        <h2>Per-dimension controllability, in 3D</h2>
-        <p>Click any joint on the 3D ORCA hand (or a button) to see the world model's prediction when that single action dimension is perturbed. Switch models and samples to compare side by side.</p>
-      </div>
-    </div>
-
-    <div class="wide reveal">
-      <iframe class="demo-frame" src="demo/index.html" title="OrcaHand DOF controllability demo" loading="lazy"></iframe>
-      <div class="demo-meta">
-        <span>Compare <b>WM + LoRA (ours)</b>, WM Mid-train, WM Real-Only, and the monolithic Baseline across 23 action dimensions. The 3D model loads from STL meshes; videos stream on click.</span>
-        <a href="demo/index.html" target="_blank" rel="noopener">Open full screen ↗</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════ RESULTS ════════════ -->
+<!-- ════════════ EXPERIMENTS ════════════ -->
 <section class="section" id="results">
   <div class="shell">
     <div class="spread">
-      <p class="eyebrow">Results</p>
+      <p class="eyebrow">Experiments</p>
       <div class="flow reveal">
-        <h2>What mask conditioning and sim midtraining buy</h2>
-        <p>The real training data is concentrated around grasping and free-play manipulation and contains only <strong>limited isolated single-finger motion</strong>. Simulation midtraining alone lifts controllability from ≈0.68→0.85 (ID) and ≈0.51→0.73 (OOD); real fine-tuning then closes the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations.</p>
+        <h2>Stronger controllability at comparable perceptual quality</h2>
+        <p>We evaluate Mask2Real-WM against monolithic baselines along two axes: geometric controllability of the rendered hand, and video and perceptual quality. Controllability is assessed with two human rating experiments, an A/B test on randomly sampled target commands and a scoring experiment on individually actuated fingers, and with a mask-overlap metric.</p>
       </div>
     </div>
 
-    <figure class="wide reveal">
-      <img src="assets/img/controllability.png" alt="Controllability results across models and degrees of freedom">
-      <figcaption><b>Action controllability.</b> <em>Left:</em> model responses to sinusoidal perturbation of individual action components. <em>Right:</em> mean controllability score for ID (top) and OOD (bottom). Our full model (WM1 sim→real, WM2 real) reaches ≈0.95 ID and ≈0.87 OOD; the monolithic baseline falls below 0.5 on OOD.</figcaption>
-    </figure>
-
-    <figure class="wide reveal">
-      <img src="assets/img/results_perceptual.png" alt="Perceptual metrics across WM1 training configurations">
-      <figcaption><b>Perceptual metrics across WM1 training configurations.</b> PSNR, SSIM, LPIPS on ID (top) and LPIPS on three OOD splits (<em>No Object</em>, <em>Random Play</em>, <em>Background</em>) in the bottom row, for real-only, sim-only, and sim-then-real (ours) WM1, all paired with the same WM2. Sim midtraining substantially reduces OOD degradation while real fine-tuning maintains strong ID performance.</figcaption>
-    </figure>
-
-    <figure class="wide reveal">
-      <img src="assets/img/wm2_ablation.png" alt="WM2 conditioning ablation measured in LPIPS">
-      <figcaption><b>WM2 conditioning ablation (LPIPS↓).</b> Mask conditioning via ControlNet is the dominant driver of spatial sharpness; adding action conditioning further tightens motion consistency. Masks alone already support competitive quality and zero-shot deployment decoupled from the action space.</figcaption>
-    </figure>
-  </div>
-</section>
-
-<!-- ════════════ LONG-HORIZON ROLLOUTS ════════════ -->
-<section class="section" id="rollouts">
-  <div class="shell">
-    <div class="spread">
-      <p class="eyebrow">Long-horizon rollouts</p>
-      <div class="flow reveal">
-        <h2>Autoregressive rollout, ours vs. monolithic</h2>
-        <p>Autoregressive rollout on a pick-and-place sequence with the cup, comparing Mask2Real-WM against the monolithic baseline.</p>
+    <div class="inset reveal">
+      <div class="flow" style="max-width: 690px;">
+        <h3>Platform and data</h3>
+        <p>The robot platform combines a 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand, commanded through a 23-dimensional action space. The simulation corpus comprises 13,950 Isaac Lab episodes with ground-truth masks (53.7&nbsp;h at 5&nbsp;fps) over five objects. MimicGen expands about 100 teleoperated demonstrations into 10,000 episodes, a procedural generator adds 3,700 random-motion episodes, and a further 250 episodes are teleoperated directly. The real dataset comprises 218 episodes (2.5&nbsp;h at 5&nbsp;fps), teleoperated with a Rokoko glove, with masks pseudo-labeled by SAM&nbsp;3.</p>
+        <p>The real demonstrations cover only a narrow range of the action space: the simulation corpus spans 2.1× the real range across the 17 hand joints and 1.5× across the end-effector pose, with the largest gap in finger abduction. Simulation midtraining exposes the dynamics model to this broader range of hand motions.</p>
       </div>
     </div>
 
-    <div class="wide reveal">
-      <div class="clips clips--2" style="margin-top:0;">
-        <div class="clip">
-          <video src="assets/video/2_stage_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>Mask2Real-WM (ours)</b>: sharp contacts, stable object identity</p>
-        </div>
-        <div class="clip">
-          <video src="assets/video/baseline_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>Monolithic baseline</b>: blur and drift accumulate</p>
-        </div>
+    <div class="inset reveal">
+      <div class="flow" style="max-width: 690px; margin-top: 2.4em;">
+        <h3>Baselines and training recipes</h3>
+        <p>Table&nbsp;I lists five models, named by architecture and training data. <em>Cascade</em> denotes our two-stage Mask2Real-WM architecture and <em>Mono</em> the monolithic approach, which adapts Ctrl-World to the same 23-D action space. The suffixes R, S, and SR denote training on real data only, simulation data only, and simulation followed by real data. For Cascade variants the suffix refers to WM1; all three share the same WM2, trained only on real data.</p>
+      </div>
+      <div class="tbl-wrap">
+        <table class="data">
+          <caption><b>Table I · Model design.</b> WM2 is shared by all Cascade rows (real data only, 70k steps). The real-data stages are not step-matched: each monolithic baseline receives more real-data updates than its corresponding cascade variant.</caption>
+          <thead><tr><th>Model</th><th>Sim midtr.</th><th>Real FT</th><th>Mask decomp.</th><th class="num">Gradient updates (sim / real)</th></tr></thead>
+          <tbody>
+            <tr><td>Mono-R</td><td>–</td><td>✓</td><td>–</td><td class="num">– / 22k</td></tr>
+            <tr><td>Mono-SR</td><td>✓</td><td>✓</td><td>–</td><td class="num">55k / 58k</td></tr>
+            <tr><td>Cascade-R</td><td>–</td><td>✓</td><td>✓</td><td class="num">– / 15k</td></tr>
+            <tr><td>Cascade-S</td><td>✓</td><td>–</td><td>✓</td><td class="num">55k / –</td></tr>
+            <tr><td>Cascade-SR</td><td>✓</td><td>✓</td><td>✓</td><td class="num">55k / 45k</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <figure class="wide reveal">
-      <img src="assets/img/ours_strip.png" alt="Long-horizon mask-to-RGB rollout strip, ours">
-      <figcaption><b>Ours</b>: long-horizon mask→RGB rollout strip.</figcaption>
-    </figure>
-    <figure class="wide reveal">
-      <img src="assets/img/baseline_strip.png" alt="Long-horizon rollout strip, baseline">
-      <figcaption><b>Baseline</b>: long-horizon rollout strip; note the loss of finger and object detail over time.</figcaption>
-    </figure>
-  </div>
-</section>
-
-<!-- ════════════ POLICY ROLLOUTS ════════════ -->
-<section class="section" id="policy-rollouts">
-  <div class="shell">
-    <div class="spread">
-      <p class="eyebrow">Policy rollouts</p>
-      <div class="flow reveal">
-        <h2>Behavior unfolding inside the world model</h2>
-        <p>These examples visualize how long-horizon behavior unfolds as ACT, Diffusion Policy, and Flow Matching are rolled out inside Mask2Real-WM. Each video shows both the third-person and wrist-camera views: the upper half is the starting image for each view, and the lower half is the policy rollout.</p>
+    <div class="inset reveal">
+      <div class="flow" style="max-width: 690px; margin-top: 2.4em;">
+        <h3>Geometric controllability</h3>
+        <p>We evaluate controllability in three ways. First, raters compare how closely the generated hand matches a commanded target posture: a trial samples a random 23-D target command, rolls the model out for 10 autoregressive steps (50 frames), and judges the final frame against a simulation-rendered reference. Raters are blind to model identity and answer A, B, or tie across 50 target scenes. Second, a sine-sweep study drives each of the 23 dimensions with one sinusoid cycle while the others are held fixed (1,150 rollouts); raters score 1 if only that dimension moves, 0.5 if it moves with unintended motion elsewhere, and 0 if it does not move. Third, for the mask-prediction models, we measure the intersection over union (IoU) between WM1's predicted hand mask and the simulator's target mask.</p>
+      </div>
+      <div class="tbl-wrap">
+        <table class="data">
+          <caption><b>Table II · Controllability.</b> A/B win rate [95% Wilson interval] over all comparisons with the other four models, ties as non-wins (3,549 ratings). Sine-sweep score: mean ± standard error of the 0/0.5/1 ratings over dimensions, episodes, and raters. IoU: WM1's predicted hand mask against the simulation-rendered target on the final frame of separate 25-frame rollouts. Best per column in bold.</caption>
+          <thead><tr><th>Model</th><th class="num">A/B win rate</th><th class="num">Sine-sweep score</th><th class="num">WM1 IoU</th></tr></thead>
+          <tbody>
+            <tr><td>Mono-R</td><td class="num">35.3% [32.8, 37.8]</td><td class="num">0.77 ± 0.02</td><td class="num">–</td></tr>
+            <tr><td>Mono-SR</td><td class="num">16.4% [14.6, 18.4]</td><td class="num">0.75 ± 0.02</td><td class="num">–</td></tr>
+            <tr><td>Cascade-R</td><td class="num">40.8% [38.3, 43.4]</td><td class="num">0.79 ± 0.02</td><td class="num">0.412</td></tr>
+            <tr><td>Cascade-S</td><td class="num">35.3% [32.9, 37.8]</td><td class="num">0.81 ± 0.02</td><td class="num">0.414</td></tr>
+            <tr><td>Cascade-SR</td><td class="num best">63.0% [60.5, 65.5]</td><td class="num best">0.87 ± 0.01</td><td class="num best">0.447</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flow" style="max-width: 690px; margin-top: 2.4em;">
+        <p>Cascade-SR leads the human pairwise ranking by a wide margin. Mono-R, the strongest monolithic model, sits level with Cascade-S and below Cascade-R, and Mono-SR is last. Head-to-head tests on the non-tied votes give four results. First, decoupling helps at both budgets: every Mask2Real-WM variant beats Mono-SR, Cascade-SR in 94% of non-tied comparisons and Cascade-R beats Mono-R in 69%. Second, simulation midtraining has opposite effects: raters prefer Cascade-SR over Cascade-R (73%) and over Cascade-S (80%), but Mono-R over Mono-SR (74%). Third, the full model beats the strongest monolithic model: Cascade-SR over Mono-R, 75%. Fourth, simulation without the real-data stage is not enough: Cascade-S ties Mono-R and does not significantly differ from Cascade-R after correction.</p>
+        <p>The sine-sweep ratings give the same top of the ranking: Cascade-SR scores 0.87, about three standard errors of the difference above Cascade-S (0.81), while the other four models (0.81 to 0.75) lie within about two standard errors of each other. For hand-mask IoU, Cascade-SR exceeds Cascade-R by +0.035 (bootstrap 95% CI [0.029, 0.042]) and Cascade-S by +0.034 ([0.023, 0.044]), while Cascade-R and Cascade-S tie.</p>
       </div>
     </div>
 
-    <div class="wide reveal">
-      <div class="clips clips--3" style="margin-top:0;">
-        <div class="clip">
-          <video src="assets/video/rollouts/ood_act_1.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>ACT</b> · Sequence A</p>
-        </div>
-        <div class="clip">
-          <video src="assets/video/rollouts/ood_dp_1.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>Diffusion Policy</b> · Sequence A</p>
-        </div>
-        <div class="clip">
-          <video src="assets/video/rollouts/ood_fm_1.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>Flow Matching</b> · Sequence A</p>
-        </div>
-        <div class="clip">
-          <video src="assets/video/rollouts/ood_act_2.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>ACT</b> · Sequence B</p>
-        </div>
-        <div class="clip">
-          <video src="assets/video/rollouts/ood_dp_2.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>Diffusion Policy</b> · Sequence B</p>
-        </div>
-        <div class="clip">
-          <video src="assets/video/rollouts/ood_fm_2.mp4" autoplay loop muted playsinline></video>
-          <p class="cap"><b>Flow Matching</b> · Sequence B</p>
-        </div>
+    <div class="inset reveal">
+      <div class="flow" style="max-width: 690px; margin-top: 2.4em;">
+        <h3>Video and perceptual quality</h3>
+        <p>We assess video quality on held-out episodes, reporting results per camera view (Table&nbsp;III) with PSNR, SSIM, LPIPS, FID, FVD, and a sharpness measure given by the Laplacian variance of predicted frames relative to ground truth (1 = as sharp as ground truth).</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ════════════ QUALITATIVE ════════════ -->
-<section class="section" id="qualitative">
-  <div class="shell">
-    <div class="spread">
-      <p class="eyebrow">Generalization</p>
-      <div class="flow reveal">
-        <h2>Cup, banana, cylinder</h2>
-        <p>Qualitative predictions on different manipulation targets.</p>
+    <div class="wide reveal" style="margin-top: clamp(28px, 3vw, 38px);">
+      <div class="tbl-wrap" style="margin-top: 0;">
+        <table class="data">
+          <caption><b>Table III · Video quality and sharpness per camera view.</b> 150 held-out samples, 50-frame rollouts. PSNR, SSIM, LPIPS: mean ± standard deviation over samples. FVD (I3D, 16 frames per clip, 150 clips per view) and FID (Inception-v3, 8 frames per clip, 1,200 frames per view) are dataset-level Fréchet distances computed per view and carry no per-sample spread. Sharp.: Laplacian variance of the predicted frames relative to ground truth (1 = as sharp as ground truth). Best per column in bold.</caption>
+          <thead>
+            <tr><th rowspan="2">Model</th><th class="num" colspan="6" style="text-align:center;">Third-person view</th><th class="num" colspan="6" style="text-align:center;">Wrist view</th></tr>
+            <tr><th class="num">PSNR↑</th><th class="num">SSIM↑</th><th class="num">LPIPS↓</th><th class="num">FVD↓</th><th class="num">FID↓</th><th class="num">Sharp.↑</th><th class="num">PSNR↑</th><th class="num">SSIM↑</th><th class="num">LPIPS↓</th><th class="num">FVD↓</th><th class="num">FID↓</th><th class="num">Sharp.↑</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Mono-R</td><td class="num">24.08 ± 1.56</td><td class="num">0.834 ± 0.028</td><td class="num">0.052 ± 0.018</td><td class="num">6.24</td><td class="num">14.85</td><td class="num">0.955</td><td class="num">17.42 ± 1.07</td><td class="num">0.559 ± 0.040</td><td class="num">0.226 ± 0.045</td><td class="num">11.71</td><td class="num">26.52</td><td class="num">0.872</td></tr>
+            <tr><td>Mono-SR</td><td class="num">21.80 ± 1.95</td><td class="num">0.770 ± 0.041</td><td class="num">0.084 ± 0.027</td><td class="num">8.82</td><td class="num">24.20</td><td class="num">0.897</td><td class="num">15.94 ± 1.01</td><td class="num">0.483 ± 0.041</td><td class="num">0.285 ± 0.050</td><td class="num">13.99</td><td class="num">31.77</td><td class="num">0.880</td></tr>
+            <tr><td>Cascade-R</td><td class="num best">24.11 ± 1.89</td><td class="num best">0.857 ± 0.031</td><td class="num best">0.045 ± 0.022</td><td class="num best">4.65</td><td class="num best">11.81</td><td class="num">0.978</td><td class="num best">17.64 ± 1.41</td><td class="num best">0.587 ± 0.049</td><td class="num best">0.214 ± 0.057</td><td class="num best">9.13</td><td class="num best">22.03</td><td class="num best">0.994</td></tr>
+            <tr><td>Cascade-S</td><td class="num">21.74 ± 1.98</td><td class="num">0.779 ± 0.047</td><td class="num">0.079 ± 0.028</td><td class="num">7.67</td><td class="num">16.78</td><td class="num">0.966</td><td class="num">14.78 ± 0.96</td><td class="num">0.443 ± 0.046</td><td class="num">0.318 ± 0.052</td><td class="num">13.65</td><td class="num">41.68</td><td class="num">0.884</td></tr>
+            <tr><td>Cascade-SR</td><td class="num">23.74 ± 1.86</td><td class="num">0.843 ± 0.033</td><td class="num">0.059 ± 0.026</td><td class="num">5.30</td><td class="num">13.39</td><td class="num best">0.979</td><td class="num">16.54 ± 1.23</td><td class="num">0.548 ± 0.045</td><td class="num">0.240 ± 0.054</td><td class="num">9.60</td><td class="num">23.32</td><td class="num">0.956</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="inset reveal">
+      <div class="flow" style="max-width: 690px; margin-top: 2.4em;">
+        <p>Cascade-SR is on par with the strongest monolithic model. In the third-person view it is within 0.3 PSNR of Mono-R with higher SSIM; in the wrist view it trails by 0.9 PSNR and 0.014 LPIPS; it is better on FVD and FID in both views. Against Mono-SR it is better on every metric in both views. Cascade-R achieves the best video-quality metrics in both views but has lower controllability scores than Cascade-SR, a trade-off that may partly reflect its full-weight training of WM1 on real data alone. Simulation midtraining also reduces perceptual quality in the monolithic model: Mono-SR scores worse than Mono-R on every pixel and distribution metric in both views, despite receiving more real-data training steps.</p>
+        <p>Wrist-view PSNR is 5.9 to 7.2&nbsp;dB lower than third-person PSNR for every model. The wrist camera moves with the hand, and the three-class mask does not encode motion within the background region; action conditioning supplies WM2 with additional motion information. Consistent with this, removing WM2's action conditioning costs 0.024 LPIPS in the wrist view but 0.003 in the third-person view.</p>
+        <p>The monolithic models' pixel scores coincide with blur: in the wrist view Mono-R and Mono-SR render at 0.87× and 0.88× ground-truth sharpness against 0.96× for Cascade-SR and 0.99× for Cascade-R, and Cascade-SR is sharper than Mono-SR in 93% of samples and than Mono-R in 87% of wrist-view samples. Pixel metrics can favor averaged predictions.</p>
       </div>
     </div>
 
-    <figure class="wide reveal">
-      <img src="assets/img/cup.png" alt="Qualitative prediction: cup">
-      <figcaption><b>Cup</b></figcaption>
-    </figure>
-    <figure class="wide reveal">
-      <img src="assets/img/banana.png" alt="Qualitative prediction: banana">
-      <figcaption><b>Banana</b></figcaption>
-    </figure>
-    <figure class="wide reveal">
-      <img src="assets/img/cylinder.png" alt="Qualitative prediction: cylinder">
-      <figcaption><b>Cylinder</b></figcaption>
-    </figure>
+    <div class="inset reveal">
+      <div class="flow" style="max-width: 690px; margin-top: 2.4em;">
+        <h3>Failure modes and discussion</h3>
+        <p>Two recurring failure modes originate in WM1's object-state prediction: under hand occlusion the object mask is sometimes dropped, leaving an empty scene, and the object is occasionally duplicated or respawned elsewhere. Both show that object permanence is what limits long autoregressive deployment; examples are shown in <a href="supplementary.html#failures">Appendix&nbsp;E</a>.</p>
+        <p>The comparisons show improved controllability with mask decomposition under both real-only training and simulation midtraining followed by real-data fine-tuning. Simulation midtraining further benefits the mask dynamics model but reduces controllability in the monolithic model. The simulation uses no material, lighting, or texture tuning, so the appearance gap between simulated and real RGB may contribute to the monolithic model's degradation. These results support learning dynamics in mask space, with real RGB supervision reserved for the rendering model.</p>
+        <p>Results from the earlier protocol (ID/OOD sinusoidal controllability, long-horizon and policy rollouts, and the interactive demo) are collected in the <a href="supplementary.html">supplementary material</a>.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -522,10 +488,50 @@
       <p class="eyebrow">Limitations</p>
       <div class="flow reveal">
         <h2>Where the system still falls short</h2>
-        <p>All principal failure modes trace back to WM1. Without depth information, WM1 loses objects under hand occlusion. Over long horizons, the color-class mask carries no object-level identity, causing drift that text-prompt or object-ID conditioning could address.</p>
-        <p>Synthetic masks are perturbed only with a fixed Gaussian blur on rasterization edges &mdash; a coarse proxy for SAM&nbsp;3's actual real-world error modes (boundary noise, occasional misclassification, temporal flicker); matching that error distribution more closely would likely narrow the sim-to-real gap further. WM1's diffusion backbone also denoises masks in pixel space; a JEPA-style architecture that predicts future states directly in a learned latent space, paired with a decoder trained to recover semantic masks from that latent, is an alternative we haven't explored.</p>
-        <p>WM2 is trained on real data from a single physical arena, so its rendering has not been evaluated in visually distinct scenes beyond the rotated-arena split. Its SVD-ControlNet backbone could also be replaced with a larger, more capable video foundation model such as Cosmos-Transfer, purpose-built for multimodal-conditioned world generation, at the cost of substantially more compute.</p>
-        <p>Because the baseline has no simulation exposure while WM1 is midtrained on over 50&nbsp;h of synthetic data, our comparison can't separate gains from the mask factorization from gains from simply seeing more data. Finally, two sequential diffusion passes are expensive; distilling both stages into consistency models is a promising route to near-real-time inference.</p>
+        <p><strong>Evaluation scope.</strong> This study uses a single physical scene with data collected on a single pick-and-place task. Robustness to distribution shift, such as new objects or scene changes, is left to future work. Moreover, the effect of the improved controllability on downstream tasks like planning or policy evaluation has not been tested.</p>
+        <p><strong>Judging.</strong> The pooled tests treat every vote as an independent trial and do not model variation between raters. The nonsignificant differences between Cascade-R and Cascade-S, and between Cascade-S and Mono-R, should be interpreted cautiously; they do not establish equivalence.</p>
+        <p><strong>Pseudo-labeling.</strong> The segmentation-mask supervision relies on SAM&nbsp;3 pseudo-labels, which may contain boundary or classification errors. This effect is most pronounced for WM2, which is trained on real data only.</p>
+        <p><strong>Model.</strong> WM1 receives no depth input and drops occluded objects; depth conditioning is a natural remedy. A background or depth channel added to the mask vocabulary would also give WM2 the egomotion cue it currently lacks in the wrist view. The color-class mask does not encode object identity; object-ID or text-prompt conditioning could help preserve identity over long horizons. A natural next baseline pairs a kinematically rendered (forward-kinematics) hand mask with a learned object-mask predictor.</p>
+        <p><strong>Future work.</strong> Other directions include conditioning on camera intrinsics and extrinsics to remove the fixed-viewpoint assumption. Moreover, two sequential diffusion passes are computationally expensive; distillation into few-step samplers is the natural route to real-time rollouts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ CODE, MODELS AND DATA ════════════ -->
+<section class="section" id="code">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Open source</p>
+      <div class="flow reveal">
+        <h2>Code, models and data</h2>
+        <p>The code, the model checkpoints and two companion repositories are public. The dataset is not released yet.</p>
+      </div>
+    </div>
+
+    <div class="inset">
+      <div class="notes reveal">
+        <div class="note">
+          <h3><a href="https://github.com/srl-ethz/Mask2Real-WM" target="_blank" rel="noopener">Code ↗</a></h3>
+          <p>Training, inference and evaluation code. The README covers installation, the checkpoint table, the dataset format and example commands. MIT licence.</p>
+        </div>
+        <div class="note">
+          <h3><a href="https://huggingface.co/riccardofeingold/Mask2Real-WM" target="_blank" rel="noopener">Checkpoints ↗</a></h3>
+          <p>Eight checkpoints, about 77&nbsp;GB: WM1 for Cascade-R, Cascade-S and Cascade-SR, the shared WM2, Mono-R, Mono-SR (two training steps) and the simulation-only stage of Mono-SR. They derive from Stable Video Diffusion and are under the Stability AI Community License.</p>
+          <p class="equation-note" style="margin-top: 10px;">Powered by Stability AI</p>
+        </div>
+        <div class="note">
+          <h3><a href="https://github.com/srl-ethz/Mask2Real-SimDataGen" target="_blank" rel="noopener">Simulation ↗</a></h3>
+          <p>Isaac Lab extension for the ORCA hand on a Franka arm: simulation data generation (random motion, MimicGen, teleoperation), export to LeRobot format, and the ground-truth renderer of the controllability evaluation. MIT licence.</p>
+        </div>
+        <div class="note">
+          <h3><a href="https://github.com/riccardofeingold/sam3_based_labeling_pipeline" target="_blank" rel="noopener">Mask labeling ↗</a></h3>
+          <p>The SAM&nbsp;3 based pipeline that produces the hand and object segmentation masks of the real recordings. Licence: see the repository.</p>
+        </div>
+        <div class="note">
+          <h3>Dataset</h3>
+          <p>Not released yet.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -539,10 +545,8 @@
       <div class="flow reveal">
         <h2>Cite this work</h2>
         <pre class="cite">@article{feingold2026mask2realwm,
-  title   = {Mask2Real-WM: Segmentation Masks as a Sim-to-Real Bridge
-             for Controllable Dexterous World Models},
-  author  = {Feingold, Riccardo Orion and Liconti, Davide and
-             Yang, Chenyu and Katzschmann, Robert K.},
+  title   = {Mask2Real-WM: Controllable Dexterous World Models via Segmentation Masks as a Sim-to-Real Bridge},
+  author  = {Feingold, Riccardo O. and Liconti, Davide and Yang, Chenyu and Katzschmann, Robert K.},
   journal = {arXiv preprint arXiv:2607.04546},
   year    = {2026}
 }</pre>

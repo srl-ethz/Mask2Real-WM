@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Supplementary Material · Mask2Real-WM</title>
-<meta name="description" content="Supplementary results for Mask2Real-WM: baseline comparison and simulation midtraining, per-component action controllability, conditioning ablations, error accumulation, failure modes, generalization to unseen objects, and implementation details.">
+<meta name="description" content="Supplementary results for Mask2Real-WM: baseline comparison and simulation midtraining, per-component action controllability, conditioning ablations, error accumulation, failure modes, generalization to unseen objects, implementation details, and the results of the earlier evaluation protocol, interactive demo, and rollouts.">
 <meta name="author" content="Riccardo Orion Feingold, Davide Liconti, Chenyu Yang, Robert K. Katzschmann">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://srl-ethz.github.io/Mask2Real-WM/supplementary.html">
@@ -67,41 +67,6 @@ code {
   color: var(--teal-2);
 }
 
-/* ── data tables: hairline rules only, no panel ── */
-.tbl-wrap { overflow-x: auto; margin-top: clamp(28px, 3vw, 38px); }
-table.data {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--mono);
-  font-size: 12.5px;
-}
-table.data caption {
-  caption-side: top;
-  text-align: left;
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.65;
-  color: var(--ink-3);
-  margin-bottom: 14px;
-}
-table.data caption b { color: var(--ink-2); font-weight: 500; }
-table.data th, table.data td { padding: 9px 16px 9px 0; text-align: left; border-bottom: 1px solid var(--rule); }
-table.data thead th {
-  color: var(--ink-3);
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--ink-3);
-}
-table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; padding-right: 0; }
-table.data tbody tr:last-child td { border-bottom: 0; }
-/* a rowspan group cell starts rows before the last one, so tr:last-child can't
-   reach it (it would leave a rule stub hanging under the final group label) */
-table.data td.grp.last { border-bottom: 0; }
-table.data .best { color: var(--teal-2); font-weight: 600; }
-table.data .grp { color: var(--ink); font-weight: 500; }
-
 /* ── policy strips ──
    These are ~6.6:1 strips; stacked full-width so the frames stay legible. */
 .trio { display: grid; grid-template-columns: 1fr; gap: clamp(30px, 3.6vw, 48px); margin-top: clamp(36px, 4vw, 52px); }
@@ -128,7 +93,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
   <div class="shell">
     <p class="venue">Preprint 2026 · Appendix</p>
     <h1>Supplementary Material for <span class="name">Mask2Real-WM</span></h1>
-    <p class="standfirst">Extended results, ablations, failure analyses, and implementation details accompanying the main paper.</p>
+    <p class="standfirst">Extended results, ablations, failure analyses, and implementation details accompanying the main paper, together with the results, demo, and rollouts of the earlier version of this work.</p>
 
     <div class="orglogos">
       <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich"></a>
@@ -137,8 +102,10 @@ table.data .grp { color: var(--ink); font-weight: 500; }
 
     <nav class="entry" aria-label="Site navigation">
       <a class="lead-link" href="index.html">← Back to main page</a>
-      <a href="index.html#demo">Interactive demo</a>
-      <a href="https://arxiv.org/abs/2607.04546v1" target="_blank" rel="noopener">Paper · arXiv ↗</a>
+      <a href="#demo">Interactive demo</a>
+      <a href="https://arxiv.org/abs/2607.04546" target="_blank" rel="noopener">Paper · arXiv ↗</a>
+      <a href="https://github.com/srl-ethz/Mask2Real-WM" target="_blank" rel="noopener">Code ↗</a>
+      <a href="https://huggingface.co/riccardofeingold/Mask2Real-WM" target="_blank" rel="noopener">Checkpoints ↗</a>
     </nav>
 
     <nav class="toc" aria-labelledby="contents-label">
@@ -156,6 +123,11 @@ table.data .grp { color: var(--ink); font-weight: 500; }
         <li><span class="ax">J</span><a href="#impl">Implementation details</a></li>
         <li><span class="ax">K</span><a href="#hyperparams">Hyperparameters</a></li>
         <li><span class="ax">L</span><a href="#future">Future work &amp; policy rollouts</a></li>
+        <li><span class="ax">M</span><a href="#earlier-results">Earlier controllability &amp; perceptual results</a></li>
+        <li><span class="ax">N</span><a href="#demo">Interactive demo</a></li>
+        <li><span class="ax">O</span><a href="#rollouts">Long-horizon rollouts</a></li>
+        <li><span class="ax">P</span><a href="#policy-rollouts">Policy rollouts (videos)</a></li>
+        <li><span class="ax">Q</span><a href="#earlier-limitations">Limitations of the earlier version</a></li>
       </ol>
     </nav>
   </div>
@@ -226,7 +198,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
           </tbody>
         </table>
       </div>
-      <p>Real-only training fits the ID distribution best, but simulation midtraining followed by fine-tuning <strong>generalizes best under distribution shift</strong> (OOD PSNR 21.7 vs. 20.5), because the synthetic corpus covers contact-rich motions absent from the small real dataset. mIoU (hand and object classes) shows a consistent pattern: sim-only alone trails both other regimes at every split (ID 0.36, OOD 0.39), and sim+real edges out real-only on OOD (0.50 vs. 0.49, a modest margin) despite trailing it substantially on ID (0.52 vs. 0.62). Long-horizon rollout strips comparing ours vs. the baseline are shown on the <a href="index.html#rollouts">main page</a>.</p>
+      <p>Real-only training fits the ID distribution best, but simulation midtraining followed by fine-tuning <strong>generalizes best under distribution shift</strong> (OOD PSNR 21.7 vs. 20.5), because the synthetic corpus covers contact-rich motions absent from the small real dataset. mIoU (hand and object classes) shows a consistent pattern: sim-only alone trails both other regimes at every split (ID 0.36, OOD 0.39), and sim+real edges out real-only on OOD (0.50 vs. 0.49, a modest margin) despite trailing it substantially on ID (0.52 vs. 0.62). Long-horizon rollouts comparing ours vs. the baseline are shown in <a href="#rollouts">Appendix&nbsp;O</a>.</p>
     </div>
   </div>
 </section>
@@ -265,7 +237,7 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       <figcaption><b>Frame sharpness across conditioning variants.</b> Laplacian variance ↑ for each of the 50 generated ID frames; dashed line is ground-truth sharpness. The actions-only variant collapses to blurry, low-variance outputs (0.80× GT), while <strong>masks-only and masks+actions both recover ≈0.97× GT sharpness</strong>.</figcaption>
     </figure>
     <div class="inset prose reveal">
-      <p><strong>Masks only</strong> (no action conditioning) is the primary driver of spatial sharpness and additionally enables zero-shot deployment decoupled from the robot's action space. <strong>Masks + actions</strong> (ours) yields the best ID pixel metrics and competitive OOD performance while keeping the sharpness gains. The LPIPS summary appears on the <a href="index.html#results">main page</a>.</p>
+      <p><strong>Masks only</strong> (no action conditioning) is the primary driver of spatial sharpness and additionally enables zero-shot deployment decoupled from the robot's action space. <strong>Masks + actions</strong> (ours) yields the best ID pixel metrics and competitive OOD performance while keeping the sharpness gains. The LPIPS summary appears in <a href="#earlier-results">Appendix&nbsp;M</a>.</p>
     </div>
   </div>
 </section>
@@ -338,8 +310,21 @@ table.data .grp { color: var(--ink); font-weight: 500; }
           </tbody>
         </table>
       </div>
-      <p>The baseline scores higher on per-pixel appearance metrics owing to the blurry-prediction bias, but <strong>WM₁ maintains high segmentation-space fidelity</strong> (SSIM ≈ 0.86) on these objects. The result is specific to WM₁: the mask dynamics model transfers segmentation dynamics to objects seen in simulation midtraining but absent from real-world training, without retraining the dynamics model, not evidence of superior zero-shot generalization of the full RGB pipeline (which scores worse than the baseline on pixel metrics here). Only WM₂ would need updating to match new textures. Qualitative rollouts for each object (ours vs. baseline) are on the <a href="index.html#qualitative">main page</a>.</p>
+      <p>The baseline scores higher on per-pixel appearance metrics owing to the blurry-prediction bias, but <strong>WM₁ maintains high segmentation-space fidelity</strong> (SSIM ≈ 0.86) on these objects. The result is specific to WM₁: the mask dynamics model transfers segmentation dynamics to objects seen in simulation midtraining but absent from real-world training, without retraining the dynamics model, not evidence of superior zero-shot generalization of the full RGB pipeline (which scores worse than the baseline on pixel metrics here). Only WM₂ would need updating to match new textures. Qualitative predictions for each object are shown below.</p>
     </div>
+
+    <figure class="wide reveal">
+      <img src="assets/img/cup.png" alt="Qualitative prediction: cup">
+      <figcaption><b>Cup</b></figcaption>
+    </figure>
+    <figure class="wide reveal">
+      <img src="assets/img/banana.png" alt="Qualitative prediction: banana">
+      <figcaption><b>Banana</b></figcaption>
+    </figure>
+    <figure class="wide reveal">
+      <img src="assets/img/cylinder.png" alt="Qualitative prediction: cylinder">
+      <figcaption><b>Cylinder</b></figcaption>
+    </figure>
   </div>
 </section>
 
@@ -499,6 +484,149 @@ table.data .grp { color: var(--ink); font-weight: 500; }
       </div>
       <p class="trio-note">Each: 100-frame rollout (5 frames predicted per step), 4 frames shown ≈33 apart; both views, lower half generated.</p>
       <a class="backlink" href="index.html">← Back to the main page</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ M · EARLIER RESULTS ════════════ -->
+<section class="section section--appendix" id="earlier-results">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Appendix M</p>
+      <div class="flow reveal">
+        <h2>Controllability and perceptual results of the earlier protocol</h2>
+        <p class="lede">An earlier version of this work evaluated controllability with sinusoidal perturbations on in-distribution (ID) and out-of-distribution (OOD) splits and compared against a single real-only baseline.</p>
+        <p>In that evaluation, the three two-stage variants (WM₁ real only, sim only, and sim+real) correspond to Cascade-R, Cascade-S, and Cascade-SR in the main paper, and the single-stage Ctrl-World baseline corresponds to the monolithic real-only model. The real training data is concentrated around grasping and free-play manipulation and contains only <strong>limited isolated single-finger motion</strong>. Simulation midtraining alone lifted controllability from ≈0.68 to 0.85 (ID) and from ≈0.51 to 0.73 (OOD); real fine-tuning then closed the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations, while the baseline reached ≈0.60 ID and fell below 0.5 on OOD. These numbers come from a different protocol than Table&nbsp;II of the main paper and are not directly comparable.</p>
+      </div>
+    </div>
+
+    <figure class="wide reveal">
+      <img src="assets/img/controllability.png" alt="Controllability results across models and degrees of freedom">
+      <figcaption><b>Action controllability.</b> <em>Left:</em> model responses to sinusoidal perturbation of individual action components. <em>Right:</em> mean controllability score for ID (top) and OOD (bottom). Our full model (WM1 sim→real, WM2 real) reaches ≈0.95 ID and ≈0.87 OOD; the monolithic baseline falls below 0.5 on OOD.</figcaption>
+    </figure>
+
+    <figure class="wide reveal">
+      <img src="assets/img/results_perceptual.png" alt="Perceptual metrics across WM1 training configurations">
+      <figcaption><b>Perceptual metrics across WM1 training configurations.</b> PSNR, SSIM, LPIPS on ID (top) and LPIPS on three OOD splits (<em>No Object</em>, <em>Random Play</em>, <em>Background</em>) in the bottom row, for real-only, sim-only, and sim-then-real WM1, all paired with the same WM2. Sim midtraining substantially reduces OOD degradation while real fine-tuning maintains strong ID performance.</figcaption>
+    </figure>
+
+    <figure class="wide reveal">
+      <img src="assets/img/wm2_ablation.png" alt="WM2 conditioning ablation measured in LPIPS">
+      <figcaption><b>WM2 conditioning ablation (LPIPS↓).</b> Mask conditioning via ControlNet is the dominant driver of spatial sharpness; adding action conditioning further tightens motion consistency. Masks alone already support competitive quality and zero-shot deployment decoupled from the action space.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ════════════ N · INTERACTIVE DEMO ════════════ -->
+<section class="section section--appendix" id="demo">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Appendix N</p>
+      <div class="flow reveal">
+        <h2>Per-dimension controllability, in 3D</h2>
+        <p>Click any joint on the 3D ORCA hand (or a button) to see the world model's prediction when that single action dimension is perturbed. Switch models and samples to compare side by side.</p>
+      </div>
+    </div>
+
+    <div class="wide reveal">
+      <iframe class="demo-frame" src="demo/index.html" title="OrcaHand DOF controllability demo" loading="lazy"></iframe>
+      <div class="demo-meta">
+        <span>Compare <b>WM + LoRA (ours)</b>, WM Mid-train, WM Real-Only, and the monolithic Baseline across 23 action dimensions. The 3D model loads from STL meshes; videos stream on click.</span>
+        <a href="demo/index.html" target="_blank" rel="noopener">Open full screen ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ O · LONG-HORIZON ROLLOUTS ════════════ -->
+<section class="section section--appendix" id="rollouts">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Appendix O</p>
+      <div class="flow reveal">
+        <h2>Autoregressive rollout, ours vs. monolithic</h2>
+        <p>Autoregressive rollout on a pick-and-place sequence with the cup, comparing Mask2Real-WM against the monolithic baseline.</p>
+      </div>
+    </div>
+
+    <div class="wide reveal">
+      <div class="clips clips--2" style="margin-top:0;">
+        <div class="clip">
+          <video src="assets/video/2_stage_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Mask2Real-WM (ours)</b>: sharp contacts, stable object identity</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/baseline_long_horizon_cup.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Monolithic baseline</b>: blur and drift accumulate</p>
+        </div>
+      </div>
+    </div>
+
+    <figure class="wide reveal">
+      <img src="assets/img/ours_strip.png" alt="Long-horizon mask-to-RGB rollout strip, ours">
+      <figcaption><b>Ours</b>: long-horizon mask→RGB rollout strip.</figcaption>
+    </figure>
+    <figure class="wide reveal">
+      <img src="assets/img/baseline_strip.png" alt="Long-horizon rollout strip, baseline">
+      <figcaption><b>Baseline</b>: long-horizon rollout strip; note the loss of finger and object detail over time.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ════════════ P · POLICY ROLLOUTS ════════════ -->
+<section class="section section--appendix" id="policy-rollouts">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Appendix P</p>
+      <div class="flow reveal">
+        <h2>Behavior unfolding inside the world model</h2>
+        <p>These examples visualize how long-horizon behavior unfolds as ACT, Diffusion Policy, and Flow Matching are rolled out inside Mask2Real-WM. Each video shows both the third-person and wrist-camera views: the upper half is the starting image for each view, and the lower half is the policy rollout. Side-by-side comparisons with the baseline are in <a href="#future">Appendix&nbsp;L</a>.</p>
+      </div>
+    </div>
+
+    <div class="wide reveal">
+      <div class="clips clips--3" style="margin-top:0;">
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_act_1.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>ACT</b> · Sequence A</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_dp_1.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Diffusion Policy</b> · Sequence A</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_fm_1.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Flow Matching</b> · Sequence A</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_act_2.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>ACT</b> · Sequence B</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_dp_2.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Diffusion Policy</b> · Sequence B</p>
+        </div>
+        <div class="clip">
+          <video src="assets/video/rollouts/ood_fm_2.mp4" autoplay loop muted playsinline></video>
+          <p class="cap"><b>Flow Matching</b> · Sequence B</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ Q · EARLIER LIMITATIONS ════════════ -->
+<section class="section section--appendix" id="earlier-limitations">
+  <div class="shell">
+    <div class="spread">
+      <p class="eyebrow">Appendix Q</p>
+      <div class="flow reveal">
+        <h2>Limitations of the earlier version</h2>
+        <p>All principal failure modes trace back to WM1. Without depth information, WM1 loses objects under hand occlusion. Over long horizons, the color-class mask carries no object-level identity, causing drift that text-prompt or object-ID conditioning could address.</p>
+        <p>Synthetic masks are perturbed only with a fixed Gaussian blur on rasterization edges &mdash; a coarse proxy for SAM&nbsp;3's actual real-world error modes (boundary noise, occasional misclassification, temporal flicker); matching that error distribution more closely would likely narrow the sim-to-real gap further. WM1's diffusion backbone also denoises masks in pixel space; a JEPA-style architecture that predicts future states directly in a learned latent space, paired with a decoder trained to recover semantic masks from that latent, is an alternative we haven't explored.</p>
+        <p>WM2 is trained on real data from a single physical arena, so its rendering has not been evaluated in visually distinct scenes beyond the rotated-arena split. Its SVD-ControlNet backbone could also be replaced with a larger, more capable video foundation model such as Cosmos-Transfer, purpose-built for multimodal-conditioned world generation, at the cost of substantially more compute.</p>
+        <p>Because the baseline had no simulation exposure while WM1 is midtrained on over 50&nbsp;h of synthetic data, that comparison cannot separate gains from the mask factorization from gains from simply seeing more data. The matched-recipe comparison of the main paper (Cascade-SR vs. Mono-SR) addresses this. Finally, two sequential diffusion passes are expensive; distilling both stages into consistency models is a promising route to near-real-time inference.</p>
+      </div>
     </div>
   </div>
 </section>
