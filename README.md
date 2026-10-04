@@ -5,7 +5,8 @@ Soft Robotics Lab, ETH Zurich
 
 [Paper](https://arxiv.org/abs/2607.04546) ·
 [Project page](https://srl-ethz.github.io/Mask2Real-WM/) ·
-[Checkpoints](https://huggingface.co/riccardofeingold/Mask2Real-WM)
+[Checkpoints](https://huggingface.co/riccardofeingold/Mask2Real-WM) ·
+[Simulation](https://github.com/srl-ethz/Mask2Real-SimDataGen)
 
 Mask2Real-WM is an action-conditioned video world model for a dexterous robot hand (an ORCA
 hand on a Franka arm, seen from a side camera and a wrist camera). Instead of predicting RGB

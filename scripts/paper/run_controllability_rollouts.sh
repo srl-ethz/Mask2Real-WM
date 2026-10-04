@@ -7,8 +7,9 @@
 #
 # Per sample: 5 whole-pose targets and 1 per-dim target for each of the 23 action dims (seed 42),
 # each approached directly and with a linear ramp: 280 targets x 2 styles = 560 trials per model.
-# The Isaac Sim ground-truth renders for the targets come from faive_lab
-# (scripts/wm_evaluation/render_controllability_targets.py) and are not needed for the rollouts.
+# The Isaac Sim ground-truth renders for the targets come from Mask2Real-SimDataGen
+# (https://github.com/srl-ethz/Mask2Real-SimDataGen, scripts/wm_evaluation/
+# render_controllability_targets.py) and are not needed for the rollouts.
 #
 # Usage:
 #   scripts/paper/run_controllability_rollouts.sh [targets|rollouts|all] [variant ...]

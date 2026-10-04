@@ -63,11 +63,12 @@ Steps 2a and 2b only need `targets_manifest.json` and are independent of each ot
 ### 2a. Ground truth from simulation
 
 For each target, the simulation holds the target as a setpoint until the robot has settled and
-renders RGB and instance segmentation from both cameras. The renderer is part of faive_lab,
-the Isaac Lab environment of the ORCA hand:
+renders RGB and instance segmentation from both cameras. The renderer is part of
+[Mask2Real-SimDataGen](https://github.com/srl-ethz/Mask2Real-SimDataGen), the Isaac Lab
+extension (`faive_lab`) for the ORCA hand:
 
 ```bash
-# in the faive_lab repository
+# in the Mask2Real-SimDataGen repository
 python scripts/wm_evaluation/render_controllability_targets.py \
   --targets_manifest /path/to/Mask2Real-WM/${OUTPUT_DIR}/targets_manifest.json \
   --output_dir /path/to/gt_renders \
