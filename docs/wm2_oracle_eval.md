@@ -1,7 +1,8 @@
 # WM2 with ground-truth masks
 
 This evaluation measures WM2 on its own. Instead of the masks predicted by WM1, WM2 receives
-the ground-truth segmentation of the out-of-distribution dataset (produced with SAM3) and
+the ground-truth segmentation of the out-of-distribution dataset (produced with SAM 3 by the
+[labeling pipeline](https://github.com/riccardofeingold/sam3_based_labeling_pipeline)) and
 predicts the RGB video. It answers how well WM2 turns a correct mask into video, which
 separates the errors of WM2 from those of WM1 in the cascade.
 

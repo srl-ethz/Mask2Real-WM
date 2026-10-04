@@ -6,7 +6,8 @@ Soft Robotics Lab, ETH Zurich
 [Paper](https://arxiv.org/abs/2607.04546) ·
 [Project page](https://srl-ethz.github.io/Mask2Real-WM/) ·
 [Checkpoints](https://huggingface.co/riccardofeingold/Mask2Real-WM) ·
-[Simulation](https://github.com/srl-ethz/Mask2Real-SimDataGen)
+[Simulation](https://github.com/srl-ethz/Mask2Real-SimDataGen) ·
+[Mask labeling](https://github.com/riccardofeingold/sam3_based_labeling_pipeline)
 
 Mask2Real-WM is an action-conditioned video world model for a dexterous robot hand (an ORCA
 hand on a Franka arm, seen from a side camera and a wrist camera). Instead of predicting RGB
@@ -120,7 +121,7 @@ A dataset consists of one folder with the episodes and one folder with its meta-
 datasets/<stamp>/<name>/
   annotation/<episode>.json                        actions and file paths of one episode
   videos/<episode>/<view>.mp4                      RGB video at 135x240 and 5 fps
-  segmentation_videos/<episode>/<view>.mp4         mask video: hand green, object blue, background black
+  segmentation_videos/<episode>/<view>.mp4         mask video: hand green, object red, background black
   latent_videos/<episode>/<view>.pt                SVD-VAE latents of the RGB video
   latent_segmentation_videos/<episode>/<view>.pt   SVD-VAE latents of the mask video
 dataset_meta_info/<stamp>/<name>/
@@ -136,7 +137,10 @@ paths of the four kinds of videos.
 To prepare recordings of your own, `scripts/prepare_dataset.sh <converted_dataset_dir>
 <output_root>` resamples and resizes the videos, encodes them with the SVD VAE and writes the
 sample lists and `stat.json`. The input folder needs `annotation/<episode>.json` and, per
-episode, the RGB and segmentation videos of every view.
+episode, the RGB and segmentation videos of every view. The segmentation videos of real
+recordings are produced with SAM 3 by the
+[labeling pipeline](https://github.com/riccardofeingold/sam3_based_labeling_pipeline)
+(`scripts/final_extract_segmentation_masks.py`), which reads and writes this folder layout.
 
 ### 4. Run a model
 
