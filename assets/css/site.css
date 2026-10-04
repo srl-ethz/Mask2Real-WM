@@ -198,7 +198,14 @@ table.data thead th {
   text-transform: uppercase;
   border-bottom: 1px solid var(--ink-3);
 }
-table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; padding-right: 0; }
+table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; padding-left: 22px; padding-right: 0; white-space: nowrap; }
+table.data td.ctr, table.data th.ctr { text-align: center; padding-inline: 12px; }
+table.data .sd { color: var(--ink-3); font-weight: 400; }
+table.data tr.ours td { background: rgba(14,124,107,.07); }
+table.data tr.ours td:first-child { box-shadow: -10px 0 0 rgba(14,124,107,.07); }
+table.data tr.ours td:last-child { box-shadow: 10px 0 0 rgba(14,124,107,.07); }
+table.data tbody td:first-child, table.data thead th:first-child { white-space: nowrap; }
+table.data.compact { max-width: 760px; }
 table.data tbody tr:last-child td { border-bottom: 0; }
 /* a rowspan group cell starts rows before the last one, so tr:last-child can't
    reach it (it would leave a rule stub hanging under the final group label) */

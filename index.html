@@ -400,15 +400,15 @@
         <p>Table&nbsp;I lists five models, named by architecture and training data. <em>Cascade</em> denotes our two-stage Mask2Real-WM architecture and <em>Mono</em> the monolithic approach, which adapts Ctrl-World to the same 23-D action space. The suffixes R, S, and SR denote training on real data only, simulation data only, and simulation followed by real data. For Cascade variants the suffix refers to WM1; all three share the same WM2, trained only on real data.</p>
       </div>
       <div class="tbl-wrap">
-        <table class="data">
+        <table class="data compact">
           <caption><b>Table I · Model design.</b> WM2 is shared by all Cascade rows (real data only, 70k steps). The real-data stages are not step-matched: each monolithic baseline receives more real-data updates than its corresponding cascade variant.</caption>
-          <thead><tr><th>Model</th><th>Sim midtr.</th><th>Real FT</th><th>Mask decomp.</th><th class="num">Gradient updates (sim / real)</th></tr></thead>
+          <thead><tr><th>Model</th><th class="ctr">Sim midtr.</th><th class="ctr">Real FT</th><th class="ctr">Mask decomp.</th><th class="num">Gradient updates (sim / real)</th></tr></thead>
           <tbody>
-            <tr><td>Mono-R</td><td>–</td><td>✓</td><td>–</td><td class="num">– / 22k</td></tr>
-            <tr><td>Mono-SR</td><td>✓</td><td>✓</td><td>–</td><td class="num">55k / 58k</td></tr>
-            <tr><td>Cascade-R</td><td>–</td><td>✓</td><td>✓</td><td class="num">– / 15k</td></tr>
-            <tr><td>Cascade-S</td><td>✓</td><td>–</td><td>✓</td><td class="num">55k / –</td></tr>
-            <tr><td>Cascade-SR</td><td>✓</td><td>✓</td><td>✓</td><td class="num">55k / 45k</td></tr>
+            <tr><td>Mono-R</td><td class="ctr">–</td><td class="ctr">✓</td><td class="ctr">–</td><td class="num">– / 22k</td></tr>
+            <tr><td>Mono-SR</td><td class="ctr">✓</td><td class="ctr">✓</td><td class="ctr">–</td><td class="num">55k / 58k</td></tr>
+            <tr><td>Cascade-R</td><td class="ctr">–</td><td class="ctr">✓</td><td class="ctr">✓</td><td class="num">– / 15k</td></tr>
+            <tr><td>Cascade-S</td><td class="ctr">✓</td><td class="ctr">–</td><td class="ctr">✓</td><td class="num">55k / –</td></tr>
+            <tr class="ours"><td>Cascade-SR</td><td class="ctr">✓</td><td class="ctr">✓</td><td class="ctr">✓</td><td class="num">55k / 45k</td></tr>
           </tbody>
         </table>
       </div>
@@ -420,15 +420,15 @@
         <p>We evaluate controllability in three ways. First, raters compare how closely the generated hand matches a commanded target posture: a trial samples a random 23-D target command, rolls the model out for 10 autoregressive steps (50 frames), and judges the final frame against a simulation-rendered reference. Raters are blind to model identity and answer A, B, or tie across 50 target scenes. Second, a sine-sweep study drives each of the 23 dimensions with one sinusoid cycle while the others are held fixed (1,150 rollouts); raters score 1 if only that dimension moves, 0.5 if it moves with unintended motion elsewhere, and 0 if it does not move. Third, for the mask-prediction models, we measure the intersection over union (IoU) between WM1's predicted hand mask and the simulator's target mask.</p>
       </div>
       <div class="tbl-wrap">
-        <table class="data">
+        <table class="data compact">
           <caption><b>Table II · Controllability.</b> A/B win rate [95% Wilson interval] over all comparisons with the other four models, ties as non-wins (3,549 ratings). Sine-sweep score: mean ± standard error of the 0/0.5/1 ratings over dimensions, episodes, and raters. IoU: WM1's predicted hand mask against the simulation-rendered target on the final frame of separate 25-frame rollouts. Best per column in bold.</caption>
           <thead><tr><th>Model</th><th class="num">A/B win rate</th><th class="num">Sine-sweep score</th><th class="num">WM1 IoU</th></tr></thead>
           <tbody>
-            <tr><td>Mono-R</td><td class="num">35.3% [32.8, 37.8]</td><td class="num">0.77 ± 0.02</td><td class="num">–</td></tr>
-            <tr><td>Mono-SR</td><td class="num">16.4% [14.6, 18.4]</td><td class="num">0.75 ± 0.02</td><td class="num">–</td></tr>
-            <tr><td>Cascade-R</td><td class="num">40.8% [38.3, 43.4]</td><td class="num">0.79 ± 0.02</td><td class="num">0.412</td></tr>
-            <tr><td>Cascade-S</td><td class="num">35.3% [32.9, 37.8]</td><td class="num">0.81 ± 0.02</td><td class="num">0.414</td></tr>
-            <tr><td>Cascade-SR</td><td class="num best">63.0% [60.5, 65.5]</td><td class="num best">0.87 ± 0.01</td><td class="num best">0.447</td></tr>
+            <tr><td>Mono-R</td><td class="num">35.3% <span class="sd">[32.8, 37.8]</span></td><td class="num">0.77 <span class="sd">± 0.02</span></td><td class="num">–</td></tr>
+            <tr><td>Mono-SR</td><td class="num">16.4% <span class="sd">[14.6, 18.4]</span></td><td class="num">0.75 <span class="sd">± 0.02</span></td><td class="num">–</td></tr>
+            <tr><td>Cascade-R</td><td class="num">40.8% <span class="sd">[38.3, 43.4]</span></td><td class="num">0.79 <span class="sd">± 0.02</span></td><td class="num">0.412</td></tr>
+            <tr><td>Cascade-S</td><td class="num">35.3% <span class="sd">[32.9, 37.8]</span></td><td class="num">0.81 <span class="sd">± 0.02</span></td><td class="num">0.414</td></tr>
+            <tr class="ours"><td>Cascade-SR</td><td class="num best">63.0% <span class="sd">[60.5, 65.5]</span></td><td class="num best">0.87 <span class="sd">± 0.01</span></td><td class="num best">0.447</td></tr>
           </tbody>
         </table>
       </div>
@@ -444,20 +444,30 @@
         <p>We assess video quality on held-out episodes, reporting results per camera view (Table&nbsp;III) with PSNR, SSIM, LPIPS, FID, FVD, and a sharpness measure given by the Laplacian variance of predicted frames relative to ground truth (1 = as sharp as ground truth).</p>
       </div>
     </div>
-    <div class="wide reveal" style="margin-top: clamp(28px, 3vw, 38px);">
-      <div class="tbl-wrap" style="margin-top: 0;">
+    <div class="inset reveal">
+      <div class="tbl-wrap">
         <table class="data">
-          <caption><b>Table III · Video quality and sharpness per camera view.</b> 150 held-out samples, 50-frame rollouts. PSNR, SSIM, LPIPS: mean ± standard deviation over samples. FVD (I3D, 16 frames per clip, 150 clips per view) and FID (Inception-v3, 8 frames per clip, 1,200 frames per view) are dataset-level Fréchet distances computed per view and carry no per-sample spread. Sharp.: Laplacian variance of the predicted frames relative to ground truth (1 = as sharp as ground truth). Best per column in bold.</caption>
-          <thead>
-            <tr><th rowspan="2">Model</th><th class="num" colspan="6" style="text-align:center;">Third-person view</th><th class="num" colspan="6" style="text-align:center;">Wrist view</th></tr>
-            <tr><th class="num">PSNR↑</th><th class="num">SSIM↑</th><th class="num">LPIPS↓</th><th class="num">FVD↓</th><th class="num">FID↓</th><th class="num">Sharp.↑</th><th class="num">PSNR↑</th><th class="num">SSIM↑</th><th class="num">LPIPS↓</th><th class="num">FVD↓</th><th class="num">FID↓</th><th class="num">Sharp.↑</th></tr>
-          </thead>
+          <caption><b>Table III · Video quality and sharpness per camera view.</b> (a) Third-person view. 150 held-out samples, 50-frame rollouts. PSNR, SSIM, LPIPS: mean ± standard deviation over samples. FVD (I3D, 16 frames per clip, 150 clips per view) and FID (Inception-v3, 8 frames per clip, 1,200 frames per view) are dataset-level Fréchet distances computed per view and carry no per-sample spread. Sharp.: Laplacian variance of the predicted frames relative to ground truth (1 = as sharp as ground truth). Best per column in bold.</caption>
+          <thead><tr><th>Model</th><th class="num">PSNR↑</th><th class="num">SSIM↑</th><th class="num">LPIPS↓</th><th class="num">FVD↓</th><th class="num">FID↓</th><th class="num">Sharp.↑</th></tr></thead>
           <tbody>
-            <tr><td>Mono-R</td><td class="num">24.08 ± 1.56</td><td class="num">0.834 ± 0.028</td><td class="num">0.052 ± 0.018</td><td class="num">6.24</td><td class="num">14.85</td><td class="num">0.955</td><td class="num">17.42 ± 1.07</td><td class="num">0.559 ± 0.040</td><td class="num">0.226 ± 0.045</td><td class="num">11.71</td><td class="num">26.52</td><td class="num">0.872</td></tr>
-            <tr><td>Mono-SR</td><td class="num">21.80 ± 1.95</td><td class="num">0.770 ± 0.041</td><td class="num">0.084 ± 0.027</td><td class="num">8.82</td><td class="num">24.20</td><td class="num">0.897</td><td class="num">15.94 ± 1.01</td><td class="num">0.483 ± 0.041</td><td class="num">0.285 ± 0.050</td><td class="num">13.99</td><td class="num">31.77</td><td class="num">0.880</td></tr>
-            <tr><td>Cascade-R</td><td class="num best">24.11 ± 1.89</td><td class="num best">0.857 ± 0.031</td><td class="num best">0.045 ± 0.022</td><td class="num best">4.65</td><td class="num best">11.81</td><td class="num">0.978</td><td class="num best">17.64 ± 1.41</td><td class="num best">0.587 ± 0.049</td><td class="num best">0.214 ± 0.057</td><td class="num best">9.13</td><td class="num best">22.03</td><td class="num best">0.994</td></tr>
-            <tr><td>Cascade-S</td><td class="num">21.74 ± 1.98</td><td class="num">0.779 ± 0.047</td><td class="num">0.079 ± 0.028</td><td class="num">7.67</td><td class="num">16.78</td><td class="num">0.966</td><td class="num">14.78 ± 0.96</td><td class="num">0.443 ± 0.046</td><td class="num">0.318 ± 0.052</td><td class="num">13.65</td><td class="num">41.68</td><td class="num">0.884</td></tr>
-            <tr><td>Cascade-SR</td><td class="num">23.74 ± 1.86</td><td class="num">0.843 ± 0.033</td><td class="num">0.059 ± 0.026</td><td class="num">5.30</td><td class="num">13.39</td><td class="num best">0.979</td><td class="num">16.54 ± 1.23</td><td class="num">0.548 ± 0.045</td><td class="num">0.240 ± 0.054</td><td class="num">9.60</td><td class="num">23.32</td><td class="num">0.956</td></tr>
+            <tr><td>Mono-R</td><td class="num">24.08 <span class="sd">± 1.56</span></td><td class="num">0.834 <span class="sd">± 0.028</span></td><td class="num">0.052 <span class="sd">± 0.018</span></td><td class="num">6.24</td><td class="num">14.85</td><td class="num">0.955</td></tr>
+            <tr><td>Mono-SR</td><td class="num">21.80 <span class="sd">± 1.95</span></td><td class="num">0.770 <span class="sd">± 0.041</span></td><td class="num">0.084 <span class="sd">± 0.027</span></td><td class="num">8.82</td><td class="num">24.20</td><td class="num">0.897</td></tr>
+            <tr><td>Cascade-R</td><td class="num best">24.11 <span class="sd">± 1.89</span></td><td class="num best">0.857 <span class="sd">± 0.031</span></td><td class="num best">0.045 <span class="sd">± 0.022</span></td><td class="num best">4.65</td><td class="num best">11.81</td><td class="num">0.978</td></tr>
+            <tr><td>Cascade-S</td><td class="num">21.74 <span class="sd">± 1.98</span></td><td class="num">0.779 <span class="sd">± 0.047</span></td><td class="num">0.079 <span class="sd">± 0.028</span></td><td class="num">7.67</td><td class="num">16.78</td><td class="num">0.966</td></tr>
+            <tr class="ours"><td>Cascade-SR</td><td class="num">23.74 <span class="sd">± 1.86</span></td><td class="num">0.843 <span class="sd">± 0.033</span></td><td class="num">0.059 <span class="sd">± 0.026</span></td><td class="num">5.30</td><td class="num">13.39</td><td class="num best">0.979</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl-wrap">
+        <table class="data">
+          <caption><b>(b) Wrist view.</b> Same protocol as (a).</caption>
+          <thead><tr><th>Model</th><th class="num">PSNR↑</th><th class="num">SSIM↑</th><th class="num">LPIPS↓</th><th class="num">FVD↓</th><th class="num">FID↓</th><th class="num">Sharp.↑</th></tr></thead>
+          <tbody>
+            <tr><td>Mono-R</td><td class="num">17.42 <span class="sd">± 1.07</span></td><td class="num">0.559 <span class="sd">± 0.040</span></td><td class="num">0.226 <span class="sd">± 0.045</span></td><td class="num">11.71</td><td class="num">26.52</td><td class="num">0.872</td></tr>
+            <tr><td>Mono-SR</td><td class="num">15.94 <span class="sd">± 1.01</span></td><td class="num">0.483 <span class="sd">± 0.041</span></td><td class="num">0.285 <span class="sd">± 0.050</span></td><td class="num">13.99</td><td class="num">31.77</td><td class="num">0.880</td></tr>
+            <tr><td>Cascade-R</td><td class="num best">17.64 <span class="sd">± 1.41</span></td><td class="num best">0.587 <span class="sd">± 0.049</span></td><td class="num best">0.214 <span class="sd">± 0.057</span></td><td class="num best">9.13</td><td class="num best">22.03</td><td class="num best">0.994</td></tr>
+            <tr><td>Cascade-S</td><td class="num">14.78 <span class="sd">± 0.96</span></td><td class="num">0.443 <span class="sd">± 0.046</span></td><td class="num">0.318 <span class="sd">± 0.052</span></td><td class="num">13.65</td><td class="num">41.68</td><td class="num">0.884</td></tr>
+            <tr class="ours"><td>Cascade-SR</td><td class="num">16.54 <span class="sd">± 1.23</span></td><td class="num">0.548 <span class="sd">± 0.045</span></td><td class="num">0.240 <span class="sd">± 0.054</span></td><td class="num">9.60</td><td class="num">23.32</td><td class="num">0.956</td></tr>
           </tbody>
         </table>
       </div>
