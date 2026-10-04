@@ -171,6 +171,22 @@ figcaption em { font-style: normal; color: var(--ink-2); }
 /* offset to sit under the narrative column, not the notation column */
 .inset { margin-left: calc(var(--aside) + var(--gutter)); }
 
+/* a text block set between figures: narrative measure, spaced like a figure */
+.block { margin-top: clamp(40px, 5vw, 64px); }
+.block > .flow { max-width: 690px; }
+.block > * + .flow { margin-top: clamp(30px, 3.4vw, 44px); }
+
+/* a figure with its caption beside it, for square or tall images */
+.figside {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+}
+.figside figcaption { margin-top: 0; }
+.figside--lead { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+.figside--flip > img { order: 2; }
+
 /* ── data tables: hairline rules only, no panel ── */
 .tbl-wrap { overflow-x: auto; margin-top: clamp(28px, 3vw, 38px); }
 table.data {
@@ -263,4 +279,6 @@ footer a:hover { color: var(--teal-2); border-bottom-color: var(--teal); }
 }
 @media (max-width: 760px) {
   body { font-size: 17.5px; }
+  .figside, .figside--lead { grid-template-columns: minmax(0, 1fr); row-gap: 14px; }
+  .figside--flip > img { order: 0; }
 }

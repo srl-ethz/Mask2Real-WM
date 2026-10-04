@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Supplementary Material · Mask2Real-WM</title>
-<meta name="description" content="Supplementary results for Mask2Real-WM: baseline comparison and simulation midtraining, per-component action controllability, conditioning ablations, error accumulation, failure modes, generalization to unseen objects, implementation details, and the results of the earlier evaluation protocol, interactive demo, and rollouts.">
+<meta name="description" content="Supplementary results for Mask2Real-WM: baseline comparison and simulation midtraining, per-component action controllability, conditioning ablations, error accumulation, failure modes, generalization to unseen objects, implementation details, and the results and rollouts of the earlier evaluation protocol.">
 <meta name="author" content="Riccardo Orion Feingold, Davide Liconti, Chenyu Yang, Robert K. Katzschmann">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://srl-ethz.github.io/Mask2Real-WM/supplementary.html">
@@ -93,7 +93,7 @@ code {
   <div class="shell">
     <p class="venue">Preprint 2026 · Appendix</p>
     <h1>Supplementary Material for <span class="name">Mask2Real-WM</span></h1>
-    <p class="standfirst">Extended results, ablations, failure analyses, and implementation details accompanying the main paper, together with the results, demo, and rollouts of the earlier version of this work.</p>
+    <p class="standfirst">Extended results, ablations, failure analyses, and implementation details accompanying the main paper, together with the results and rollouts of the earlier version of this work.</p>
 
     <div class="orglogos">
       <a href="https://ethz.ch/" target="_blank" rel="noopener" aria-label="ETH Zürich"><img class="logo-eth" src="assets/img/logos/eth_logo.svg" alt="ETH Zürich"></a>
@@ -102,7 +102,7 @@ code {
 
     <nav class="entry" aria-label="Site navigation">
       <a class="lead-link" href="index.html">← Back to main page</a>
-      <a href="#demo">Interactive demo</a>
+      <a href="index.html#demo">Interactive demo</a>
       <a href="https://arxiv.org/abs/2607.04546" target="_blank" rel="noopener">Paper · arXiv ↗</a>
       <a href="https://github.com/srl-ethz/Mask2Real-WM" target="_blank" rel="noopener">Code ↗</a>
       <a href="https://huggingface.co/riccardofeingold/Mask2Real-WM" target="_blank" rel="noopener">Checkpoints ↗</a>
@@ -124,10 +124,9 @@ code {
         <li><span class="ax">K</span><a href="#hyperparams">Hyperparameters</a></li>
         <li><span class="ax">L</span><a href="#future">Future work &amp; policy rollouts</a></li>
         <li><span class="ax">M</span><a href="#earlier-results">Earlier controllability &amp; perceptual results</a></li>
-        <li><span class="ax">N</span><a href="#demo">Interactive demo</a></li>
-        <li><span class="ax">O</span><a href="#rollouts">Long-horizon rollouts</a></li>
-        <li><span class="ax">P</span><a href="#policy-rollouts">Policy rollouts (videos)</a></li>
-        <li><span class="ax">Q</span><a href="#earlier-limitations">Limitations of the earlier version</a></li>
+        <li><span class="ax">N</span><a href="#rollouts">Long-horizon rollouts</a></li>
+        <li><span class="ax">O</span><a href="#policy-rollouts">Policy rollouts (videos)</a></li>
+        <li><span class="ax">P</span><a href="#earlier-limitations">Limitations of the earlier version</a></li>
       </ol>
     </nav>
   </div>
@@ -198,7 +197,7 @@ code {
           </tbody>
         </table>
       </div>
-      <p>Real-only training fits the ID distribution best, but simulation midtraining followed by fine-tuning <strong>generalizes best under distribution shift</strong> (OOD PSNR 21.7 vs. 20.5), because the synthetic corpus covers contact-rich motions absent from the small real dataset. mIoU (hand and object classes) shows a consistent pattern: sim-only alone trails both other regimes at every split (ID 0.36, OOD 0.39), and sim+real edges out real-only on OOD (0.50 vs. 0.49, a modest margin) despite trailing it substantially on ID (0.52 vs. 0.62). Long-horizon rollouts comparing ours vs. the baseline are shown in <a href="#rollouts">Appendix&nbsp;O</a>.</p>
+      <p>Real-only training fits the ID distribution best, but simulation midtraining followed by fine-tuning <strong>generalizes best under distribution shift</strong> (OOD PSNR 21.7 vs. 20.5), because the synthetic corpus covers contact-rich motions absent from the small real dataset. mIoU (hand and object classes) shows a consistent pattern: sim-only alone trails both other regimes at every split (ID 0.36, OOD 0.39), and sim+real edges out real-only on OOD (0.50 vs. 0.49, a modest margin) despite trailing it substantially on ID (0.52 vs. 0.62). Long-horizon rollouts comparing ours vs. the baseline are shown in <a href="#rollouts">Appendix&nbsp;N</a>.</p>
     </div>
   </div>
 </section>
@@ -409,7 +408,7 @@ code {
       <p class="eyebrow">Appendix J</p>
       <div class="flow reveal">
         <h2>Implementation details</h2>
-        <p><strong>Real-world rig.</strong> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (24 actuated joint DoF total: 7 arm + 17 hand; commanded through a 23-dimensional action space of a 6-D Cartesian end-effector pose and 17 hand-joint positions) inside a fixed arena, observed by a static third-person camera and a wrist-mounted camera (two Luxonis OAK-D RGB cameras). The setup figure is on the <a href="index.html#method">main page</a>.</p>
+        <p><strong>Real-world rig.</strong> A 7-DoF Franka Emika Panda arm with the 17-DoF ORCA hand (24 actuated joint DoF total: 7 arm + 17 hand; commanded through a 23-dimensional action space of a 6-D Cartesian end-effector pose and 17 hand-joint positions) inside a fixed arena, observed by a static third-person camera and a wrist-mounted camera (two Luxonis OAK-D RGB cameras). The setup figure is on the <a href="index.html#platform">main page</a>.</p>
         <p><strong>Simulation assets.</strong> Default Franka Panda URDF and the ORCA hand USD; the arena is reconstructed from physical measurements. No material, lighting or texture tuning is applied.</p>
         <p><strong>System identification.</strong> To reduce the kinematic gap between the simulated and physical ORCA hand, per-joint PD gains and friction coefficients are optimized with CMA-ES (following Bjelonic et&nbsp;al. 2025) to minimise tracking error under a chirp command. After calibration the simulated trajectory closely follows the measured one across the full frequency sweep, sufficient for the joint-angle-driven segmentation representation to stay accurate.</p>
         <h3>SAM 3 prompt engineering</h3>
@@ -496,7 +495,7 @@ code {
       <div class="flow reveal">
         <h2>Controllability and perceptual results of the earlier protocol</h2>
         <p class="lede">An earlier version of this work evaluated controllability with sinusoidal perturbations on in-distribution (ID) and out-of-distribution (OOD) splits and compared against a single real-only baseline.</p>
-        <p>In that evaluation, the three two-stage variants (WM₁ real only, sim only, and sim+real) correspond to Cascade-R, Cascade-S, and Cascade-SR in the main paper, and the single-stage Ctrl-World baseline corresponds to the monolithic real-only model. The real training data is concentrated around grasping and free-play manipulation and contains only <strong>limited isolated single-finger motion</strong>. Simulation midtraining alone lifted controllability from ≈0.68 to 0.85 (ID) and from ≈0.51 to 0.73 (OOD); real fine-tuning then closed the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations, while the baseline reached ≈0.60 ID and fell below 0.5 on OOD. These numbers come from a different protocol than Table&nbsp;II of the main paper and are not directly comparable.</p>
+        <p>In that evaluation, the three two-stage variants (WM₁ real only, sim only, and sim+real) are the counterparts of Cascade-R, Cascade-S, and Cascade-SR in the main paper, and the single-stage Ctrl-World baseline is the counterpart of the monolithic real-only model Mono-R. The training recipes differ in detail (the earlier baseline was trained for 70,000 steps, Mono-R uses 22k real-data updates), so the two evaluations are not directly comparable. The real training data is concentrated around grasping and free-play manipulation and contains only <strong>limited isolated single-finger motion</strong>. Simulation midtraining alone lifted controllability from ≈0.68 to 0.85 (ID) and from ≈0.51 to 0.73 (OOD); real fine-tuning then closed the remaining gap to <strong>0.95 ID / 0.87 OOD</strong>, with the largest benefit on near-grasp OOD configurations, while the baseline reached ≈0.60 ID and fell below 0.5 on OOD. These numbers come from a different protocol than Table&nbsp;II of the main paper.</p>
       </div>
     </div>
 
@@ -517,32 +516,11 @@ code {
   </div>
 </section>
 
-<!-- ════════════ N · INTERACTIVE DEMO ════════════ -->
-<section class="section section--appendix" id="demo">
-  <div class="shell">
-    <div class="spread">
-      <p class="eyebrow">Appendix N</p>
-      <div class="flow reveal">
-        <h2>Per-dimension controllability, in 3D</h2>
-        <p>Click any joint on the 3D ORCA hand (or a button) to see the world model's prediction when that single action dimension is perturbed. Switch models and samples to compare side by side.</p>
-      </div>
-    </div>
-
-    <div class="wide reveal">
-      <iframe class="demo-frame" src="demo/index.html" title="OrcaHand DOF controllability demo" loading="lazy"></iframe>
-      <div class="demo-meta">
-        <span>Compare <b>WM + LoRA (ours)</b>, WM Mid-train, WM Real-Only, and the monolithic Baseline across 23 action dimensions. The 3D model loads from STL meshes; videos stream on click.</span>
-        <a href="demo/index.html" target="_blank" rel="noopener">Open full screen ↗</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════ O · LONG-HORIZON ROLLOUTS ════════════ -->
+<!-- ════════════ N · LONG-HORIZON ROLLOUTS ════════════ -->
 <section class="section section--appendix" id="rollouts">
   <div class="shell">
     <div class="spread">
-      <p class="eyebrow">Appendix O</p>
+      <p class="eyebrow">Appendix N</p>
       <div class="flow reveal">
         <h2>Autoregressive rollout, ours vs. monolithic</h2>
         <p>Autoregressive rollout on a pick-and-place sequence with the cup, comparing Mask2Real-WM against the monolithic baseline.</p>
@@ -573,11 +551,11 @@ code {
   </div>
 </section>
 
-<!-- ════════════ P · POLICY ROLLOUTS ════════════ -->
+<!-- ════════════ O · POLICY ROLLOUTS ════════════ -->
 <section class="section section--appendix" id="policy-rollouts">
   <div class="shell">
     <div class="spread">
-      <p class="eyebrow">Appendix P</p>
+      <p class="eyebrow">Appendix O</p>
       <div class="flow reveal">
         <h2>Behavior unfolding inside the world model</h2>
         <p>These examples visualize how long-horizon behavior unfolds as ACT, Diffusion Policy, and Flow Matching are rolled out inside Mask2Real-WM. Each video shows both the third-person and wrist-camera views: the upper half is the starting image for each view, and the lower half is the policy rollout. Side-by-side comparisons with the baseline are in <a href="#future">Appendix&nbsp;L</a>.</p>
@@ -615,11 +593,11 @@ code {
   </div>
 </section>
 
-<!-- ════════════ Q · EARLIER LIMITATIONS ════════════ -->
+<!-- ════════════ P · EARLIER LIMITATIONS ════════════ -->
 <section class="section section--appendix" id="earlier-limitations">
   <div class="shell">
     <div class="spread">
-      <p class="eyebrow">Appendix Q</p>
+      <p class="eyebrow">Appendix P</p>
       <div class="flow reveal">
         <h2>Limitations of the earlier version</h2>
         <p>All principal failure modes trace back to WM1. Without depth information, WM1 loses objects under hand occlusion. Over long horizons, the color-class mask carries no object-level identity, causing drift that text-prompt or object-ID conditioning could address.</p>

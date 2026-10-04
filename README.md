@@ -30,7 +30,7 @@ assets/
 
 ## The interactive demo
 
-Embedded in the supplementary page (and openable full-screen at `demo/index.html`), the demo lets
+Embedded in the main page (and openable full-screen at `demo/index.html`), the demo lets
 you click any of the 23 degrees of freedom on a 3D model of the ORCA hand and watch the
 world model's prediction when that single action component is perturbed by a sinusoid.
 You can compare four models — **WM + LoRA (ours)**, **WM Mid-train**, **WM Real-Only**,
