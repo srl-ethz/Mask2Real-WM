@@ -1,0 +1,72 @@
+# WM2 "oracle" evaluation on one OOD category (duck): WM2 (checkpoint 70,000) is fed
+# ground-truth SAM3 segmentation masks instead of WM1 predictions, scored on this category's
+# own 150-sample validation split. Run with scripts/inference_wm_one_stage.py. Only the
+# dataset block differs from ../wm2.yaml, so the checkpoint loads and behaves identically.
+# Original config: experiments/real_world_big_data/real_world_big_data_wm2_with_svd_ood_eval_duck.yaml
+experiment:
+  experiment_name: "wm2_oracle_sam3_ood_duck"
+  experiment_description: "WM2 checkpoint 70,000 evaluated on the OOD 'duck' category with ground-truth SAM3 masks as ControlNet input."
+  base_config: "../../base_configs/base_video_model_conditioned_on_seg.yaml"
+
+training:
+  tag: "wm2_oracle_sam3_ood_duck"
+  output_dir: "model_ckpt/${training.tag}"
+  wandb_run_name: "${experiment.experiment_name}_${training.tag}"
+  wandb_project_name: "mask2real-wm"
+
+  debug: false
+  learning_rate: 1e-4
+  lr_scheduler: "cosine"
+  lr_warmup_steps: 3000
+  lr_num_cycles: 0.5
+  gradient_accumulation_steps: 1
+  mixed_precision: "bf16"
+  train_batch_size: 8
+  shuffle: true
+  num_train_epochs: 100
+  max_train_steps: 100000
+  checkpointing_steps: 5000
+  validation_steps: 2500
+  validation_batch_size: 8
+  max_grad_norm: 1.0
+  video_num: 4
+  starting_global_step: 5000
+
+dataset:
+  dataset_root_path: "datasets/2026-04-05T20-09-04"
+  dataset_names: "processed_OOD_combined_all4_5fps"
+  dataset_meta_info_path: "dataset_meta_info/2026-04-05T20-09-04"
+  dataset_meta_info_name: "processed_OOD_combined_all4_5fps_val_duck"
+  dataset_cfgs: ${dataset.dataset_names}
+  fps: 5
+  latent_original_fps: 5
+  original_fps: 5
+  down_sample: 1
+  max_num_samples: 1000000000000000000
+  max_num_samples_for_validation: 200  # the category val_sample.json has 150 samples; avoids truncation
+  real_data: true
+  swap_abd_with_mcp: true
+
+model:
+  load_ctrl_world_pretrained: false
+  ckpt_path: null
+
+  action_encoder: "action_encoder_dual"
+  cond_dropout_mask_only_prob: 0.10
+  cond_dropout_action_only_prob: 0.10
+  cond_dropout_both_prob: 0.05
+  guidance_scale: 1.0
+
+  use_controlnet_conditioning: true
+  controlnet_conditioning_scale: 1.0
+  use_vae_roundtrip_for_controlnet: true  # decode pre-encoded latent_segmentation_videos to pixel space before the CNN adapter
+
+  use_unet_lora: true
+  unet_lora_rank: 16
+  unet_lora_alpha: 16.0
+
+  num_inference_steps: 20
+
+  num_views: 2
+  width: 240
+  height: 135

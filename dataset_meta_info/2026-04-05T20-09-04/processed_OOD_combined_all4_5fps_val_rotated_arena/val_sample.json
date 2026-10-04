@@ -1,0 +1,1052 @@
+[
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            37
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            728
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            124
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            551
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            1042
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            699
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            151
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            214
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            380
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            437
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            1128
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            772
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            324
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            399
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            858
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            85
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            181
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            8
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            123
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            372
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            152
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            208
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            942
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            485
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            814
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            656
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            572
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            471
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            856
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            686
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            142
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            230
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            528
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            71
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            371
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            713
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            171
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            199
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            671
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            351
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            985
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            685
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            428
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            885
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            1014
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            414
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            14
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            751
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            771
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            557
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            628
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            487
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            608
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            1
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            58
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            257
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            157
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            665
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            100
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            237
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            722
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            315
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            514
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            30
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            294
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            500
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            271
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            357
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            494
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            285
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            114
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            401
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            913
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            243
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            599
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            9
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            408
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            744
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            956
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            542
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            544
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            201
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            842
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            1071
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            172
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            28
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            95
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            658
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            637
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            38
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            144
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            928
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            694
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            1099
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            209
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            601
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            580
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            328
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            385
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            94
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            295
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            228
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            757
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            115
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            300
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            1156
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            785
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            799
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            522
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            87
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            43
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            614
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            238
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            629
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            66
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            999
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            456
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            128
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            458
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            585
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            57
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            742
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            429
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            0
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            970
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            1028
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            185
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            258
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            642
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            314
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            180
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            323
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            780
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            66
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            899
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            515
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            1185
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            442
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            342
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            715
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            465
+        ]
+    },
+    {
+        "ann_file": "annotation/18.json",
+        "episode_id": 18,
+        "frame_ids": [
+            265
+        ]
+    },
+    {
+        "ann_file": "annotation/15.json",
+        "episode_id": 15,
+        "frame_ids": [
+            266
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            829
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            344
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            828
+        ]
+    },
+    {
+        "ann_file": "annotation/16.json",
+        "episode_id": 16,
+        "frame_ids": [
+            871
+        ]
+    },
+    {
+        "ann_file": "annotation/12.json",
+        "episode_id": 12,
+        "frame_ids": [
+            571
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            801
+        ]
+    },
+    {
+        "ann_file": "annotation/13.json",
+        "episode_id": 13,
+        "frame_ids": [
+            287
+        ]
+    }
+]

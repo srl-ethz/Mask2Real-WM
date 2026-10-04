@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Local environment and secrets
+.env
+.venv/
+
+# Downloaded assets and generated outputs
+/checkpoints
+/datasets
+/model_ckpt
+/outputs
+/inference_output
+/results
+/gt_renders
+/wandb
+/logs

@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "Mask2Real-WM"
+type: software
+authors:
+  - family-names: Feingold
+    given-names: Riccardo O.
+  - family-names: Liconti
+    given-names: Davide
+  - family-names: Yang
+    given-names: Chenyu
+  - family-names: Katzschmann
+    given-names: Robert K.
+repository-code: "https://github.com/srl-ethz/Mask2Real-WM"
+url: "https://srl-ethz.github.io/Mask2Real-WM/"
+license: MIT
+preferred-citation:
+  type: article
+  title: "Mask2Real-WM: Controllable Dexterous World Models via Segmentation Masks as a Sim-to-Real Bridge"
+  authors:
+    - family-names: Feingold
+      given-names: Riccardo O.
+    - family-names: Liconti
+      given-names: Davide
+    - family-names: Yang
+      given-names: Chenyu
+    - family-names: Katzschmann
+      given-names: Robert K.
+  journal: "arXiv preprint arXiv:2607.04546"
+  year: 2026
+  url: "https://arxiv.org/abs/2607.04546"

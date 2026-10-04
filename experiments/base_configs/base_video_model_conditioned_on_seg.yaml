@@ -1,0 +1,97 @@
+# Base configuration that all experiments inherit from
+# Experiment: 10fps with hand mask
+experiment:
+  experiment_name: ""
+  experiment_description: ""
+  
+# Override base config parameters
+training:
+  tag: ""
+  output_dir: "model_ckpt/${training.tag}"
+  wandb_run_name: "${experiment.experiment_name}_${training.tag}"
+  wandb_project_name: ""
+  
+  debug: false
+  learning_rate: 1e-5
+  gradient_accumulation_steps: 2
+  mixed_precision: "fp16"
+  train_batch_size: 4
+  shuffle: true
+  num_train_epochs: 100
+  max_train_steps: 100000
+  checkpointing_steps: 2500
+  validation_steps: 2500
+  max_grad_norm: 1.0
+
+  starting_global_step: 0
+  video_num: 4
+  validation_batch_size: 4
+  max_patience: 3
+
+dataset:
+  dataset_root_path: ""
+  dataset_names: ""
+  dataset_meta_info_path: "dataset_meta_info"
+  dataset_cfgs: ${dataset.dataset_names}  # Reference from dataset section
+  annotation_name: "annotation"
+  prob: [1.0]  # Use only one dataset
+  original_fps: 50
+  latent_original_fps: 10
+  fps: 5
+  down_sample: 10  # 50 Hz/10 = 5 Hz
+  skip_step: 1
+  num_workers: 4 # increase for faster data loading aka faster training in the end
+  max_num_samples: 13000
+  max_num_samples_for_validation: 100
+  use_hand_mask: false
+  use_only_hand_actions: false
+  use_only_ee_pose_actions: false
+  use_average_scalar_hand_action: false
+  encode_segmentation_with_svd: false
+  predicted_datatype: "latent_videos" # "latent_videos" or "latent_segmentation_videos" or "videos" or "segmentation_videos" or "depth" or "optical_flow"
+
+  min_stride: 1
+  max_stride: 2
+  stride_factor: 1
+
+model:
+  # Model paths
+  svd_model_path: "stabilityai/stable-video-diffusion-img2vid"
+  clip_model_path: "openai/clip-vit-base-patch32"
+  ckpt_path: null
+  pi_ckpt: null  # Policy checkpoint for rollout (not needed for training)
+  load_ctrl_world_pretrained: false
+  ctrl_world_pretrained_path: "yjguo/Ctrl-World"
+  ctrl_world_pretrained_strict: false
+  ctrl_world_pretrained_strict_require_all_keys: false
+  ctrl_world_pretrained_load_mode: "video_predictor"
+  ctrl_world_pretrained_action_copy_dims: 6
+  ctrl_world_pretrained_init_controlnet_from_unet: false
+  
+  # Model architecture
+  action_encoder: "dino_visual"
+  hub_dir: null
+  dinov2_size: 224
+
+  action_dim: 23
+  action_encoder_hidden_dims: [1024]
+  vae_compression_rate: 8
+  text_cond: false
+  frame_level_cond: true
+  his_cond_zero: false
+  num_views: 2
+  only_wrist_view: false
+  
+  # Training/inference settings
+  dtype: "bfloat16"  # Options: "float32", "float16", "bfloat16"
+  hand_weight: 2.5
+  motion_bucket_id: 127
+  guidance_scale: 2.0
+  num_inference_steps: 50 # only for inference. During training, we use the scheduler to set the timesteps.
+  decode_chunk_size: 5
+  
+  # Frame dimensions
+  width: 256
+  height: 256
+  num_frames: 5
+  num_history: 5

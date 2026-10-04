@@ -1,0 +1,56 @@
+# Mono-R: monolithic (single-stage) world model that predicts RGB directly from actions,
+# trained on real data only. Released checkpoint: checkpoints/mono_r (step 22,000).
+# Original config: experiments/real_world_big_data/baseline_ctrl_world_with_svd.yaml
+experiment:
+  experiment_name: "mono_r"
+  experiment_description: "Mono-R: Ctrl-World-style monolithic model predicting future RGB latents from actions. Full finetune from SVD weights on the real-world dataset only; no ControlNet, no LoRA, no mask stream. 2 views."
+  base_config: "../base_configs/baseline_ctrl.yaml"
+
+training:
+  tag: "mono_r"
+  output_dir: "model_ckpt/${training.tag}"
+  wandb_run_name: "${experiment.experiment_name}_${training.tag}"
+  wandb_project_name: "mask2real-wm"
+
+  debug: false
+  learning_rate: 1e-4
+  lr_scheduler: "cosine"
+  lr_warmup_steps: 3000
+  lr_num_cycles: 0.5  # the cosine schedule reaches its minimum at 100,000 steps
+  gradient_accumulation_steps: 2
+  mixed_precision: "fp16"
+  train_batch_size: 4
+  shuffle: true
+  num_train_epochs: 100
+  max_train_steps: 50000
+  checkpointing_steps: 500
+  validation_steps: 500
+  max_grad_norm: 1.0
+  video_num: 4
+
+dataset:
+  dataset_root_path: "datasets/2026-03-14T13-34-49"
+  dataset_names: "large_real_dataset_5fps_135_240"
+  dataset_meta_info_path: "dataset_meta_info/2026-03-14T13-34-49"
+  dataset_cfgs: ${dataset.dataset_names}
+  fps: 5
+  latent_original_fps: 5
+  original_fps: 5
+  down_sample: 1
+  max_num_samples: 1000000000000000000
+  max_num_samples_for_validation: 100
+  real_data: true
+
+model:
+  load_ctrl_world_pretrained: false
+
+  action_encoder: "action_encoder_dual"
+  action_encoder_hidden_dims: [1024]
+  cond_dropout_mask_only_prob: 0.10
+  cond_dropout_action_only_prob: 0.10
+  cond_dropout_both_prob: 0.05
+  guidance_scale: 1.0
+
+  num_views: 2
+  width: 240
+  height: 135

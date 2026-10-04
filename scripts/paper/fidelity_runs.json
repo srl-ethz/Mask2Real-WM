@@ -1,0 +1,37 @@
+{
+  "description": "W&B runs of scripts/inference_wm1_to_wm2.py (autoregressive, 10 steps, seed 0) behind the video-fidelity tables, per dataset and model. The first model of each dataset also provides the shared ground-truth frames for FID.",
+  "wandb_project": "real_world_big_data_inference_requested_models",
+  "models": {
+    "mono_sr_58000": {"label": "Mono-SR", "prefix": "baseline_wm_ar"},
+    "cascade_s": {"label": "Cascade-S", "prefix": "wm2_ar"},
+    "cascade_sr": {"label": "Cascade-SR", "prefix": "wm2_ar"},
+    "cascade_r": {"label": "Cascade-R", "prefix": "wm2_ar"}
+  },
+  "datasets": {
+    "id": {
+      "label": "In-distribution",
+      "num_samples": 150,
+      "runs": {"mono_sr_58000": "uithro7w", "cascade_s": "813ca7xq", "cascade_sr": "3nseogy1", "cascade_r": "fjc0sse7"}
+    },
+    "ood_no_cube": {
+      "label": "OOD: No Cube",
+      "num_samples": 50,
+      "runs": {"mono_sr_58000": "r17padkd", "cascade_s": "xg05x48r", "cascade_sr": "8bl5e20t", "cascade_r": "sos4k04m"}
+    },
+    "ood_cube": {
+      "label": "OOD: Cube",
+      "num_samples": 50,
+      "runs": {"mono_sr_58000": "5mq6ko0o", "cascade_s": "94oy4an4", "cascade_sr": "g1d77b6t", "cascade_r": "sc50dodo"}
+    },
+    "ood_rotated_arena": {
+      "label": "OOD: Rotated Arena",
+      "num_samples": 50,
+      "runs": {"mono_sr_58000": "asyci2w2", "cascade_s": "h78smrj1", "cascade_sr": "o06z6kgq", "cascade_r": "tnovs7rc"}
+    },
+    "ood_duck": {
+      "label": "OOD: Duck",
+      "num_samples": 50,
+      "runs": {"mono_sr_58000": "rqq76k3p"}
+    }
+  }
+}
